@@ -10,14 +10,24 @@ export interface PanelProps {
   overlay?: boolean;
   onClickOverlay?(e?: React.MouseEvent): void;
   className?: string;
+  height?: string;
+  width?: string;
 }
 
-export const panel = style({
+export const panel = (height: PanelProps['height'], width: PanelProps['width']) => style({
   //padding: '1rem',
-  marginTop: '1rem',
+  margin: '0.25rem',
   border: '1px solid #444',
   borderRadius: '0.25rem',
   position: 'relative',
+  height,
+  width,
+  overflow: 'auto',
+  $nest: {
+    '&::-webkit-scrollbar': {
+      display: 'none',
+    },
+  },
 });
 
 export const header = style({
@@ -60,6 +70,8 @@ export function Panel({
   name,
   children,
   className,
+  height = 'auto',
+  width = '100%',
   overlayChildren = null,
   overlay = false,
   onClickOverlay = (e) => null,
@@ -67,7 +79,7 @@ export function Panel({
   const [isCollapsed, setCollapsed] = useState(false);
 
   return (
-    <div className={classes(panel, className && className)}>
+    <div className={classes(panel(height, width), className && className)}>
       {overlay && (
         <div className={Overlay}>
           <div onClick={onClickOverlay} className={OverlayCloser}>

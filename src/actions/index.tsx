@@ -1,6 +1,6 @@
 import { v4 as createId } from 'uuid';
 
-export namespace Action {
+
   export type Index = {
     id: string;
     moveId: number;
@@ -14,11 +14,11 @@ export namespace Action {
     readonly type: T & Type;
     readonly meta?: any;
   }
-}
 
-export type Action<T extends Action.Type, P = unknown> = (
-  args: { [K in keyof Action.Index]?: Action.Index[K] }
-) => Action.Data<T> & Action.Payload<P>;
+
+export type Action<T extends Type, P = unknown> = (
+  args: { [K in keyof Index]?: Index[K] }
+) => Data<T> & Payload<P>;
 
 export type USE_MOVE = '@battle/USE_MOVE';
 export const USE_MOVE: USE_MOVE = '@battle/USE_MOVE';

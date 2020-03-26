@@ -1,8 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Types, typeToColor } from '../../utils';
+import { Types, typeToColor, getContrastColor } from '../../utils';
 import { style } from 'typestyle';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
+import clamp from 'ramda/src/clamp';
 
 export const MoveStyle = (type: Types, timeLeft: number) =>
   style({
@@ -11,19 +12,27 @@ export const MoveStyle = (type: Types, timeLeft: number) =>
     flexDirection: 'column',
     alignItems: 'center',
     background: typeToColor(type) || 'transparent',
+    color: getContrastColor(typeToColor(type) || '#000'),
     width: '14rem',
     margin: '4px',
     borderRadius: '4px',
-    border: '1px solid #fff',
+    border: '1px solid transparent',
     fontSize: '1rem',
     cursor: 'pointer',
-    opacity: timeLeft !== 0 ? '0.5' : '1',
+    opacity: timeLeft !== 0 ? '0.8' : '1',
+    $nest: {
+      '&:hover': {
+        boxShadow: '0 0 .25rem #eee',
+        transition: '200ms all',
+        borderColor: 'white',
+      }
+    }
   });
 
 export const MoveWrapper = style({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
+  justifyContent: 'flex-start',
   borderBottom: '1px solid white',
   width: '100%',
   padding: '2px',
@@ -37,6 +46,7 @@ export const MoveInfoWrapper = style({
 export const MoveDamage = style({
   fontSize: '1.1rem',
   background: '#222',
+  color: '#fff',
   padding: '2px 6px',
   borderRadius: '.25rem',
   margin: '2px',
@@ -45,13 +55,12 @@ export const MoveDamage = style({
 export const MoveStyleImage = style({
   height: '1.5rem',
   margin: '2px',
-  marginRight: 'auto',
-  filter: 'drop-shadow(0 0 2px white)',
   borderRadius: '50%',
 });
 
 export const MoveStyleName = style({
-  marginRight: '2rem',
+  marginLeft: '0.25rem',
+  fontWeight: 'bold',
 });
 
 export interface MoveProps {
@@ -77,11 +86,19 @@ export function Move({
   const RADIAN = Math.PI / 180;
   const time = [
     { name: 'totalRemaining', value: totalTime },
-    { name: 'timeUsed', value: totalTime - timeLeft },
+    { name: 'timeUsed', value: clamp(0, totalTime, timeLeft) },
   ];
 
+  const onClick = () => {
+    if (timeLeft === 0) {
+      console.log('attack!', name);
+    } else {
+      console.log('you cannot use this attack yet');
+    }
+  }
+
   return (
-    <div className={MoveStyle(type, timeLeft)}>
+    <div className={MoveStyle(type, timeLeft)} onClick={onClick}>
       <div className={MoveWrapper}>
         <img
           alt=""
@@ -91,8 +108,10 @@ export function Move({
         <span className={MoveStyleName}>{name}</span>
       </div>
       <div className={MoveInfoWrapper}>
-        {damage === 0 ? null : <div className={MoveDamage}>DMG: {damage}</div>}
-
+        <div>
+          {damage === 0 ? null : <div className={MoveDamage}>DMG: {damage}</div>}
+          <div className={MoveDamage}>{timeLeft !== 0 ? `${timeLeft}s` : 'READY!'}</div>
+        </div>
         <PieChart width={40} height={60}>
           <Pie
             dataKey="value"

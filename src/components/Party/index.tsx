@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { HPBar, ExpBar, Panel } from '../../components';
 import { Button } from '../Button';
 import { classes, stylesheet } from 'typestyle';
-import { getPokemonIcon, typeToColor, Types } from 'utils';
-import { moves } from '../../App';
+import { getPokemonIcon, typeToColor, Types, moves } from 'utils';
+import { PanelProps } from 'components/Panel';
 
 export const styles = stylesheet({
   PokemonEntry: {
@@ -123,9 +123,10 @@ export const styles = stylesheet({
 
 export interface PartyProps {
   party: any[];
+  panelProps?: Partial<PanelProps>;
 }
 
-export function Party({ party }: PartyProps) {
+export function Party({ party, panelProps }: PartyProps) {
   const [activeId, setActiveId] = useState(-1);
 
   const onClick = (id: number) => (e: any) => {
@@ -137,7 +138,7 @@ export function Party({ party }: PartyProps) {
   };
 
   return (
-    <Panel name="Party">
+    <Panel name="Party" {...panelProps}>
       {party.map((member, id) => {
         const isFainted = id === 3;
         const canEvolve = id === 4;
@@ -187,8 +188,8 @@ export function Party({ party }: PartyProps) {
                         marginTop: '-32px',
                         imageRendering: 'pixelated',
                       }}
-                      alt="bulbasaur"
-                      src={getPokemonIcon(member.species)}
+                      alt={member.species}
+                      src={getPokemonIcon(member.species, member.shiny)}
                     />
                     <span>{member.species}</span>
                   </div>

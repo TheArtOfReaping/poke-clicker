@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { calculateBaseDPS, Types, expRequiredForumla } from './utils';
+import { calculateBaseDPS, Types, expRequiredForumla, generateRewards, moves } from './utils';
 import {
   Move,
   ExpBar,
@@ -11,12 +11,17 @@ import {
   AchivementsPanel,
   OptionsPanel,
   Trainer,
+  ItemIcon,
+  BattleStage,
 } from './components';
 import { HPBar } from './components/HPBar';
 //@ts-ignore
 import * as Pokedex from 'pokeapi-js-wrapper';
 import { expFormula } from './utils/expFormula';
 import { Party } from './components/Party';
+import clamp from 'ramda/src/clamp';
+import { listOfRoutes } from 'utils/listOfRoutes';
+import { useSelector } from 'react-redux';
 
 export interface Enemy {
   id: number;
@@ -27,59 +32,6 @@ export interface Enemy {
   moves?: number[];
 }
 
-export interface Move {
-  id: number;
-  name: string;
-  type: Types;
-}
-
-export const moves: Move[] = [
-  {
-    id: 1,
-    name: 'Vine Whip',
-    type: Types.Grass,
-  },
-  {
-    id: 2,
-    name: 'Tackle',
-    type: Types.Normal,
-  },
-  {
-    id: 3,
-    name: 'Sludge Bomb',
-    type: Types.Poison,
-  },
-  {
-    id: 4,
-    name: 'Weather Ball',
-    type: Types.Normal,
-  },
-  {
-    id: 5,
-    name: 'Gust',
-    type: Types.Flying,
-  },
-  {
-    id: 6,
-    name: 'Fire Blast',
-    type: Types.Fire,
-  },
-  {
-    id: 7,
-    name: 'Dragon Rage',
-    type: Types.Dragon,
-  },
-  {
-    id: 8,
-    name: 'Slash',
-    type: Types.Normal,
-  },
-  {
-    id: 9,
-    name: 'Air Slash',
-    type: Types.Flying,
-  },
-];
 
 export interface PartyPokemon {
   id: number;
@@ -94,76 +46,11 @@ export interface PartyPokemon {
   item?: string;
 }
 
-const party: PartyPokemon[] = [
-  {
-    id: 1,
-    species: 'Bulbasaur',
-    nickname: 'Bulby',
-    level: 5,
-    gender: 'm',
-    currentHp: 21,
-    shiny: false,
-    ability: 'Overgrow',
-    moves: [1, 2, 3, 4],
-  },
-  {
-    id: 6,
-    nickname: 'Fargo',
-    species: 'Charizard',
-    level: 37,
-    currentHp: 21,
-    shiny: false,
-    gender: 'f',
-    ability: 'Blaze',
-    item: 'Charcoal',
-    moves: [6, 7, 8, 9],
-  },
-  {
-    id: 16,
-    nickname: 'Birdo',
-    species: 'Pidgey',
-    level: 11,
-    currentHp: 21,
-    shiny: false,
-    gender: 'f',
-    moves: [2, 5],
-  },
-  {
-    id: 1,
-    nickname: 'Squirt',
-    species: 'Squirtle',
-    level: 22,
-    currentHp: 21,
-    shiny: false,
-    gender: 'm',
-    moves: [2],
-  },
-  {
-    id: 1,
-    nickname: 'Bulby',
-    species: 'Bulbasaur',
-    level: 1,
-    currentHp: 21,
-    shiny: false,
-    gender: 'f',
-    moves: [2],
-  },
-  {
-    id: 1,
-    nickname: 'Egg',
-    species: 'Chansey',
-    level: 30,
-    currentHp: 21,
-    shiny: false,
-    gender: 'f',
-    moves: [2],
-  },
-];
-
 const enemy = {
   id: 16,
   level: 2,
-  currentHp: 200,
+  currentHp: 20,
+  maxHP: 20,
   shiny: false,
 };
 const game = {
@@ -245,21 +132,33 @@ const calculateOtherStat = (level: number, stat?: number) => {
   return (2 * stat + 31 + (252 / 4) * level) / 100 + 5 * 1;
 };
 
-const pokemon = party[0];
 // const species = getSpecies(party[0].id);
 const enemySpecies = getSpecies(enemy.id);
 const hp = 20;
 
+const getMove = (id?: number) => id == null ? {coolDown: 0} : moves.find(m => m.id === id);
+
 function App() {
   const [enemyHp, setEnemeyHp] = useState(20);
   const [pokemonExp, setPokemonExp] = useState(0);
+  const team = useSelector((state: any) => state.team);
+  const pokemon = team[1];
   const [pokemonExpRequired, setPokemonExpRequired] = useState(
     expRequiredForumla(pokemon.level, 'Medium Slow')
   );
   const [pokemonLevel, setPokemonLevel] = useState(5);
+  const coolDown = (id: number) => getMove(pokemon?.moves?.[id])?.coolDown || 0;
+
+  const [moveTimes, setMoveTimes] = useState(
+    [coolDown(0), coolDown(1), coolDown(2), coolDown(3)]
+  );
+
+  console.log(generateRewards({
+      routeItems: listOfRoutes[0].itemDrops,
+  }))
 
   const enemyHpPercent = (enemyHp / 20) * 100;
-  const isFainted = enemyHp < 0;
+  const isFainted = enemyHp === 0;
 
   // const doIt = async () => {
   //   const dex = new Pokedex.Pokedex();
@@ -269,13 +168,20 @@ function App() {
 
   // doIt();
 
-  const species = getSpecies(party[0].id).then((res) => res);
+  const species = getSpecies(pokemon.id).then((res) => res);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setEnemeyHp(Math.floor(enemyHp - calculateBaseDPS(species, pokemon)));
+      setEnemeyHp(clamp(0, enemy.maxHP, enemyHp - calculateBaseDPS(species, pokemon)));
 
-      if (enemyHp < 0) {
+      setMoveTimes([
+        clamp(0, coolDown(0), moveTimes[0] - 1),
+        clamp(0, coolDown(1), moveTimes[1] - 1),
+        clamp(0, coolDown(2), moveTimes[2] - 1),
+        clamp(0, coolDown(3), moveTimes[3] - 1),
+      ])
+
+      if (enemyHp === 0) {
         setEnemeyHp(20);
         setPokemonExp(
           pokemonExp +
@@ -303,226 +209,43 @@ function App() {
 
   return (
     <div className="App">
-      <h1>PokeClicker</h1>
-
-      <div
-        style={{
-          background: 'rgba(255, 255, 255, 0.2)',
-          padding: '4px',
-          borderRadius: '2px',
-          marginTop: '1rem',
-          marginBottom: '0.25rem',
-        }}
-      >
-        1.0.0
-      </div>
       <header className="App-header">
-        <div
-          className="storage"
-          style={{
-            width: '200px',
-          }}
-        >
-          <h2>Storage</h2>
-        </div>
-
         <div
           style={{
             border: '1px solid #222',
             background: 'rgba(0, 0, 0, 0.2)',
-            padding: '1rem',
             boxShadow: '0 0 4px rba(0, 0, 0, 0.5)',
             width: '100%',
-            maxWidth: '120rem',
-            minHeight: '60rem',
+            height: '100vh',
+            overflow: 'auto',
             marginTop: '0',
             display: 'flex',
-            justifyContent: 'center',
+            flexWrap: 'wrap',
           }}
         >
-          <div
-            className="left-wrapper"
-            style={{
-              width: '25%',
-              padding: '1rem',
-              marginRight: 'auto',
-            }}
-          >
-            <Trainer />
-            <Party party={party} />
-            <Inventory />
-          </div>
 
-          <div className="battle-wrapper">
-            <div
-              className="battle-stage"
-              style={{
-                padding: '1rem',
-                margin: '1rem',
-                border: '1px solid white',
-                boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
-                background: 'url(./images/backgrounds/forest.png)',
-                height: '460px',
-                width: '800px',
-                backgroundSize: 'cover',
-                position: 'relative',
-              }}
-            >
-              <div
-                style={{
-                  backgroundColor: 'white',
-                  position: 'absolute',
-                  top: '1rem',
-                  right: '1rem',
-                  padding: '0.5rem',
-                  borderRadius: '0.25rem',
-                  //boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
-                  color: '#000',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <img
-                  alt="weather"
-                  height="14px"
-                  src="https://image.flaticon.com/icons/svg/890/890347.svg"
-                />
-                Sunny
-              </div>
-
-              <div className="defending-pokemon">
-                {isFainted && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: '160px',
-                      right: '80px',
-                      background: '#222',
-                      borderRadius: '.25rem',
-                      padding: '0.5rem',
-                      width: '240px',
-                      zIndex: 100,
-                    }}
-                  >
-                    Pokemon fainted!
-                  </div>
-                )}
-
-                <img
-                  className={isFainted ? `fainted` : undefined}
-                  style={{
-                    height: '128px',
-                    imageRendering: 'pixelated',
-                    position: 'absolute',
-                    bottom: '180px',
-                    right: '130px',
-                  }}
-                  alt="enemy"
-                  src={`https://img.pokemondb.net/sprites/black-white/anim/${
-                    enemy.shiny ? 'shiny' : 'normal'
-                  }/${'pidgey'}.gif`}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '10px',
-                    left: '0',
-                    padding: '1rem',
-                    background: '#222',
-                    boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
-                    clipPath: `polygon(0 0, 100% 0, 94% 100%, 0% 100%)`,
-                  }}
-                >
-                  <div>{'Pidgey'}</div>
-                  <HPBar totalHp={20} currentHp={enemyHp} />
-                </div>
-              </div>
-
-              <div className="active-pokemon">
-                <img
-                  style={{
-                    height: '192px',
-                    imageRendering: 'pixelated',
-                    position: 'absolute',
-                    bottom: '0',
-                    left: '120px',
-                  }}
-                  className="attacking"
-                  alt="bulbasaur"
-                  src={`https://img.pokemondb.net/sprites/black-white/anim/back-${
-                    pokemon.shiny ? 'shiny' : 'normal'
-                  }/${'bulbasaur'}.gif`}
-                />
-
-                <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    right: '0',
-                    padding: '1rem',
-                    background: '#222',
-                    boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
-                  }}
-                >
-                  {pokemon.nickname} lv.{pokemonLevel}
-                  <HPBar currentHp={pokemon.currentHp} totalHp={hp} />
-                  <ExpBar
-                    totalExpNeeded={pokemonExpRequired}
-                    currentExpProgress={pokemonExp}
-                  />
-                  <div>DPS: {calculateBaseDPS(species, pokemon)}</div>
-                </div>
-              </div>
+            <div style={{height: '100%', width: '20%', display: 'flex', flexWrap: 'wrap'}}>
+              <Trainer panelProps={{height: '20%'}} />
+              <Party party={team} panelProps={{height: '40%'}} />
+              <Inventory panelProps={{height: '38%'}} />
             </div>
 
-            <div style={{ display: 'flex', margin: '1rem', width: '800px' }}>
-              <Move
-                damage={40}
-                totalTime={20}
-                timeLeft={1}
-                type={Types.Grass}
-              />
-              <Move
-                rank={2}
-                damage={50}
-                totalTime={10}
-                timeLeft={4}
-                name="Tackle"
-              />
-              <Move
-                rank={3}
-                damage={90}
-                totalTime={10}
-                timeLeft={0}
-                name="Sludge Bomb"
-                type={Types.Poison}
-              />
-              <Move
-                damage={100}
-                totalTime={50}
-                timeLeft={50}
-                name="Weather Ball"
-                type={Types.Fire}
-              />
+            <div style={{width: '45%', margin: '0 0.25rem', }}>
+              <Panel name='Battle'>
+                <BattleStage pokemon={pokemon} isFainted={false} moveTimes={moveTimes} />
+              </Panel>
+              <OptionsPanel />
+              <Panel name='Console'>
+              </Panel>
             </div>
 
-            <OptionsPanel />
-          </div>
-
-          <div
-            className="right-panel"
-            style={{ width: '25%', marginLeft: 'auto' }}
-          >
-            <Map />
-            <PokedexPanel />
-            <AchivementsPanel />
-          </div>
+            <div style={{height: '100%', width: '20%', display: 'flex', flexWrap: 'wrap'}}>
+              <Map />
+              <PokedexPanel />
+              <AchivementsPanel />
+            </div>
         </div>
       </header>
-      <div style={{}}>
-        Hint: you can use Ctrl + Click to select multiple items in any list
-      </div>
     </div>
   );
 }

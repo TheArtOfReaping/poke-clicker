@@ -1,12 +1,15 @@
-export * from './pokemonData';
-export * from './Types';
-export * from './typeToColor';
 export * from './captureFormula';
 export * from './expFormula';
 export * from './expRequiredFormula';
-export * from './listOfPokemon';
+export * from './generateRewards';
+export * from './getContrastColor';
 export * from './getPokemonIcon';
 export * from './listOfItems';
+export * from './listOfPokemon';
+export * from './Types';
+export * from './typeToColor';
+export * from './ZIndexMap';
+export * from './listOfMoves';
 
 export const calculateBaseDPS = (species: any, pokemon: any) => {
   // return ((species.stats.find(s => s.) + species.stats.spatk + species.stats.spd) * pokemon.level ) / 100;

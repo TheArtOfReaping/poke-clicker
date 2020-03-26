@@ -17,9 +17,9 @@ export const formatSpeciesName = (species: string | null) => {
   return species.toLowerCase();
 };
 
-export const getPokemonIcon = (poke: string) => {
+export const getPokemonIcon = (poke: string, shiny?: boolean) => {
   try {
-    const img = require(`../../node_modules/pokesprite-images/pokemon-gen8/regular/${formatSpeciesName(
+    const img = require(`../../node_modules/pokesprite-images/pokemon-gen8/${shiny ? 'shiny' : 'regular'}/${formatSpeciesName(
       poke
     )}.png`);
     return img;
