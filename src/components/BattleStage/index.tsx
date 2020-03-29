@@ -1,6 +1,6 @@
 import React from 'react';
 import { HPBar, ExpBar, Move, Panel, OptionsPanel, ItemIcon } from '../../components';
-import { Types, calculateBaseDPS, moves, Pokemon, getSpecies, generateRewards, ZIndexMap } from 'utils';
+import { Types, calculateBaseDPS, moves, Pokemon, getSpecies, generateRewards, ZIndexMap, speciesToNumber } from 'utils';
 import { PartyPokemon } from '../../App';
 import { stylesheet, media, keyframes, classes } from 'typestyle';
 import { listOfRoutes } from 'utils/listOfRoutes';
@@ -45,6 +45,7 @@ const styles = stylesheet({
     backgroundSize: 'contain',
     backgroundRepeat: 'no-repeat',
     position: 'relative',
+    overflow: 'hidden',
     
     $nest: {
       '&': {
@@ -160,10 +161,8 @@ export function BattleStage({
   const showPokemart = false;
   const selectedRoute = useSelector<State, number>(state => state.selections.selectedRoute);
 
-  const height = getSpeciesValue(pokemon?.id || 0, 'height');
-  console.log(height);
-
-  const determineSize = (species?: string) => clamp(80, 360, height * 20) + 'px';
+  const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 0, 'height');
+  const determineSize = (species?: string) => clamp(120, 360, height * 20) + 'px';
   const determinePosition = () => {
 
     const bottom = height > 10 ? -10 : 80
@@ -188,7 +187,6 @@ export function BattleStage({
                 background: `url(./images/backgrounds/${listOfRoutes[selectedRoute].background || 'route'}.png)`,
               }}
             >
-              
               <div className={styles.BattleFXLayer}></div>
               <FieldEffects />
 

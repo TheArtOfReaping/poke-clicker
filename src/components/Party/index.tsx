@@ -231,7 +231,7 @@ export function Party({ party, panelProps }: PartyProps) {
                 <ExpBar totalExpNeeded={20} currentExpProgress={1} />
               </div>
             </div>
-            {activeId === id && (
+            {activeId === idx && (
               <div className={classes(styles.ExpandedView, member?.shiny && styles.ExpandedViewShiny)}>
                 <div className={styles.PokemonData}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -290,6 +290,7 @@ export function Party({ party, panelProps }: PartyProps) {
                   })}
                 </div>
                 <div className={styles.PokemonOptions}>
+                  <Button className={styles.PokemonOptionsButton} options={{smallFont: true}} value="Favorite" />
                   {party.length > 1 && (
                     <Button className={styles.PokemonOptionsButton} options={{ smallFont: true }} value="Release" />
                   )}

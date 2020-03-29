@@ -75,7 +75,7 @@ export function Map({panelProps}: MapProps) {
           >
             {r.name}
             {r.id === selectedRoute && <ExpBar totalExpNeeded={r.defeatNumber || 0} currentExpProgress={2} />}
-            {r.defeatNumber && <div style={{fontSize: '0.8rem'}}>2/{r?.defeatNumber}</div>}
+            {((r?.defeatNumber || 0) > 0) && r.id === selectedRoute && <div style={{fontSize: '0.8rem'}}>2/{r?.defeatNumber}</div>}
           </div>
         ))}
       </div>

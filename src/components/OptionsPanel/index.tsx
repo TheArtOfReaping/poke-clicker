@@ -5,6 +5,8 @@ import { stylesheet } from 'typestyle';
 const styles = stylesheet({
   OptionsLabel: {
     margin: '4px',
+    display: 'flex',
+    alignItems: 'center',
   },
 });
 
