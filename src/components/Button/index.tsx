@@ -1,5 +1,6 @@
 import React from 'react';
 import { stylesheet, classes } from 'typestyle';
+import { colors } from 'utils/colors';
 
 export const styles = stylesheet({
   Base: {
@@ -7,9 +8,9 @@ export const styles = stylesheet({
     padding: '0.25rem',
     margin: '0.25rem',
     display: 'flex',
-    background: '#444',
+    background: colors.secondary.get(),
     borderRadius: '0.25rem',
-    border: '1px solid #555',
+    border: 'none',
     cursor: 'pointer',
     color: 'white',
     fontSize: '1.1rem',
@@ -17,7 +18,7 @@ export const styles = stylesheet({
     alignItems: 'center',
     $nest: {
       '&:hover': {
-        background: '#555',
+        background: colors.secondary.shade1,
       },
     },
   },
@@ -43,6 +44,7 @@ export interface ButtonProps {
   value?: any;
   intent?: Intent;
   disabled?: boolean;
+  className?: string;
   options?: { smallFont?: boolean; image?: string };
 }
 
@@ -51,13 +53,14 @@ export function Button({
   onClick,
   value,
   intent,
+  className,
   disabled,
   options,
 }: ButtonProps) {
   return (
     <button
       disabled={disabled}
-      className={classes(styles.Base, options?.smallFont && styles.SmallFont)}
+      className={classes(styles.Base, options?.smallFont && styles.SmallFont, className)}
       onClick={onClick}
     >
       {options?.image && (

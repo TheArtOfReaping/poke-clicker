@@ -1,4 +1,4 @@
-import { USE_MOVE, ADD_POKEMON, Action } from 'actions';
+import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action } from 'actions';
 import { PartyPokemon } from 'App';
 
 export function inventory(state = [], action: any) {
@@ -46,7 +46,7 @@ export const initialTeamState: PartyPokemon[] = [
     moves: [2, 5],
   },
   {
-    id: 1,
+    id: 7,
     nickname: 'Squirt',
     species: 'Squirtle',
     level: 22,
@@ -57,8 +57,8 @@ export const initialTeamState: PartyPokemon[] = [
   },
   {
     id: 1,
-    nickname: 'Bulby',
-    species: 'Bulbasaur',
+    nickname: 'Charcoals',
+    species: 'Charmander',
     level: 1,
     currentHp: 21,
     shiny: false,
@@ -66,21 +66,51 @@ export const initialTeamState: PartyPokemon[] = [
     moves: [2],
   },
   {
-    id: 1,
-    nickname: 'Egg',
-    species: 'Chansey',
-    level: 30,
-    currentHp: 21,
+    id: 382,
+    nickname: 'Meanie',
+    species: 'Kyogre',
+    level: 100,
+    currentHp: 1000,
+    ability: 'Drizzle',
     shiny: false,
     gender: 'f',
     moves: [2],
   },
 ]
 
+export function selectedPokemon(state = '', action: any) {
+  switch (action.type) {
+    case SELECT_POKEMON:
+      return action.payload.pokemonId;
+    default:
+      return;
+  }
+}
+
+export function selections(state = {selectedRoute: 0}, action: any) {
+  switch (action.type) {
+    case SELECT_ROUTE:
+      return {
+        ...state,
+        selectedRoute: action.payload.routeId,
+      }
+    default:
+      return state;
+  }
+}
+
 export function team(state = initialTeamState, action: any) {
   switch (action.type) {
     case ADD_POKEMON:
-      return [state, action.payload.pokemon];
+      return [...state, action.payload.pokemon];
+    case 'EDIT_POKEMON':
+      return [
+        ...state.filter(pk => pk.id !== action.payload.id),
+        {
+          ...state.find(pk => pk.id === action.payload.id),
+          ...action.payload.pokemon,
+        }
+      ]
     default:
       return state;
   }
@@ -92,7 +122,21 @@ export function field(state = {}, action: any) {
       return {
         ...state,
         weather: action.payload.weather,
+        room: action.payload.room,
+        terrain: action.payload.terrain,
       };
+    default:
+      return state;
+  }
+}
+
+export function pokedex(state = {}, action: any) {
+  switch (action.type) {
+    case 'ADD_SEEN':
+      return {
+        ...state,
+        [action.payload.species]: {seen: action.payload.seen},
+      }
     default:
       return state;
   }
@@ -102,4 +146,6 @@ export const reducers = {
   inventory,
   team,
   field,
+  selections,
+  pokedex,
 };

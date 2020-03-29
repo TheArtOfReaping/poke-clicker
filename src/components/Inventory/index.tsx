@@ -1,7 +1,35 @@
 import React, { useState, ImgHTMLAttributes } from 'react';
-import { style, classes } from 'typestyle';
+import { style, classes, stylesheet } from 'typestyle';
 import { Panel, PanelProps, panel } from '../Panel';
 import { listOfItems, Item } from 'utils';
+import { colors } from 'utils/colors';
+import { invert } from 'ramda';
+
+const styles = stylesheet({
+  ItemQuantity: {
+    width: '60px',
+    background: colors.secondary.shade1,
+    display: 'inline-block',
+    padding: '0.5rem',
+    color: 'white',
+    fontWeight: 'bold',
+    marginLeft: 'auto',
+    clipPath: `polygon(8% 0, 100% 0, 100% 100%, 0% 100%)`,
+  },
+  NewItem: {
+    background: 'red',
+    display: 'inline-block',
+    padding: '0 0.25rem',
+    color: 'white',
+    fontWeight: 'bold',
+    marginLeft: '.25rem',
+    fontStyle: 'italic',
+  },
+  InventoryCategoryImage: {
+    height: '100%',
+    filter: 'invert(100%)',
+  }
+});
 
 export const ItemsFilter = style({
   display: 'flex',
@@ -20,31 +48,33 @@ export const ItemsWrapper = style({
 export const ItemEntry = style({
   display: 'flex',
   alignItems: 'center',
-  border: '1px solid #ccc',
-  background: '#222',
+  //border: '1px solid #ccc',
+  background: colors.primary.get(),
   marginTop: '2px',
   position: 'relative',
   cursor: 'pointer',
   borderRadius: '2px',
-  transition: '200ms all 200ms',
+  transition: '200ms background 200ms',
   $nest: {
     '&:hover': {
-      background: '#444',
+      background: colors.primary.tint1,
       transition: '200ms all',
     },
   },
 });
 export const ItemHighlighted = style({
-  background: '#444',
+  background: colors.primary.tint1,
 });
 export const ContextMenu = style({
-  background: '#333',
+  background: colors.primary.get(),
   zIndex: 1,
   position: 'absolute',
-  top: '1rem',
+  bottom: '0',
   right: '0rem',
   width: '10rem',
-  border: '1px solid white',
+  border: '1px solid transparent',
+  borderColor: colors.primary.inverse,
+  boxShadow: '0 0 1rem rgba(0,0,0,0.1)',
 });
 export const ContextMenuItem = style({
   height: '1.5rem',
@@ -103,16 +133,20 @@ export interface InventoryItemProps {
   onClickToss: (e?: React.MouseEvent) => void;
 }
 
-export function ItemIcon({img, folder, imgProps}: Partial<Item> & {imgProps?: ImgHTMLAttributes<HTMLElement>}) {
+export function ItemIcon({img, folder, imgProps, outline = true}: Partial<Item> & {imgProps?: ImgHTMLAttributes<HTMLElement>, outline?: boolean}) {
   return <img
       {...imgProps}
       alt=''
-      src={`https://github.com/msikma/pokesprite/blob/master/items-outline/${folder}/${img}.png?raw=true`}
+      style={{imageRendering: 'pixelated'}}
+      src={`https://github.com/msikma/pokesprite/blob/master/${outline ? 'items-outline' : 'items'}/${folder}/${img}.png?raw=true`}
     />
 }
 
 export function InventoryItem({item, idx, contextId, isContextMenu, onClick, onClickToss}: InventoryItemProps) {
   const {img, folder} = item;
+  if (!item.quantity) {
+    return null;
+  }
   return <div
     onClick={onClick(idx)}
     key={idx}
@@ -129,6 +163,7 @@ export function InventoryItem({item, idx, contextId, isContextMenu, onClick, onC
         <div onClick={onClickToss} className={ContextMenuItem}>
           Toss
         </div>
+        <div className={ContextMenuItem} onClick={e => onClick(-1)}>Cancel</div>
       </div>
     )}
     <ItemIcon img={img} folder={folder} />
@@ -137,29 +172,13 @@ export function InventoryItem({item, idx, contextId, isContextMenu, onClick, onC
     </span>
     {item?.new && (
       <span
-        style={{
-          display: 'inline-block',
-          background: 'red',
-          marginLeft: '4px',
-          borderRadius: '.25rem',
-          padding: '0 4px',
-          fontStyle: 'italic',
-        }}
+        className={styles.NewItem}
       >
         NEW!
       </span>
     )}
     <span
-      style={{
-        width: '60px',
-        background: 'red',
-        display: 'inline-block',
-        padding: '0.5rem',
-        color: 'white',
-        fontWeight: 'bold',
-        marginLeft: 'auto',
-        clipPath: `polygon(8% 0, 100% 0, 100% 100%, 0% 100%)`,
-      }}
+      className={styles.ItemQuantity}
     >
       x{item.quantity}
     </span>
@@ -170,6 +189,7 @@ export function Inventory({ inventory = [], panelProps }: InventoryProps) {
   const [isContextMenu, setContextMenu] = useState(false);
   const [isOverlay, setOverlay] = useState(false);
   const [contextId, setContextId] = useState(-1);
+  const [selectedCategory, selectCategory] = useState<string | null>(null);
 
   const onClick = (id: number) => (e: any) => {
     e.preventDefault();
@@ -181,7 +201,11 @@ export function Inventory({ inventory = [], panelProps }: InventoryProps) {
     }
   };
 
-  const inventoryFilter = (category: string) => (e: any) => {};
+  const inventoryFilter = (category: string) => (e: any) => {
+    category === selectedCategory ?
+      selectCategory(null) :
+      selectCategory(category);
+  };
 
   const onClickToss = (e: any) => {
     setOverlay(true);
@@ -196,7 +220,7 @@ export function Inventory({ inventory = [], panelProps }: InventoryProps) {
     >
       <div className={classes(ItemsWrapper)}>
         <div className={ItemsFilter}>
-          {['A', 'B', 'M', 'H', 'B', 'E', 'K'].map((category, idx) => {
+          {['ball', 'medicine', 'battle-items', 'berries', 'other-items', 'tms', 'treasures', 'ingredients', 'key-items'].map((category, idx) => {
             return (
               <div
                 onClick={inventoryFilter(category)}
@@ -204,7 +228,7 @@ export function Inventory({ inventory = [], panelProps }: InventoryProps) {
                 style={{
                   cursor: 'pointer',
                   textTransform: 'uppercase',
-                  background: category === 'A' ? '#ada160' : '#444',
+                  background: category === selectedCategory ? colors.secondary.get() : colors.black.tint1,
                   width: '2rem',
                   padding: '0.5rem',
                   height: '2rem',
@@ -216,13 +240,13 @@ export function Inventory({ inventory = [], panelProps }: InventoryProps) {
                   justifyContent: 'center',
                 }}
               >
-                {category}
+                <img className={styles.InventoryCategoryImage} alt={category} src={`./images/bag-icons/${category}.png`} />
               </div>
             );
           })}
         </div>
 
-        {listOfItems.map((item, idx) => (
+        {listOfItems.filter(item => selectedCategory ? item.folder === selectedCategory : true).map((item, idx) => (
           <InventoryItem contextId={contextId} isContextMenu={isContextMenu} item={item} onClick={onClick} onClickToss={onClickToss} idx={idx} />
         ))}
       </div>

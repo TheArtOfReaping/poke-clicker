@@ -1,4 +1,5 @@
 import { listOfPokemon } from 'utils';
+import { SpeciesName } from './SpeciesName';
 
 export const formatSpeciesName = (species: string | null) => {
   if (species == null) return 'unknown';
@@ -13,7 +14,7 @@ export const formatSpeciesName = (species: string | null) => {
   if (species === 'Type: Null') return 'type-null';
   if (species.startsWith('Tapu'))
     return species.toLowerCase().replace(/\s/, '-');
-  if (listOfPokemon.indexOf(species) < 0) return 'unknown';
+  if (listOfPokemon.indexOf(species as SpeciesName) < 0) return 'unknown';
   return species.toLowerCase();
 };
 

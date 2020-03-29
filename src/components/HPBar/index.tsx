@@ -3,7 +3,7 @@ import React from 'react';
 export interface HPBarProps {
   currentHp: number;
   totalHp: number;
-
+  showHp?: boolean;
   width?: string;
 }
 
@@ -18,7 +18,7 @@ export const getHPColor = (value: number) => {
 };
 
 export type HPBar = React.FunctionComponent<HPBarProps>;
-export function HPBar({ currentHp, totalHp, width = '24rem' }: HPBarProps) {
+export function HPBar({ currentHp, totalHp, showHp = true, width = '24rem' }: HPBarProps) {
   const percent = (currentHp / totalHp) * 100;
 
   return (
@@ -61,7 +61,7 @@ export function HPBar({ currentHp, totalHp, width = '24rem' }: HPBarProps) {
           marginLeft: '4px',
         }}
       >
-        {currentHp}/{totalHp}
+        {showHp && `${currentHp}/${totalHp}`}
       </div>
     </div>
   );

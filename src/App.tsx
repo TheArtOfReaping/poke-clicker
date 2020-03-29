@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { calculateBaseDPS, Types, expRequiredForumla, generateRewards, moves } from './utils';
+import { calculateBaseDPS, Types, expRequiredForumla, generateRewards, moves, getSpecies, choose, listOfPokemon, colors, getContrastColor, speciesToNumber } from 'utils';
 import {
   Move,
   ExpBar,
@@ -13,29 +13,48 @@ import {
   Trainer,
   ItemIcon,
   BattleStage,
-} from './components';
+} from 'components';
 import { HPBar } from './components/HPBar';
 //@ts-ignore
-import * as Pokedex from 'pokeapi-js-wrapper';
 import { expFormula } from './utils/expFormula';
 import { Party } from './components/Party';
 import clamp from 'ramda/src/clamp';
 import { listOfRoutes } from 'utils/listOfRoutes';
 import { useSelector } from 'react-redux';
+import { Enemy } from 'actions';
+import { style, media } from 'typestyle';
+import { State } from 'actions';
+import { SpeciesName } from 'utils/SpeciesName';
 
-export interface Enemy {
-  id: number;
+const Base = style({
+    border: '1px solid #222',
+    //background: 'rgba(0, 0, 0, 0.2)',
+    //boxShadow: '0 0 4px rba(0, 0, 0, 0.5)',
+    width: '100%',
+    height: '100vh',
+    overflow: 'auto',
+    marginTop: '0',
+    display: 'flex',
+    flexWrap: 'wrap',},
+    media({minWidth: 0, maxWidth: 720}, {flexDirection: 'column'})
+);
 
-  level: number;
-  currentHp: number;
-  shiny?: boolean;
-  moves?: number[];
-}
+export const AppStyle = style({
+  backgroundColor: colors.primary.get(),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  color: getContrastColor(colors.primary.get()),
+  minHeight: '100vh',
+  width: '100%',
+  overflow: 'hidden',
+  textAlign: 'center',
+});
 
 
 export interface PartyPokemon {
   id: number;
-  species: string;
+  species: SpeciesName;
   nickname: string;
   level: number;
   gender?: string;
@@ -52,6 +71,8 @@ const enemy = {
   currentHp: 20,
   maxHP: 20,
   shiny: false,
+  gender: 'm',
+  species: 'Pidgey',
 };
 const game = {
   totalCaptures: 0,
@@ -60,89 +81,21 @@ const game = {
   totalWhiteouts: 0,
 };
 
-export interface Ability {}
-
-export interface Form {}
-
-export interface Stat {
-  base_stat: number;
-  effort: number;
-  stat: { name: string; url: string };
+export const generateNewEnemy = () => {
+  return choose(listOfPokemon);
 }
 
-export interface Type {
-  slot: number;
-  type: { name: string; url: string };
-}
-
-export interface Pokemon {
-  abilities: Ability[];
-  base_experience: number;
-  forms: Form[];
-  game_indices: any;
-  height: number;
-  held_items: string[];
-  ids: number;
-  is_default: boolean;
-  location_area_encounters: string;
-  moves: any[];
-  name: string;
-  order: number;
-  species: { name: string; url: string };
-  sprites: any;
-  stats: Stat[];
-  types: Type[];
-  weight: number;
-}
-
-const dexEntries: Pokemon[] = [];
-
-const getSpecies = async (pokeId: number): Promise<Pokemon | undefined> => {
-  try {
-    const dex = new Pokedex.Pokedex();
-    if (dexEntries[pokeId] != null) {
-      return dexEntries[pokeId];
-    }
-    const species: Pokemon = await dex.resource(['api/v2/pokemon/' + pokeId]);
-    dexEntries[pokeId] = species;
-    console.log(species);
-    return species;
-  } catch (e) {
-    console.error(e);
-  }
-  //return pokemonData.find(p => p.id === pokeId);
-};
-
-const calculateHP = (level: number, hpStat?: number) => {
-  console.log(level, hpStat);
-  if (!hpStat) return 0;
-  //return Math.floor((( ( 2 * hpStat + 31 + (252 / 4) * level) / 100)) + level + 10);
-  let res = 2 * hpStat;
-  res = res + 31 + 0;
-  res = res * level;
-  res = res / 100;
-  res = res + level;
-  res = res + 10;
-  return Math.floor(res);
-};
-
-const calculateOtherStat = (level: number, stat?: number) => {
-  console.log(level, stat);
-  if (!stat) return 0;
-  return (2 * stat + 31 + (252 / 4) * level) / 100 + 5 * 1;
-};
-
-// const species = getSpecies(party[0].id);
-const enemySpecies = getSpecies(enemy.id);
-const hp = 20;
 
 const getMove = (id?: number) => id == null ? {coolDown: 0} : moves.find(m => m.id === id);
 
 function App() {
-  const [enemyHp, setEnemeyHp] = useState(20);
+  const [enemyHp, setEnemeyHp] = useState(enemy.currentHp);
+  const [enemySpecies, setEnemySpecies] = useState('Pidgey');
   const [pokemonExp, setPokemonExp] = useState(0);
-  const team = useSelector((state: any) => state.team);
-  const pokemon = team[1];
+  const [pokeId, setpokeId] = useState(0);
+  const team = useSelector<State, PartyPokemon[]>((state: any) => state.team);
+  const selectedRoute = useSelector<State, number>(state => state.selections.selectedRoute);
+  const pokemon = team[pokeId];
   const [pokemonExpRequired, setPokemonExpRequired] = useState(
     expRequiredForumla(pokemon.level, 'Medium Slow')
   );
@@ -153,26 +106,18 @@ function App() {
     [coolDown(0), coolDown(1), coolDown(2), coolDown(3)]
   );
 
-  console.log(generateRewards({
-      routeItems: listOfRoutes[0].itemDrops,
-  }))
-
-  const enemyHpPercent = (enemyHp / 20) * 100;
-  const isFainted = enemyHp === 0;
-
   // const doIt = async () => {
   //   const dex = new Pokedex.Pokedex();
   //   const golduck = await dex.getPokemonByName('bulbasaur');
-  //   console.log(golduck);
   // }
 
   // doIt();
 
-  const species = getSpecies(pokemon.id).then((res) => res);
+  const species = getSpecies(speciesToNumber(pokemon.species)).then((res) => res);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setEnemeyHp(clamp(0, enemy.maxHP, enemyHp - calculateBaseDPS(species, pokemon)));
+      setEnemeyHp(clamp(0, enemy.maxHP, enemyHp - 10));
 
       setMoveTimes([
         clamp(0, coolDown(0), moveTimes[0] - 1),
@@ -192,6 +137,9 @@ function App() {
               level: pokemonLevel,
             })
         );
+        setEnemySpecies(choose(listOfRoutes[selectedRoute]?.pokemon?.map(p => p.species) || []))
+        setpokeId(choose([0, 1, 2, 3, 4, 5]))
+        generateRewards({routeItems: listOfRoutes[0].itemDrops})
       }
 
       if (pokemonExp >= pokemonExpRequired) {
@@ -207,42 +155,61 @@ function App() {
     return null;
   }
 
+  const p = {
+    trainer: true,
+    party: true,
+    inventory: true,
+    battle: true,
+    map: true,
+    pokedex: true,
+    achievements: true,
+  }
+
   return (
-    <div className="App">
+    <div className={AppStyle}>
       <header className="App-header">
         <div
-          style={{
-            border: '1px solid #222',
-            background: 'rgba(0, 0, 0, 0.2)',
-            boxShadow: '0 0 4px rba(0, 0, 0, 0.5)',
-            width: '100%',
-            height: '100vh',
-            overflow: 'auto',
-            marginTop: '0',
-            display: 'flex',
-            flexWrap: 'wrap',
-          }}
+          className={Base}
         >
 
             <div style={{height: '100%', width: '20%', display: 'flex', flexWrap: 'wrap'}}>
-              <Trainer panelProps={{height: '20%'}} />
-              <Party party={team} panelProps={{height: '40%'}} />
-              <Inventory panelProps={{height: '38%'}} />
+              <Trainer panelProps={{height: '20%', visible: p.trainer}} />
+              <Party party={team} panelProps={{height: '40%', visible: p.party}} />
+              <Inventory panelProps={{height: '38%', visible: p.inventory}} />
             </div>
 
-            <div style={{width: '45%', margin: '0 0.25rem', }}>
+            <div style={{width: '41%', margin: '0 0.25rem', }}>
               <Panel name='Battle'>
-                <BattleStage pokemon={pokemon} isFainted={false} moveTimes={moveTimes} />
+                <BattleStage
+                  enemy={{
+                    id: 16,
+                    level: 2,
+                    currentHp: enemyHp,
+                    maxHp: 20,
+                    shiny: false,
+                    species: enemySpecies,
+                  }}
+                pokemon={pokemon} isFainted={enemyHp === 0} moveTimes={moveTimes} />
               </Panel>
-              <OptionsPanel />
-              <Panel name='Console'>
-              </Panel>
+              <div style={{display: 'flex'}}>
+                <OptionsPanel />
+                <Panel name='Console'>
+                </Panel>
+              </div>
             </div>
 
             <div style={{height: '100%', width: '20%', display: 'flex', flexWrap: 'wrap'}}>
-              <Map />
-              <PokedexPanel />
-              <AchivementsPanel />
+              <Map panelProps={{height: '40%', visible: p.map}} />
+              <PokedexPanel panelProps={{height: '30%', visible: p.pokedex}} />
+              <AchivementsPanel panelProps={{height: '28%', visible: p.achievements}} />
+            </div>
+            <div style={{height: '100%', width: '18%', display: 'flex', flexDirection: 'column'}}>
+              <Panel name='Wiki'>
+
+              </Panel>
+              <Panel name='Stats'>
+
+              </Panel>
             </div>
         </div>
       </header>

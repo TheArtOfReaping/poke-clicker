@@ -4,12 +4,14 @@ export interface ExpBarProps {
   width?: number;
   currentExpProgress: number;
   totalExpNeeded: number;
+  baseColor?: string;
 }
 
 export function ExpBar({
   width,
   currentExpProgress,
   totalExpNeeded,
+  baseColor = 'cyan',
 }: ExpBarProps) {
   const percent = (currentExpProgress / totalExpNeeded) * 100;
 
@@ -29,7 +31,7 @@ export function ExpBar({
         style={{
           height: '0.5rem',
           border: '1px solid white',
-          background: `linear-gradient(to right, cyan, cyan ${percent}%, black ${percent}%, black)`,
+          background: `linear-gradient(to right, ${baseColor}, ${baseColor} ${percent}%, black ${percent}%, black)`,
           transition: '200ms all',
           width: '10rem',
         }}

@@ -1,4 +1,6 @@
-export const listOfPokemon = [
+import { SpeciesName } from "./SpeciesName";
+
+export const listOfPokemon: SpeciesName[] = [
   'Bulbasaur',
   'Ivysaur',
   'Venusaur',

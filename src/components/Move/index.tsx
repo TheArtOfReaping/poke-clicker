@@ -4,14 +4,15 @@ import { Types, typeToColor, getContrastColor } from '../../utils';
 import { style } from 'typestyle';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import clamp from 'ramda/src/clamp';
+import { color } from 'csx';
 
-export const MoveStyle = (type: Types, timeLeft: number) =>
+export const MoveStyle = (type: Types, ready: boolean) =>
   style({
     display: 'flex',
     justifyContent: 'space-around',
     flexDirection: 'column',
     alignItems: 'center',
-    background: typeToColor(type) || 'transparent',
+    background: (ready ? typeToColor(type) : color(typeToColor(type) || 'white').desaturate(0.4).toString()) || 'transparent',
     color: getContrastColor(typeToColor(type) || '#000'),
     width: '14rem',
     margin: '4px',
@@ -19,10 +20,10 @@ export const MoveStyle = (type: Types, timeLeft: number) =>
     border: '1px solid transparent',
     fontSize: '1rem',
     cursor: 'pointer',
-    opacity: timeLeft !== 0 ? '0.8' : '1',
+    opacity: ready ? '1' : '0.8',
     $nest: {
       '&:hover': {
-        boxShadow: '0 0 .25rem #eee',
+        boxShadow: ready ? '0 0 .25rem #eee' : 'none',
         transition: '200ms all',
         borderColor: 'white',
       }
@@ -73,6 +74,28 @@ export interface MoveProps {
   rank?: number;
 }
 
+  const COLORS = ['#fff', 'rgba(0,0,0,0.2)'];
+
+export function MoveTimer({time}: {time: {name: string, value: number}[]}) {
+  return <PieChart width={30} height={30}>
+  <Pie
+    dataKey="value"
+    data={time}
+    paddingAngle={2}
+    innerRadius={6}
+    fill="transparent"
+  >
+    {time.map((entry, index) => (
+      <Cell
+        strokeWidth={0}
+        key={`cell-${index}`}
+        fill={COLORS[index % COLORS.length]}
+      />
+    ))}
+  </Pie>
+</PieChart>
+}
+
 export function Move({
   description,
   rank = 1,
@@ -82,12 +105,12 @@ export function Move({
   name = 'Vine Whip',
   type = Types.Normal,
 }: MoveProps) {
-  const COLORS = ['#fff', 'transparent'];
   const RADIAN = Math.PI / 180;
   const time = [
-    { name: 'totalRemaining', value: totalTime },
+    { name: 'totalRemaining', value: totalTime - timeLeft },
     { name: 'timeUsed', value: clamp(0, totalTime, timeLeft) },
   ];
+  const ready = timeLeft == 0;
 
   const onClick = () => {
     if (timeLeft === 0) {
@@ -98,7 +121,7 @@ export function Move({
   }
 
   return (
-    <div className={MoveStyle(type, timeLeft)} onClick={onClick}>
+    <div className={MoveStyle(type, ready)} onClick={onClick}>
       <div className={MoveWrapper}>
         <img
           alt=""
@@ -106,34 +129,14 @@ export function Move({
           src={`./images/type-icons/${type}.png`}
         />
         <span className={MoveStyleName}>{name}</span>
+        <div style={{marginLeft: 'auto'}}><MoveTimer time={time} /></div>
       </div>
       <div className={MoveInfoWrapper}>
-        <div>
-          {damage === 0 ? null : <div className={MoveDamage}>DMG: {damage}</div>}
-          <div className={MoveDamage}>{timeLeft !== 0 ? `${timeLeft}s` : 'READY!'}</div>
+        {damage === 0 ? null : <div className={MoveDamage}>DMG: {damage}</div>}
+        <div className={MoveDamage}>{!ready ? `${timeLeft}s` : 'READY!'}</div>
+        <div className={MoveDamage}>
+          <img alt="" src="./images/panel-icons/star.png" /> {rank}
         </div>
-        <PieChart width={40} height={60}>
-          <Pie
-            dataKey="value"
-            data={time}
-            paddingAngle={2}
-            innerRadius={8}
-            fill="transparent"
-          >
-            {time.map((entry, index) => (
-              <Cell
-                strokeWidth={0}
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-        </PieChart>
-        {
-          <div className={MoveDamage}>
-            <img alt="" src="./images/panel-icons/star.png" /> {rank}
-          </div>
-        }
       </div>
     </div>
   );

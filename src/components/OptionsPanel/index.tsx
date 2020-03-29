@@ -19,9 +19,7 @@ export function OptionsPanel() {
           textAlign: 'left',
         }}
       >
-        <label className={styles.OptionsLabel}>
-          <input type="checkbox" /> Rotate through new catches
-        </label>
+        
         <label className={styles.OptionsLabel}>
           Catch{' '}
           <select>
@@ -39,7 +37,13 @@ export function OptionsPanel() {
           </select>
         </label>
         <label className={styles.OptionsLabel}>
+          <input type="checkbox" /> Rotate through new catches
+        </label>
+        <label className={styles.OptionsLabel}>
           <input type="checkbox" /> Auto-use Potions
+        </label>
+        <label className={styles.OptionsLabel}>
+          <input type="checkbox" /> Automatically advance onto next route
         </label>
       </div>
     </Panel>

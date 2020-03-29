@@ -1,4 +1,5 @@
 import { Types } from './Types';
+import { getContrastColor } from './getContrastColor';
 
 export const typeToColor = (
   type: keyof typeof Types | 'None'
@@ -26,3 +27,10 @@ export const typeToColor = (
   };
   return types[type];
 };
+
+export const typeToStyle = (type: keyof typeof Types | 'None') => {
+  return {
+    backgroundColor: typeToColor(type) || 'transparent',
+    color: getContrastColor(typeToColor(type) || 'transparent'),
+  }
+}

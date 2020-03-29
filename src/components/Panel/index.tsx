@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { style, classes } from 'typestyle';
 import { styles } from '../../styles';
+import { colors } from 'utils';
 
 export interface PanelProps {
   name: string;
@@ -12,15 +13,18 @@ export interface PanelProps {
   className?: string;
   height?: string;
   width?: string;
+  visible?: boolean;
 }
 
-export const panel = (height: PanelProps['height'], width: PanelProps['width']) => style({
+export const panel = (height: PanelProps['height'], width: PanelProps['width'], isCollapsed: boolean) => style({
   //padding: '1rem',
+  //background: 'rgba(0,0,0,0.2)',
+  background: colors.primary.shade1,
   margin: '0.25rem',
   border: '1px solid #444',
   borderRadius: '0.25rem',
   position: 'relative',
-  height,
+  height: isCollapsed ? '32px' : height,
   width,
   overflow: 'auto',
   $nest: {
@@ -36,6 +40,7 @@ export const header = style({
   alignItems: 'center',
   borderBottom: '1px solid #444',
   padding: '0.25rem',
+  height: '32px',
 });
 
 export const body = style({
@@ -72,14 +77,17 @@ export function Panel({
   className,
   height = 'auto',
   width = '100%',
+  visible = true,
   overlayChildren = null,
   overlay = false,
   onClickOverlay = (e) => null,
 }: PanelProps) {
   const [isCollapsed, setCollapsed] = useState(false);
 
+  if (!visible) return null;
+
   return (
-    <div className={classes(panel(height, width), className && className)}>
+    <div className={classes(panel(height, width, isCollapsed), className && className)}>
       {overlay && (
         <div className={Overlay}>
           <div onClick={onClickOverlay} className={OverlayCloser}>

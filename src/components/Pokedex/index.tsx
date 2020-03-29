@@ -1,19 +1,20 @@
 import React from 'react';
-import { Panel } from 'components/Panel';
-import { listOfPokemon, getPokemonIcon } from 'utils';
+import { Panel, PanelProps } from 'components/Panel';
+import { listOfPokemon, getPokemonIcon, colors } from 'utils';
 import { stylesheet, classes } from 'typestyle';
 
 export const styles = stylesheet({
   PokedexIcon: {
     display: 'inline-block',
     padding: '2px',
-    height: '64px',
-    width: '64px',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
+    height: '32px',
+    width: '32px',
+    //border: '1px solid rgba(255, 255, 255, 0.3)',
+    background: colors.primary.shade2,
     margin: '2px',
     $nest: {
       '&:hover': {
-        background: 'rgba(255, 255, 255, 0.4)',
+        background: colors.primary.shade1,
         transition: '200ms all',
         cursor: 'pointer',
       },
@@ -22,12 +23,13 @@ export const styles = stylesheet({
   PokedexIconImage: {
     height: '100%',
     filter: 'grayscale(100%)',
+    imageRendering: 'pixelated',
   },
   Owned: {
     filter: 'grayscale(0)',
   },
   InnerPanel: {
-    height: '300px',
+    height: '100%',
     overflowY: 'auto',
     overflowX: 'hidden',
   },
@@ -44,6 +46,7 @@ export interface PokedexProps {
   seen?: number;
   caught?: number;
   total?: number;
+  panelProps?: Partial<PanelProps>;
 }
 
 const dex: any = {
@@ -54,9 +57,9 @@ const dex: any = {
 };
 
 //`https://github.com/msikma/pokesprite/blob/master/pokemon-gen8/regular/${poke.toLowerCase()}.png?raw=true`
-export function Pokedex({ seen, caught, total }: PokedexProps) {
+export function Pokedex({ seen, caught, total, panelProps }: PokedexProps) {
   return (
-    <Panel name="Pokédex">
+    <Panel name="Pokédex" {...panelProps}>
       <div className={classes(styles.InnerPanel, styles.Scrollbar)}>
         <div>330 Seen, 220 Caught</div>
         {listOfPokemon.map((poke) => (
