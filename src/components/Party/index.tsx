@@ -8,6 +8,10 @@ import { colors } from 'utils/colors';
 import { PartyPokemon } from 'App';
 import { color } from 'csx';
 import { HealBar } from 'components/ExpBar/HealBar';
+import { useDispatch } from 'react-redux';
+import { editPokemon } from 'actions';
+import { take } from 'ramda';
+import { positionalSort } from 'utils/positionalSort';
 
 export const styles = stylesheet({
   PokemonEntry: {
@@ -174,8 +178,10 @@ export const getStat = (id: number, stat: StatName) => dexEntries[id]?.stats?.fi
 
 export const getTypes = (id: number) => dexEntries[id]?.types;
 export const getSpeciesValue = (id: number, key: keyof Pokemon) => dexEntries[id]?.[key]
+
 export function Party({ party, panelProps }: PartyProps) {
   const [activeId, setActiveId] = useState(-1);
+  const dispatch = useDispatch();
 
   const onClick = (id: number) => (e: any) => {
     if (activeId === id) {
@@ -185,20 +191,24 @@ export function Party({ party, panelProps }: PartyProps) {
     }
   };
 
-  const totalHealth = party.reduce((prev, curr) => prev + curr.currentHp, 0);
+  const totalHealth = party.reduce((prev, curr) => {
+    return prev + calculateHP(curr.level, getStat(speciesToNumber(curr.species) || 0, 'hp'));
+  }, 0);
+
+  console.log('team', party.map(p => p.position));
 
   return (
     <Panel name="Party" {...panelProps}>
       <HealBar currentHealth={20} totalHealth={totalHealth} baseColor={colors.pink.get()} />
-      {party.map((member, idx) => {
-        const isFainted = idx === 3;
+      {take(6, party.sort(positionalSort)).map((member, idx) => {
+        const isFainted = member?.currentHp === 0;
         const canEvolve = idx === 4;
 
         const id = speciesToNumber(member?.species) || 1;
         const species = getSpecies(speciesToNumber(member?.species)).then((res) => res);
 
         return (
-          <>
+          <React.Fragment key={idx}>
             <div
               onClick={onClick(idx)}
               className={classes(
@@ -208,14 +218,21 @@ export function Party({ party, panelProps }: PartyProps) {
               )}
             >
               <img
+                
+                style={{ height: '64px', marginTop: '-16px', imageRendering: 'pixelated', filter: member?.superShiny ? `hue-rotate(${member?.superShinySeed || 0}deg)` : undefined, }}
                 className={classes(
+                  canEvolve && styles.CanEvolve,
                   isFainted && styles.GrayScale,
-                  canEvolve && styles.CanEvolve
                 )}
-                style={{ height: '64px', marginTop: '-16px', imageRendering: 'pixelated' }}
                 alt={member.species}
                 src={getPokemonIcon(member.species, member.shiny)}
               />
+              {member?.favorite && <div style={{
+                      position: 'absolute',
+                      bottom: '0px',
+                      left: '52px',
+                      color: colors.gold.get()
+                    }}>★</div>}
               <div className="fs-small">
                 {member.nickname} lv. {member.level}
               </div>
@@ -227,8 +244,8 @@ export function Party({ party, panelProps }: PartyProps) {
                   marginLeft: 'auto',
                 }}
               >
-                <HPBar width="10rem" currentHp={calculateHP(member.level, getStat(id, 'hp'))} totalHp={calculateHP(member.level, getStat(member.id, 'hp'))} />
-                <ExpBar totalExpNeeded={20} currentExpProgress={1} />
+                <HPBar width="10rem" currentHp={member.currentHp} totalHp={calculateHP(member.level, getStat(id, 'hp'))} />
+                <ExpBar totalExpNeeded={member?.expRequired} currentExpProgress={member.currentExp} />
               </div>
             </div>
             {activeId === idx && (
@@ -240,13 +257,16 @@ export function Party({ party, panelProps }: PartyProps) {
                         height: '128px',
                         marginTop: '-32px',
                         imageRendering: 'pixelated',
+                        filter: member?.superShiny ? `hue-rotate(${member?.superShinySeed || 0}deg)` : undefined,
                       }}
                       alt={member.species}
                       src={getPokemonIcon(member.species, member.shiny)}
                     />
-                    <span style={{fontSize: '1.1rem'}}>{member.nickname}</span>
+                    <span style={{fontSize: '1.1rem'}}>{member.nickname} {member?.favorite && <span style={{
+                      color: colors.gold.get()
+                    }}>★</span>}</span>
                     <span>{member.species} {getGenderIcon(member.gender)} lv.{member.level}</span><span></span>
-                    <div style={{display: 'flex', margin: '0 auto'}}>{getTypes(id).map(type => <div style={{...typeToStyle(capitalize(type.type.name) as Types), width: '3rem'}}>{capitalize(type.type.name)}</div>)}</div>
+                    <div style={{display: 'flex', margin: '0 auto'}}>{getTypes(id)?.map(type => <div style={{...typeToStyle(capitalize(type.type.name) as Types), width: '3rem'}}>{capitalize(type.type.name)}</div>)}</div>
                   </div>
                   <div className={styles.PokemonStats}>
                     <div className={styles.PokemonStat}>
@@ -290,7 +310,7 @@ export function Party({ party, panelProps }: PartyProps) {
                   })}
                 </div>
                 <div className={styles.PokemonOptions}>
-                  <Button className={styles.PokemonOptionsButton} options={{smallFont: true}} value="Favorite" />
+                  <Button onClick={e => dispatch(editPokemon({favorite: !member?.favorite, id: idx}))} className={styles.PokemonOptionsButton} options={{smallFont: true}} value={!member?.favorite ? "Favorite" : "Unfavorite"} />
                   {party.length > 1 && (
                     <Button className={styles.PokemonOptionsButton} options={{ smallFont: true }} value="Release" />
                   )}
@@ -304,7 +324,7 @@ export function Party({ party, panelProps }: PartyProps) {
                 </div>
               </div>
             )}
-          </>
+          </React.Fragment>
         );
       })}
 

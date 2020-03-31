@@ -2,15 +2,15 @@ import React from 'react';
 
 export interface ExpBarProps {
   width?: number;
-  currentExpProgress: number;
-  totalExpNeeded: number;
+  currentExpProgress?: number;
+  totalExpNeeded?: number;
   baseColor?: string;
 }
 
 export function ExpBar({
   width,
-  currentExpProgress,
-  totalExpNeeded,
+  currentExpProgress = 0,
+  totalExpNeeded = 1,
   baseColor = 'cyan',
 }: ExpBarProps) {
   const percent = (currentExpProgress / totalExpNeeded) * 100;

@@ -1,0 +1,10 @@
+[
+    {
+        "groupName": "pokeclickerusers",
+        "precedence": 1
+    },
+    {
+        "groupName": "pokeclickeradmins",
+        "precedence": 2
+    }
+]

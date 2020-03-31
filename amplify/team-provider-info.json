@@ -1,0 +1,22 @@
+{
+    "production": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-poke-clicker-production-214600-authRole",
+            "UnauthRoleArn": "arn:aws:iam::814983361220:role/amplify-poke-clicker-production-214600-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::814983361220:role/amplify-poke-clicker-production-214600-authRole",
+            "Region": "us-east-2",
+            "DeploymentBucketName": "amplify-poke-clicker-production-214600-deployment",
+            "UnauthRoleName": "amplify-poke-clicker-production-214600-unauthRole",
+            "StackName": "amplify-poke-clicker-production-214600",
+            "StackId": "arn:aws:cloudformation:us-east-2:814983361220:stack/amplify-poke-clicker-production-214600/d26563b0-716f-11ea-bef8-0a569e9f7d94",
+            "AmplifyAppId": "d2qsbgwevha9oh"
+        },
+        "categories": {
+            "auth": {
+                "pokeclickerauth": {
+                    "hostedUIProviderCreds": "[]"
+                }
+            }
+        }
+    }
+}

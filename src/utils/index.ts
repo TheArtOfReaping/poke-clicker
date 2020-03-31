@@ -15,6 +15,8 @@ export * from './colors';
 export * from './getGenderIcon';
 export * from './dateAsRng';
 export * from './speciesToNumber';
+export * from './determineShiny';
+export * from './positionalSort';
 
 export const calculateBaseDPS = (level: number, spAtk: any, atk: any) => {
   return ((spAtk + atk) * level) / 100;

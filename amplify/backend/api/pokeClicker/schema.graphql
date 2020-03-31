@@ -1,0 +1,6 @@
+type DailyDeal @model {
+	id: ID!
+	title: String!
+	content: String!
+	price: Int
+}

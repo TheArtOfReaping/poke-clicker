@@ -1,6 +1,8 @@
 import { v4 as createId } from 'uuid';
 import { ItemName } from 'utils';
 import { PartyPokemon } from 'App';
+import { omit } from 'ramda';
+import { SpeciesName } from 'utils/SpeciesName';
 
 export interface Field {
   weather: string;
@@ -10,16 +12,17 @@ export interface Field {
 }
 
 export interface Enemy {
-  id: number;
   level: number;
   currentHp: number;
-  maxHp: number;
+  maxHp?: number;
 
   gender?: 'm' | 'f';
   shiny?: boolean;
-  species: string;
+  superShiny?: boolean;
+  superShinySeed?: number;
+  species: SpeciesName;
   moves?: number[];
-  isWild?: number;
+  isWild?: boolean;
 }
 
 export interface Selections {
@@ -29,27 +32,36 @@ export interface Selections {
 export interface State {
   team: PartyPokemon[];
   field: Field;
-  selections: Selections; 
+  selections: Selections;
+  enemy: Enemy;
 }
 
+export type RELEASE_POKEMON = '@team/RELEASE_POKEMON';
+export const RELEASE_POKEMON: RELEASE_POKEMON = '@team/RELEASE_POKEMON';
 
-  export type Index = {
-    id: string;
-    moveId: number;
-    actorId: number;
-    targetId: number;
-    pokemon: Pokemon;
-    itemName: ItemName;
-    quantity: number;
-    pokemonId: string;
-    field: State['field'];
-  };
-  export type Type = USE_MOVE | ADD_POKEMON | ADD_ITEM | SELECT_POKEMON;
-  export type Payload<P> = { payload: { [K in keyof P]?: P[K] } };
-  export interface Data<T extends Type> {
-    readonly type: T & Type;
-    readonly meta?: any;
-  }
+export type CREATE_NEW_ENEMY = '@enemy/CREATE_NEW_ENEMY';
+export const CREATE_NEW_ENEMY: CREATE_NEW_ENEMY = '@enemy/CREATE_NEW_ENEMY';
+
+export type EDIT_ENEMY = '@enemy/EDIT_ENEMY';
+export const EDIT_ENEMY: EDIT_ENEMY = '@enemy/EDIT_ENEMY';
+
+export type Index = {
+  id: string;
+  moveId: number;
+  actorId: number;
+  targetId: number;
+  pokemon: Pokemon;
+  itemName: ItemName;
+  quantity: number;
+  pokemonId: string;
+  field: State['field'];
+};
+export type Type = USE_MOVE | ADD_POKEMON | ADD_ITEM | SELECT_POKEMON | EDIT_POKEMON | EDIT_ENEMY | CREATE_NEW_ENEMY;
+export type Payload<P> = { payload: { [K in keyof P]?: P[K] } };
+export interface Data<T extends Type> {
+  readonly type: T & Type;
+  readonly meta?: any;
+}
 
 
 export type Action<T extends Type, P = unknown> = (
@@ -86,11 +98,42 @@ interface Pokemon {
 export type ADD_POKEMON = '@team/ADD_POKEMON';
 export const ADD_POKEMON: ADD_POKEMON = '@team/ADD_POKEMON';
 
-export const addPokemon: Action<ADD_POKEMON, Partial<Pokemon>> = (pokemon) => ({
+export const addPokemon: Action<ADD_POKEMON, Partial<PartyPokemon>> = (pokemon) => ({
   type: ADD_POKEMON,
   payload: {
     //id: createId(),
     pokemon,
+  },
+});
+
+
+
+export const editEnemy: Action<EDIT_ENEMY, Partial<Enemy>> = (enemy) => ({
+  type: EDIT_ENEMY,
+  payload: {
+    id: createId(),
+    enemy,
+  },
+});
+
+export const createNewEnemy: Action<CREATE_NEW_ENEMY, Partial<Enemy>> = (enemy) => ({
+  type: CREATE_NEW_ENEMY,
+  payload: {
+    id: createId(),
+    enemy,
+  },
+});
+
+
+export type EDIT_POKEMON = '@team/EDIT_POKEMON';
+export const EDIT_POKEMON: EDIT_POKEMON = '@team/EDIT_POKEMON';
+
+export const editPokemon: Action<EDIT_POKEMON, Partial<PartyPokemon>> = (pokemon) => ({
+  type: EDIT_POKEMON,
+  payload: {
+    //id: createId(),
+    id: pokemon.id,
+    pokemon: omit(['id'], pokemon),
   },
 });
 
@@ -117,7 +160,7 @@ export const selectPokemon: Action<SELECT_POKEMON, SelectPokemonArgs> = ({pokemo
     id: createId(),
     pokemonId,
   }
-})
+});
 
 export type SET_FIELD = '@field/SET_FIELD';
 export const SET_FIELD: SET_FIELD = '@field/SET_FIELD';
@@ -140,4 +183,4 @@ export const selectRoute: Action<SELECT_ROUTE, SelectRouteArgs> = ({routeId}) =>
     id: createId(),
     routeId,
   }
-})
+});

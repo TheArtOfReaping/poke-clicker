@@ -91,7 +91,7 @@ const styles = stylesheet({
     animationDirection: 'alternate',
     animationTimingFunction: 'ease-in-out',
   },
-  PokeMartLayer: {
+  Dialog: {
     background: colors.primary.get(),
     width: '100%',
     height: '100%',
@@ -128,7 +128,17 @@ const styles = stylesheet({
     width: '5rem',
     marginTop: '2px',
     marginLeft: 'auto',
-  }
+  },
+  PokemonName: {
+    //textAlign: 'left',
+    fontSize: '1.25rem',
+  },
+  PokeBallIcon: {
+    height: '12px',
+    filter: 'invert(100%)',
+    verticalAlign: 'middle',
+    marginLeft: '4px',
+  },
 });
 
 
@@ -146,7 +156,10 @@ export interface BattleStageProps {
   enemy?: Enemy;
   pokemon?: PartyPokemon;
   isFainted?: boolean;
+  maxHp: number;
   moveTimes: number[];
+  wipedOut?: boolean;
+  username?: string;
 }
 
 export function BattleStage({
@@ -154,19 +167,23 @@ export function BattleStage({
   pokemon,
   moveTimes,
   isFainted,
+  username,
+  maxHp,
+  wipedOut,
 }: BattleStageProps) {
   const hp = 20;
-  const pokemonExp = 10;
   const pokemonExpRequired = 1000;
   const showPokemart = false;
+  console.log('log', enemy);
+  const isPokemonFainted = pokemon?.currentHp === 0;
   const selectedRoute = useSelector<State, number>(state => state.selections.selectedRoute);
 
-  const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 0, 'height');
-  const determineSize = (species?: string) => clamp(120, 360, height * 20) + 'px';
+  const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 1, 'height');
+  const determineSize = (species?: string) => clamp(164, 360, height * 20) + 'px';
   const determinePosition = () => {
 
-    const bottom = height > 10 ? -10 : 80
-    const left = height > 10 ? -20 : 80
+    const bottom = height > 10 ? -10 : 70
+    const left = height > 10 ? -20 : 100
 
     return {
       bottom,
@@ -174,13 +191,15 @@ export function BattleStage({
     }
   }
 
-  const message = <div>{enemy?.species} Fainted!<br/>{generateRewards({routeItems: listOfRoutes[selectedRoute].itemDrops}).map((item, idx) => {
-    return <div>+1 <ItemIcon img={item?.item?.img} folder={item?.item?.folder} imgProps={{height: '16px', style: {verticalAlign: 'middle'}}} /></div>;
-  })}</div>;
+  // const message = <div>{enemy?.species} Fainted!<br/>{generateRewards({routeItems: listOfRoutes[selectedRoute].itemDrops}).map((item, idx) => {
+  //   return <div>+1 <ItemIcon img={item?.item?.img} folder={item?.item?.folder} imgProps={{height: '16px', style: {verticalAlign: 'middle'}}} /></div>;
+  // })}</div>;
+  const message = '';
 
   return (
     <div className="battle-wrapper">
-      {showPokemart && <div className={styles.PokeMartLayer}><Pokemart /></div>}
+      {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
+      {showPokemart && <div className={styles.Dialog}><Pokemart /></div>}
             <div
               className={styles.BattleStage}
               style={{
@@ -202,6 +221,7 @@ export function BattleStage({
                     position: 'absolute',
                     bottom: '180px',
                     right: '130px',
+                    filter: enemy?.superShiny ? `hue-rotate(${enemy?.superShinySeed || 0}deg)` : undefined,
                   }}
                   alt={enemy?.species}
                   src={`https://img.pokemondb.net/sprites/black-white/anim/${
@@ -219,16 +239,20 @@ export function BattleStage({
                     clipPath: `polygon(0 0, 100% 0, 94% 100%, 0% 100%)`,
                   }}
                 >
-                  <div>{enemy?.species} {getGenderIcon(enemy?.gender)} lv.{enemy?.level}</div>
-                  <HPBar showHp={false} totalHp={20} currentHp={enemy?.currentHp || 0} />
+                  <div className={styles.PokemonName}>{enemy?.species} {getGenderIcon(enemy?.gender)} lv.{enemy?.level}
+                    <img className={styles.PokeBallIcon} src='./images/bag-icons/ball.png' />
+                  </div>
+                  
+                  {enemy?.currentHp != null && <HPBar showHp={false} totalHp={enemy.maxHp} currentHp={enemy?.currentHp} />}
                 </div>
               </div>
 
-              <div className="active-pokemon">
+              {!isPokemonFainted && <div className="active-pokemon">
                 <img
                   style={{
                     height: determineSize(pokemon?.species),
                     ...determinePosition(),
+                    filter: pokemon?.superShiny ? `hue-rotate(${pokemon?.superShinySeed || 0}deg)` : undefined,
                   }}
                   className={classes(styles.TeamPokemonSprite, styles.TeamPokemonSpriteFX)}
                   alt={pokemon?.species}
@@ -245,17 +269,20 @@ export function BattleStage({
                     padding: '1rem',
                     background: '#222',
                     boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
+                    
                   }}
                 >
-                  {pokemon?.nickname} {getGenderIcon(pokemon?.gender)} lv.{pokemon?.level}
-                  <HPBar currentHp={pokemon?.currentHp || 20} totalHp={hp} />
+                  <div className={styles.PokemonName}>
+                    {pokemon?.nickname} {getGenderIcon(pokemon?.gender)} lv.{pokemon?.level}
+                  </div>
+                  <HPBar currentHp={pokemon?.currentHp} totalHp={maxHp} />
                   <ExpBar
-                    totalExpNeeded={pokemonExpRequired}
-                    currentExpProgress={pokemonExp}
+                    totalExpNeeded={pokemon?.expRequired}
+                    currentExpProgress={pokemon?.currentExp}
                   />
                   <div className={styles.DPSBadge}>DPS: 20</div>
                 </div>
-              </div>
+              </div>}
             </div>
 
             <div style={{ display: 'flex', marginTop: '0.5rem', width: '800px' }}>

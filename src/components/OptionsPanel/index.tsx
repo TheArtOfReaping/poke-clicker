@@ -24,14 +24,14 @@ export function OptionsPanel() {
         
         <label className={styles.OptionsLabel}>
           Catch{' '}
-          <select>
+          <select style={{marginLeft: '2px'}}>
             <option>Only New Pokemon and Shinies</option>
             <option>All Pokemon</option>
           </select>
         </label>
         <label className={styles.OptionsLabel}>
           Number of Pokéballs to throw{' '}
-          <select>
+          <select style={{marginLeft: '2px'}}>
             <option>1</option>
             <option>2</option>
             <option>3</option>

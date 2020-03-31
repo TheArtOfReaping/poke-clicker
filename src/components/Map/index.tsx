@@ -54,9 +54,9 @@ export function Map({panelProps}: MapProps) {
   const dispatch = useDispatch();
   return (
     <Panel name="Map" {...panelProps}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      {/* <div style={{ display: 'flex', alignItems: 'center' }}>
         Current Region: <Button options={{ smallFont: true }} value="Kanto" />
-      </div>
+      </div> */}
       <Button
         options={{ image: './images/ui/pokemart-quest.png' }}
         value={'Go to Pokémart'}

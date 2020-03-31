@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Types, typeToColor, getContrastColor } from '../../utils';
+import { Types, typeToColor, getContrastColor, colors } from '../../utils';
 import { style } from 'typestyle';
 import { PieChart, Pie, Sector, Cell } from 'recharts';
 import clamp from 'ramda/src/clamp';
@@ -135,7 +135,9 @@ export function Move({
         {damage === 0 ? null : <div className={MoveDamage}>DMG: {damage}</div>}
         <div className={MoveDamage}>{!ready ? `${timeLeft}s` : 'READY!'}</div>
         <div className={MoveDamage}>
-          <img alt="" src="./images/panel-icons/star.png" /> {rank}
+        <span style={{
+                      color: colors.gold.get()
+                    }}>★</span> {rank}
         </div>
       </div>
     </div>
