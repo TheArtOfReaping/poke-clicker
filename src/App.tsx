@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { calculateBaseDPS, Types, expRequiredForumla, generateRewards, moves, getSpecies, choose, moneyFormula, listOfPokemon, colors, getContrastColor, speciesToNumber, StatName, calculateHP, determineShiny, ItemName, expFormula, Pokemon, determineDamage, calculateBaseDFS } from 'utils';
+import { calculateBaseDPS, expRequiredForumla, generateRewards, moves, getSpecies, choose, moneyFormula, colors, getContrastColor, speciesToNumber, calculateHP, determineShiny, expFormula, Pokemon, determineDamage, calculateBaseDFS, PartyPokemon, Enemy } from 'utils';
 import {
-  Move,
-  ExpBar,
   Inventory,
   Panel,
   Map,
@@ -11,31 +9,26 @@ import {
   AchivementsPanel,
   OptionsPanel,
   TrainerPanel,
-  ItemIcon,
   BattleStage,
 } from 'components';
-import { HPBar } from './components/HPBar';
 //@ts-ignore
 import { Party, getStat } from './components/Party';
 import clamp from 'ramda/src/clamp';
 import { listOfRoutes } from 'utils/listOfRoutes';
 import { useSelector, useDispatch } from 'react-redux';
-import { Enemy, editPokemon, createNewEnemy, editEnemy, addPokemon, selectRoute, awardMoney, editGame, Game, selectPokemon } from 'actions';
+import { editPokemon, createNewEnemy, editEnemy, addPokemon, awardMoney, editGame, Game, selectPokemon } from 'actions';
 import { style, media } from 'typestyle';
 import { State } from 'actions';
 import { SpeciesName } from 'utils/SpeciesName';
-import { Nature } from 'utils/Nature';
 // @ts-ignore
-import Amplify, { API, graphqlOperation } from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports';
 import {withAuthenticator} from 'aws-amplify-react';
-import { max, take, tail, last } from 'ramda';
+import { take,last } from 'ramda';
 import { positionalSort } from 'utils/positionalSort';
-import { useSpeciesFetch } from 'utils/useSpeciesFetch';
-import { SpeciesProvider } from 'components/SpeciesProvider';
+import { listOfNatures } from 'utils/Nature';
 
 Amplify.configure(awsconfig);
-
 
 const Base = style({
     border: '1px solid #222',
@@ -62,59 +55,6 @@ export const AppStyle = style({
   textAlign: 'center',
 });
 
-export type MarkType = 'Circle' | 'Triangle' | 'Square' | 'Heart' | 'Star' | 'Diamond';
-export type Mark = {mark: MarkType, level: 0 | 1 | 2};
-export type Ribbon = {ribbon?: string; dateRecieved?: number};
-
-export interface PartyPokemon {
-  id: number | string;
-  position: number;
-  species: SpeciesName;
-  nickname: string;
-  level: number;
-  gender?: string;
-  favorite?: boolean;
-  
-  shiny?: boolean;
-  superShiny?: boolean;
-  superShinySeed?: number;
-  moves?: number[];
-  moveRanks?: {
-    moveId: number;
-    rank: number;
-  }[];
-  ivs?: {stat: StatName; value: number}[];
-  evs?: {stat: StatName; value: number}[];
-  avs?: {stat: StatName; value: number}[];
-  statBoosts?: {stat: StatName; value: number}[];
-  ability?: string;
-  item?: ItemName;
-  otName?: string;
-  otId?: string;
-  nature?: Nature;
-
-  currentExp?: number;
-  expRequired?: number;
-  currentHp: number;
-
-  markings?: Mark[];
-  forme?: any;
-
-  metData?: {
-    locationId?: number;
-    isFatefulEncounter?: boolean;
-    dateMet?: number;
-    dateEggRecieved?: number;
-    metLevel?: number;
-  };
-
-  hasPokerus?: boolean;
-  pokeball?: ItemName;
-  isEgg?: boolean;
-
-  ribbons?: Ribbon[];
-  friendship?: number;
-}
 
 // const game = {
 //   totalCaptures: 0,
@@ -216,6 +156,7 @@ function App(props: any) {
     species: routeEnemy.species,
     isWild: true,
     gender: choose(['m', 'f']),
+    nature: choose(listOfNatures),
     ...determineShiny(),
   }));
 

@@ -1,6 +1,8 @@
 import { clamp } from 'ramda';
 import { Nullable } from './Nullable';
 
+export * from './models';
+
 export * from './calculateHp';
 export * from './calculateOtherStat';
 export * from './calculateStatDifference';

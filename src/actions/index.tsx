@@ -1,8 +1,7 @@
 import { v4 as createId } from 'uuid';
 import { ItemName } from 'utils';
-import { PartyPokemon } from 'App';
+import { PartyPokemon, Enemy } from 'utils';
 import { omit } from 'ramda';
-import { SpeciesName } from 'utils/SpeciesName';
 import { Trainer } from 'components';
 
 export interface Field {
@@ -17,20 +16,6 @@ export interface Game {
 
 }
 
-export interface Enemy {
-  level: number;
-  currentHp: number;
-  maxHp?: number;
-
-  dyanamax?: boolean;
-  gender?: 'm' | 'f';
-  shiny?: boolean;
-  superShiny?: boolean;
-  superShinySeed?: number;
-  species: SpeciesName;
-  moves?: number[];
-  isWild?: boolean;
-}
 
 export interface Selections {
   selectedRoute: number;
