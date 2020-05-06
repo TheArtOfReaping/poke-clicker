@@ -26,6 +26,7 @@ import {withAuthenticator} from 'aws-amplify-react';
 import { take,last } from 'ramda';
 import { positionalSort } from 'utils/positionalSort';
 import { listOfNatures } from 'utils/Nature';
+import { Button } from 'components/Button';
 
 Amplify.configure(awsconfig);
 
@@ -93,6 +94,8 @@ function App(props: any) {
   console.log(pokeId);
   const [enemySpeciesData, setEnemySpeciesData] = useState<Pokemon | undefined>();
   const pokemon = team[pokeId];
+
+  const [simulationSpeed, setSimulationSpeed] = useState<number>(1000); 
 
   const coolDown = (id: number) => getMove(pokemon?.moves?.[id])?.coolDown || 0;
 
@@ -320,7 +323,7 @@ function App(props: any) {
       } else {
         dispatch(selectPokemon({pokemonId: 0}));
       }
-    }, 1000);
+    }, simulationSpeed);
     return () => clearTimeout(timer);
   }, [
     pokeId,
@@ -328,6 +331,7 @@ function App(props: any) {
     enemy,
     selectedDialog,
     game,
+    simulationSpeed,
   ]);
 
   if (species == null) {
@@ -367,7 +371,12 @@ function App(props: any) {
 
             <div style={{height: '100%', width: '20%', display: 'flex', flexWrap: 'wrap'}}>
               <Map panelProps={{height: '40%', visible: p.map}} />
-              
+              <Panel name='Dev'>
+                <Button onClick={e => setSimulationSpeed(simulationSpeed - 200)} value='Speed Up' />
+                <Button onClick={e => setSimulationSpeed(1000)} value='Reset' />
+                <Button onClick={e => setSimulationSpeed(simulationSpeed + 200)} value='Slow Down' />
+                Current Speed: {simulationSpeed}
+              </Panel>
             </div>
             <div style={{height: '100%', width: '18%', display: 'flex', flexDirection: 'column'}}>
               <Panel name='Wiki'>

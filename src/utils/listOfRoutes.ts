@@ -109,7 +109,7 @@ export const listOfRoutes: Route[] = [
     name: 'Route 2',
     accessible: false,
     visible: true,
-    connections: [1, 4],
+    connections: [4, 1],
     defeatNumber: 10,
     currentNumberDefeated: 0,
     pokemon: [
@@ -191,18 +191,22 @@ export const listOfRoutes: Route[] = [
     name: 'Pewter City',
     accessible: true,
     visible: true,
-    connections: [4, 6],
+    connections: [6, 5],
     defeatNumber: 5,
     currentNumberDefeated: 0,
-    pokemon: [],
-  },
-  { id: 6, name: 'Route 3', accessible: false, visible: true, connections: [],
     pokemon: [
-
-    ]
+      { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
+      { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
+    ],
+  },
+  { id: 6, name: 'Route 3', accessible: false, visible: true, connections: [7, 5],
+  pokemon: [
+    { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
+    { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
+  ],
   },
   { id: 7, name: 'Mt. Moon', accessible: false, visible: true,
-  connections: [0],
+  connections: [8],
   defeatNumber: 5,
     currentNumberDefeated: 0,
     pokemon: [
@@ -246,9 +250,15 @@ export const listOfRoutes: Route[] = [
       item: listOfItems.find(item => item.name === 'Helix Fossil'),
     }
 ] },
-  { id: 8, name: 'Route 4', accessible: false, visible: true, pokemon: [], connections: [], defeatNumber: 5,
+  { id: 8, name: 'Route 4', accessible: false, visible: true, pokemon: [
+    { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
+    { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
+  ], connections: [], defeatNumber: 5,
   currentNumberDefeated: 0, },
-  { id: 9, name: 'Cerulean City', accessible: false, visible: true, pokemon: [], connections: [], defeatNumber: 5,
+  { id: 9, name: 'Cerulean City', accessible: false, visible: true, pokemon: [
+    { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
+    { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
+  ], connections: [], defeatNumber: 5,
   currentNumberDefeated: 0, },
   {
     id: 10,
@@ -258,7 +268,8 @@ export const listOfRoutes: Route[] = [
     defeatNumber: 5,
     currentNumberDefeated: 0,
     pokemon: [
-
+      { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
+      { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
     ],
     connections: [
 

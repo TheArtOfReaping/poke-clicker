@@ -6,7 +6,6 @@ import { stylesheet, media, keyframes, classes } from 'typestyle';
 import { colors } from 'utils/colors';
 import { Pokemart } from './Pokemart';
 import { getGenderIcon } from 'utils';
-import {listOfRoutes} from 'utils/listOfRoutes';
 import { getSpeciesValue, getStat } from 'components/Party';
 import { clamp } from 'ramda';
 import { useSelector } from 'react-redux';
@@ -43,7 +42,7 @@ const styles = stylesheet({
     boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
     height: '460px',
     //width: '800px',
-    backgroundSize: 'contain',
+    backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat',
     position: 'relative',
     overflow: 'hidden',
@@ -182,7 +181,7 @@ export function BattleStage({
   const preRoute = useSelector<State, number>(state => state.selections.selectedRoute);
   const selectedRoute = preRoute == null ? 0 : preRoute;
   const selectedDialog = useSelector<State, number>(state => state.selections.selectedDialog);
-  //const listOfRoutes = useSelector<State, State['map']>(state => state.map);
+  const listOfRoutes = useSelector<State, State['map']>(state => state.map);
 
   const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 1, 'height');
   const determineSize = (species?: string, dynamax?: boolean) => clamp(dynamax ? 360 : 164, dynamax ? 640 : 360, height * 20) + 'px';
@@ -210,7 +209,7 @@ export function BattleStage({
             <div
               className={styles.BattleStage}
               style={{
-                background: `url(./images/backgrounds/${listOfRoutes[selectedRoute].background || 'route'}.png)`,
+                backgroundImage: `url(./images/backgrounds/${listOfRoutes[selectedRoute].background || 'route'}.png)`,
               }}
             >
               <div className={styles.BattleFXLayer}></div>
