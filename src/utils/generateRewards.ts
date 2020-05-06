@@ -47,7 +47,6 @@ export function generateRewards({
     const rewardsAmount = determineRewardsAmount(speciesLevel, pokemonLevel)
     let rewards: (RouteItem | undefined)[] = [];
 
-    console.log('log', rewardsAmount);
 
     for (let i = 0; i < rewardsAmount; i++) {
         const routeItem = pickRandomWeighted(routeItems);

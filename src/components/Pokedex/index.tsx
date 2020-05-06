@@ -22,8 +22,11 @@ export const styles = stylesheet({
   },
   PokedexIconImage: {
     height: '100%',
-    filter: 'grayscale(100%)',
+    filter: 'brightness(0)',
     imageRendering: 'pixelated',
+  },
+  Seen: {
+    filter: 'brightness(1) grayscale(1)'
   },
   Owned: {
     filter: 'grayscale(0)',
@@ -51,6 +54,7 @@ export interface PokedexProps {
 
 const dex: any = {
   Bulbasaur: { seen: true, caught: true },
+  Ivysaur: { seen: true, caught: false },
   Pidgey: { seen: true, caught: true },
   Rattata: { seen: true, caught: true },
   Pidgeot: { seen: true, caught: false },
@@ -68,6 +72,7 @@ export function Pokedex({ seen, caught, total, panelProps }: PokedexProps) {
               data-caught={dex[poke]?.caught}
               className={classes(
                 styles.PokedexIconImage,
+                dex[poke]?.seen && styles.Seen,
                 dex[poke]?.caught && styles.Owned
               )}
               alt={poke}

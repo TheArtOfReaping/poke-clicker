@@ -29,6 +29,10 @@ export const styles = stylesheet({
     height: '1rem',
     marginRight: '4px',
   },
+  Disabled: {
+    filter: 'grayscale(1)',
+    pointerEvents: 'none',
+  }
 });
 
 export enum Intent {
@@ -60,7 +64,7 @@ export function Button({
   return (
     <button
       disabled={disabled}
-      className={classes(styles.Base, options?.smallFont && styles.SmallFont, className)}
+      className={classes(styles.Base, options?.smallFont && styles.SmallFont, className, disabled && styles.Disabled)}
       onClick={onClick}
     >
       {options?.image && (

@@ -1,5 +1,6 @@
 import { Types } from "./Types";
 import { Route } from "./listOfRoutes";
+import { accentedE } from "./accentedE";
 
 export type ItemName = 'Poké Ball' |
     'Dive Ball' |
@@ -16,7 +17,8 @@ export type ItemName = 'Poké Ball' |
     'Helix Fossil' |
     'Dome Fossil' |
     'Great Ball' |
-    'Moon Stone'
+    'Moon Stone' |
+    'Max Potion'
 ;
 
 export type ItemFolder = 'apricorn' |
@@ -70,6 +72,8 @@ export interface Item {
     tmType?: 'TM' | 'HM' | 'TR';
     number?: number;
     price?: number;
+    heal?: number;
+    description?: string;
 }
 
 export const listOfItems: Item[] = [
@@ -80,23 +84,25 @@ export const listOfItems: Item[] = [
     quantity: 0,
     catchRate: 1,
     price: 200,
+    description: `The most basic ball. Base catch rate: 1`,
   },
   {
     folder: 'ball',
     img: 'great',
     name: 'Great Ball',
     quantity: 0,
-    catchRate: 1,
+    catchRate: 2,
     price: 1000,
-
+    description: `A second-tier ball. Base catch rate: 2`,
   },
   {
     folder: 'ball',
     img: 'ultra',
     name: 'Ultra Ball',
     quantity: 0,
-    catchRate: 1,
+    catchRate: 3,
     price: 2000,
+    description: `An advanced ball. Base catch rate: 3`,
   },
   {
     folder: 'medicine',
@@ -104,6 +110,8 @@ export const listOfItems: Item[] = [
     name: 'Potion',
     quantity: 0,
     price: 100,
+    heal: 20,
+    description: `Heals 20 dmg.`
   },
   {
     folder: 'medicine',
@@ -111,6 +119,17 @@ export const listOfItems: Item[] = [
     name: 'Super Potion',
     quantity: 0,
     price: 500,
+    heal: 50,
+    description: `Heals 50 dmg.`
+  },
+  {
+    folder: 'medicine',
+    img: 'max-potion',
+    name: 'Max Potion',
+    quantity: 0,
+    price: 3000,
+    heal: 300,
+    description: `Heals 300 dmg in auto-mode and 100% in manual mode.`,
   },
   {
     folder: 'medicine',
@@ -118,12 +137,15 @@ export const listOfItems: Item[] = [
     name: 'Rare Candy',
     quantity: 0,
     price: 4800,
+    description: `Raises a Pokémon's level by 1.`,
   },
   {
     folder: 'ball',
     img: 'dive',
     name: 'Dive Ball',
     quantity: 0,
+    price: 800,
+    description: `A type of ball that works best on aquatic Pok${accentedE}mon.`,
     catchRate: ({type}) => {
         if (type === Types.Water) {
             return 3.5;
@@ -136,6 +158,9 @@ export const listOfItems: Item[] = [
     img: 'hyper-potion',
     name: 'Hyper Potion',
     quantity: 0,
+    price: 1500,
+    description: `A medicine that heals 120 dmg.`,
+    heal: 120,
   },
   {
     folder: 'tm',

@@ -9,7 +9,6 @@ export const getDailyDeal = /* GraphQL */ `
       title
       content
       price
-      rating
     }
   }
 `;
@@ -25,7 +24,6 @@ export const listDailyDeals = /* GraphQL */ `
         title
         content
         price
-        rating
       }
       nextToken
     }

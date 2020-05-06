@@ -6,7 +6,7 @@ import { listOfRoutes } from 'utils/listOfRoutes';
 import { PanelProps } from 'components/Panel';
 import { ExpBar } from 'components/ExpBar';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectRoute } from 'actions';
+import { selectRoute, openDialog } from 'actions';
 import { styles } from 'styles';
 
 export const RoutesList = style({
@@ -17,7 +17,7 @@ export const Route = style({
   fontSize: '1.25rem',
   cursor: 'pointer',
   opacity: '0.7',
-  display: 'none',
+  //display: 'none',
   transition: '200ms all',
   alignItems: 'center',
   $nest: {
@@ -58,6 +58,7 @@ export function Map({panelProps}: MapProps) {
         Current Region: <Button options={{ smallFont: true }} value="Kanto" />
       </div> */}
       <Button
+        onClick={e => dispatch(openDialog({selectedDialog: 1}))}
         options={{ image: './images/ui/pokemart-quest.png' }}
         value={'Go to Pokémart'}
       ></Button>

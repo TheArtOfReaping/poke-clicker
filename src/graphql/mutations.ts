@@ -12,7 +12,6 @@ export const createDailyDeal = /* GraphQL */ `
       title
       content
       price
-      rating
     }
   }
 `;
@@ -26,7 +25,6 @@ export const updateDailyDeal = /* GraphQL */ `
       title
       content
       price
-      rating
     }
   }
 `;
@@ -40,7 +38,6 @@ export const deleteDailyDeal = /* GraphQL */ `
       title
       content
       price
-      rating
     }
   }
 `;

@@ -7,7 +7,7 @@ export interface GymLeader {
     pokemon: {
         species: SpeciesName;
         level: number;
-        maxHP: number;
+        maxHp: number;
         moves?: number[];
     }[];
 }
@@ -20,8 +20,14 @@ export const gymLeaders: GymLeader[] = [
             {
                 species: 'Geodude',
                 level: 12,
-                maxHP: 2000,
+                maxHp: 2000,
                 moves: [1]
+            },
+            {
+                species: 'Onix',
+                level: 12,
+                maxHp: 3000,
+                moves: [1],
             }
         ]
     }

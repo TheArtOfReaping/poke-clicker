@@ -1,5 +1,4 @@
-
-import { Types } from '.';
+import { Types } from 'utils';
 
 export interface Move {
     id: number;

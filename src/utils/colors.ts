@@ -18,6 +18,10 @@ export const createPalette = function createPalette(c: string) {
     tint4: color(c).tint(0.8).toString(),
     complement: color(c).spin(180).toString(),
     inverse: color(c).invert().toString(),
+    fadeOut1: color(c).fadeOut(0.2).toString(),
+    fadeOut2: color(c).fadeOut(0.4).toString(),
+    fadeOut3: color(c).fadeOut(0.6).toString(),
+    fadeOut4: color(c).fadeOut(0.8).toString(),
   }
 }
 

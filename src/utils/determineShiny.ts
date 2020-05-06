@@ -1,7 +1,7 @@
 import { PartyPokemon } from "App";
 import { clamp } from "ramda";
 
-const SHINY_RATE = 3;
+const SHINY_RATE = 4096;
 
 function getRandom<A>(weights: number[], values: A[]) {
     let num = Math.random();
@@ -20,13 +20,11 @@ function getRandom<A>(weights: number[], values: A[]) {
 
 
 export const determineShiny = function determineShiny(): Pick<PartyPokemon, 'shiny' | 'superShiny' | 'superShinySeed'> {
-    console.log('log', getRandom([0.1, 0.9], [true, false]))
     
     const superShiny = getRandom([(SHINY_RATE - 1)/SHINY_RATE, 1/SHINY_RATE], [false, true]);
     const shiny = superShiny ? true : getRandom([(SHINY_RATE * 4 - 1)/(SHINY_RATE * 4), 1/(SHINY_RATE * 4)], [false, true]);
     const superShinySeed = clamp(30, 360, (Math.random() * 360));
 
-    console.log('log', shiny, superShiny, superShinySeed);
 
     return {
         shiny,

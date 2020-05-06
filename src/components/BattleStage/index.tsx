@@ -7,11 +7,12 @@ import { listOfRoutes } from 'utils/listOfRoutes';
 import { colors } from 'utils/colors';
 import { Pokemart } from './Pokemart';
 import { getGenderIcon } from 'utils';
-import { getSpeciesValue } from 'components/Party';
+import { getSpeciesValue, getStat } from 'components/Party';
 import { clamp } from 'ramda';
 import { useSelector } from 'react-redux';
 import { State, Enemy, selectRoute } from 'actions';
 import { FieldEffects } from './FieldEffects';
+import { PokemonStorage } from './PokemonStorage';
 
 const basicAttackAnimation = keyframes({
   '0%': {
@@ -112,6 +113,9 @@ const styles = stylesheet({
   },
   TeamPokemonSpriteFX: {
   },
+  EnemyPokemon: {
+
+  },
   EnemyPokemonSprite: {
     imageRendering: 'pixelated',
     position: 'absolute',
@@ -174,12 +178,13 @@ export function BattleStage({
   const hp = 20;
   const pokemonExpRequired = 1000;
   const showPokemart = false;
-  console.log('log', enemy);
   const isPokemonFainted = pokemon?.currentHp === 0;
-  const selectedRoute = useSelector<State, number>(state => state.selections.selectedRoute);
+  const preRoute = useSelector<State, number>(state => state.selections.selectedRoute);
+  const selectedRoute = preRoute == null ? 0 : preRoute;
+  const selectedDialog = useSelector<State, number>(state => state.selections.selectedDialog);
 
   const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 1, 'height');
-  const determineSize = (species?: string) => clamp(164, 360, height * 20) + 'px';
+  const determineSize = (species?: string, dynamax?: boolean) => clamp(dynamax ? 360 : 164, dynamax ? 640 : 360, height * 20) + 'px';
   const determinePosition = () => {
 
     const bottom = height > 10 ? -10 : 70
@@ -199,7 +204,8 @@ export function BattleStage({
   return (
     <div className="battle-wrapper">
       {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
-      {showPokemart && <div className={styles.Dialog}><Pokemart /></div>}
+      {selectedDialog === 2 && <PokemonStorage />}
+      {selectedDialog === 1 && <Pokemart />}
             <div
               className={styles.BattleStage}
               style={{
@@ -211,7 +217,7 @@ export function BattleStage({
 
               <StageMessage message={enemy?.currentHp === 0 ? message : null} />
 
-              <div className="defending-pokemon">
+              <div className={styles.EnemyPokemon}>
 
                 <img
                   className={classes(isFainted && 'fainted', styles.EnemyPokemonSprite)}
@@ -280,7 +286,7 @@ export function BattleStage({
                     totalExpNeeded={pokemon?.expRequired}
                     currentExpProgress={pokemon?.currentExp}
                   />
-                  <div className={styles.DPSBadge}>DPS: 20</div>
+                  <div className={styles.DPSBadge}></div>
                 </div>
               </div>}
             </div>

@@ -7,14 +7,12 @@ export type CreateDailyDealInput = {
   title: string,
   content: string,
   price?: number | null,
-  rating?: number | null,
 };
 
 export type ModelDailyDealConditionInput = {
   title?: ModelStringInput | null,
   content?: ModelStringInput | null,
   price?: ModelIntInput | null,
-  rating?: ModelFloatInput | null,
   and?: Array< ModelDailyDealConditionInput | null > | null,
   or?: Array< ModelDailyDealConditionInput | null > | null,
   not?: ModelDailyDealConditionInput | null,
@@ -72,24 +70,11 @@ export type ModelIntInput = {
   attributeType?: ModelAttributeTypes | null,
 };
 
-export type ModelFloatInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
-};
-
 export type UpdateDailyDealInput = {
   id: string,
   title?: string | null,
   content?: string | null,
   price?: number | null,
-  rating?: number | null,
 };
 
 export type DeleteDailyDealInput = {
@@ -101,7 +86,6 @@ export type ModelDailyDealFilterInput = {
   title?: ModelStringInput | null,
   content?: ModelStringInput | null,
   price?: ModelIntInput | null,
-  rating?: ModelFloatInput | null,
   and?: Array< ModelDailyDealFilterInput | null > | null,
   or?: Array< ModelDailyDealFilterInput | null > | null,
   not?: ModelDailyDealFilterInput | null,
@@ -135,7 +119,6 @@ export type CreateDailyDealMutation = {
     title: string,
     content: string,
     price: number | null,
-    rating: number | null,
   } | null,
 };
 
@@ -151,7 +134,6 @@ export type UpdateDailyDealMutation = {
     title: string,
     content: string,
     price: number | null,
-    rating: number | null,
   } | null,
 };
 
@@ -167,7 +149,6 @@ export type DeleteDailyDealMutation = {
     title: string,
     content: string,
     price: number | null,
-    rating: number | null,
   } | null,
 };
 
@@ -182,7 +163,6 @@ export type GetDailyDealQuery = {
     title: string,
     content: string,
     price: number | null,
-    rating: number | null,
   } | null,
 };
 
@@ -201,7 +181,6 @@ export type ListDailyDealsQuery = {
       title: string,
       content: string,
       price: number | null,
-      rating: number | null,
     } | null > | null,
     nextToken: string | null,
   } | null,
@@ -214,7 +193,6 @@ export type OnCreateDailyDealSubscription = {
     title: string,
     content: string,
     price: number | null,
-    rating: number | null,
   } | null,
 };
 
@@ -225,7 +203,6 @@ export type OnUpdateDailyDealSubscription = {
     title: string,
     content: string,
     price: number | null,
-    rating: number | null,
   } | null,
 };
 
@@ -236,6 +213,5 @@ export type OnDeleteDailyDealSubscription = {
     title: string,
     content: string,
     price: number | null,
-    rating: number | null,
   } | null,
 };

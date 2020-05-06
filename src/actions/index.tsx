@@ -3,6 +3,7 @@ import { ItemName } from 'utils';
 import { PartyPokemon } from 'App';
 import { omit } from 'ramda';
 import { SpeciesName } from 'utils/SpeciesName';
+import { Trainer } from 'components';
 
 export interface Field {
   weather: string;
@@ -11,11 +12,17 @@ export interface Field {
   hazards: string;
 }
 
+export interface Game {
+  healing: number;
+
+}
+
 export interface Enemy {
   level: number;
   currentHp: number;
   maxHp?: number;
 
+  dyanamax?: boolean;
   gender?: 'm' | 'f';
   shiny?: boolean;
   superShiny?: boolean;
@@ -27,6 +34,8 @@ export interface Enemy {
 
 export interface Selections {
   selectedRoute: number;
+  selectedPokemon: number;
+  selectedDialog: number;
 }
 
 export interface State {
@@ -34,6 +43,8 @@ export interface State {
   field: Field;
   selections: Selections;
   enemy: Enemy;
+  trainer: Trainer;
+  game: Game;
 }
 
 export type RELEASE_POKEMON = '@team/RELEASE_POKEMON';
@@ -44,6 +55,18 @@ export const CREATE_NEW_ENEMY: CREATE_NEW_ENEMY = '@enemy/CREATE_NEW_ENEMY';
 
 export type EDIT_ENEMY = '@enemy/EDIT_ENEMY';
 export const EDIT_ENEMY: EDIT_ENEMY = '@enemy/EDIT_ENEMY';
+
+export type OPEN_DIALOG = '@selections/OPEN_DIALOG';
+export const OPEN_DIALOG: OPEN_DIALOG = '@selections/OPEN_DIALOG';
+
+export type AWARD_MONEY = '@trainer/AWARD_MONEY';
+export const AWARD_MONEY: AWARD_MONEY = '@trainer/AWARD_MONEY';
+
+export type EDIT_TRAINER = '@trainer/EDIT_TRAINER';
+export const EDIT_TRAINER: EDIT_TRAINER = '@trainer/EDIT_TRAINER';
+
+export type EDIT_GAME = '@game/EDIT_GAME';
+export const EDIT_GAME: EDIT_GAME = '@game/EDIT_GAME';
 
 export type Index = {
   id: string;
@@ -56,7 +79,8 @@ export type Index = {
   pokemonId: string;
   field: State['field'];
 };
-export type Type = USE_MOVE | ADD_POKEMON | ADD_ITEM | SELECT_POKEMON | EDIT_POKEMON | EDIT_ENEMY | CREATE_NEW_ENEMY;
+export type Type = USE_MOVE | ADD_POKEMON | ADD_ITEM | SELECT_POKEMON | EDIT_POKEMON | EDIT_ENEMY | CREATE_NEW_ENEMY | OPEN_DIALOG | AWARD_MONEY |
+  EDIT_TRAINER | EDIT_GAME | SELECT_ROUTE;
 export type Payload<P> = { payload: { [K in keyof P]?: P[K] } };
 export interface Data<T extends Type> {
   readonly type: T & Type;
@@ -101,8 +125,10 @@ export const ADD_POKEMON: ADD_POKEMON = '@team/ADD_POKEMON';
 export const addPokemon: Action<ADD_POKEMON, Partial<PartyPokemon>> = (pokemon) => ({
   type: ADD_POKEMON,
   payload: {
-    //id: createId(),
-    pokemon,
+    pokemon: {
+      ...pokemon,
+      id: createId(),
+    },
   },
 });
 
@@ -150,7 +176,7 @@ export const addItem: Action<ADD_ITEM, AddItemArgs> = ({itemName, quantity}) => 
   }
 })
 
-export type SelectPokemonArgs = {pokemonId: string};
+export type SelectPokemonArgs = {pokemonId: number};
 export type SELECT_POKEMON = '@team/SELECT_POKEMON';
 export const SELECT_POKEMON: SELECT_POKEMON = '@team/SELECT_POKEMON';
 
@@ -174,8 +200,8 @@ export const setField: Action<ADD_POKEMON, Partial<Field>> = (field) => ({
 });
 
 export type SelectRouteArgs = {routeId: number};
-export type SELECT_ROUTE = '@team/SELECT_POKEMON';
-export const SELECT_ROUTE: SELECT_POKEMON = '@team/SELECT_POKEMON';
+export type SELECT_ROUTE = '@selections/SELECT_ROUTE';
+export const SELECT_ROUTE: SELECT_ROUTE = '@selections/SELECT_ROUTE';
 
 export const selectRoute: Action<SELECT_ROUTE, SelectRouteArgs> = ({routeId}) => ({
   type: SELECT_ROUTE,
@@ -184,3 +210,36 @@ export const selectRoute: Action<SELECT_ROUTE, SelectRouteArgs> = ({routeId}) =>
     routeId,
   }
 });
+
+
+export const openDialog: Action<OPEN_DIALOG, {selectedDialog: number}> = ({selectedDialog}) => ({
+  type: OPEN_DIALOG,
+  payload: {
+    id: createId(),
+    selectedDialog,
+  }
+})
+
+export const awardMoney: Action<AWARD_MONEY, Trainer> = ({money}) => ({
+  type: AWARD_MONEY,
+  payload: {
+    id: createId(),
+    money,
+  }
+})
+
+export const editTrainer: Action<EDIT_TRAINER, Trainer> = (trainer) => ({
+  type: EDIT_TRAINER,
+  payload: {
+    id: createId(),
+    trainer,
+  }
+})
+
+export const editGame: Action<EDIT_GAME, Game> = (game) => ({
+  type: EDIT_GAME,
+  payload: {
+    id: createId(),
+    game,
+  }
+})

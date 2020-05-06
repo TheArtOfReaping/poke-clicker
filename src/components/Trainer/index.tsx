@@ -3,6 +3,8 @@ import { stylesheet, classes } from 'typestyle';
 import { Panel, PanelProps } from 'components/Panel';
 import { colors } from 'utils/colors';
 import { Region } from 'utils/listOfRoutes';
+import { useSelector } from 'react-redux';
+import { State } from 'actions';
 
 const styles = stylesheet({
   TrainerInner: {
@@ -48,7 +50,8 @@ export interface TrainerProps {
   panelProps?: Partial<PanelProps>;
 }
 
-export function TrainerPanel({ trainer, panelProps, username }: TrainerProps) {
+export function TrainerPanel({ panelProps, username }: TrainerProps) {
+  const trainer = useSelector<State, Trainer>(state => state.trainer);
   return (
     <Panel name="Trainer" {...panelProps}>
       <div className={styles.TrainerInner}>
