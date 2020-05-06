@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { StyledSprite } from 'components/Party/StyledSprite';
 import { colors, Stat } from 'utils';
 import { Button } from 'components/Button';
-import { PartyPokemon } from 'App';
+import { PartyPokemon } from 'utils';
 import { PokemonView } from 'components/Party/PokemonView';
 
 

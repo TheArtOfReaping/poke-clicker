@@ -1,6 +1,5 @@
 import React from 'react';
-import { getPokemonIcon } from 'utils';
-import { PartyPokemon } from 'App';
+import { getPokemonIcon, PartyPokemon } from 'utils';
 
 export interface StyledSpriteProps {
     member: PartyPokemon;

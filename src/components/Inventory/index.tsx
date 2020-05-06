@@ -3,7 +3,6 @@ import { style, classes, stylesheet } from 'typestyle';
 import { Panel, PanelProps, panel } from '../Panel';
 import { listOfItems, Item } from 'utils';
 import { colors } from 'utils/colors';
-import { invert } from 'ramda';
 
 const styles = stylesheet({
   ItemQuantity: {

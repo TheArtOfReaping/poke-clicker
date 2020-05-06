@@ -1,4 +1,4 @@
-import { PartyPokemon } from "App";
+import { PartyPokemon } from "utils";
 import { clamp } from "ramda";
 
 const SHINY_RATE = 4096;

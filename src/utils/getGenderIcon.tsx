@@ -1,5 +1,5 @@
 import React from 'react';
-import {PartyPokemon} from 'App';
+import {PartyPokemon} from 'utils';
 import {colors} from 'utils';
 
 export const getGenderIcon = (gender: PartyPokemon['gender']) => {

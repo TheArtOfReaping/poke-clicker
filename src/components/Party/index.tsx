@@ -5,7 +5,7 @@ import { classes, stylesheet } from 'typestyle';
 import { getPokemonIcon, typeToColor, Types, moves, getContrastColor, calculateHP, calculateOtherStat, getSpecies, dexEntries, StatName, calculateBaseDPS, getGenderIcon, typeToStyle, Pokemon, speciesToNumber, Stat } from 'utils';
 import { PanelProps } from 'components/Panel';
 import { colors } from 'utils/colors';
-import { PartyPokemon } from 'App';
+import { PartyPokemon } from 'utils';
 import { color } from 'csx';
 import { HealBar } from 'components/ExpBar/HealBar';
 import { useDispatch, useSelector } from 'react-redux';

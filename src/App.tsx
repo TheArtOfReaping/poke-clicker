@@ -14,9 +14,8 @@ import {
 //@ts-ignore
 import { Party, getStat } from './components/Party';
 import clamp from 'ramda/src/clamp';
-import { listOfRoutes } from 'utils/listOfRoutes';
 import { useSelector, useDispatch } from 'react-redux';
-import { editPokemon, createNewEnemy, editEnemy, addPokemon, awardMoney, editGame, Game, selectPokemon } from 'actions';
+import { editPokemon, createNewEnemy, editEnemy, addPokemon, awardMoney, editGame, Game, selectPokemon, editRoute, selectRoute } from 'actions';
 import { style, media } from 'typestyle';
 import { State } from 'actions';
 import { SpeciesName } from 'utils/SpeciesName';
@@ -84,7 +83,9 @@ function App(props: any) {
   const game = useSelector<State, Game>(state => state.game);
   const team = useSelector<State, PartyPokemon[]>(state => state.team.sort(positionalSort));
   const routePrep = useSelector<State, number>(state => state.selections.selectedRoute);
+  const listOfRoutes = useSelector<State, State['map']>(state => state.map);
   const selectedRoute = routePrep == null ? 0 : routePrep;
+  const route = listOfRoutes[selectedRoute];
   console.log(useSelector<State, State['selections']>(state => state.selections).selectedRoute);
   const selectedDialog = useSelector<State, number>(state => state.selections.selectedDialog);
   
@@ -205,6 +206,29 @@ function App(props: any) {
             pokemonLevel: pokemon.level,
             routeItems: listOfRoutes[selectedRoute].itemDrops
           });
+
+
+          const currentNumberDefeated = (route?.currentNumberDefeated!) + 1;
+
+          dispatch(editRoute({
+            ...route,
+            currentNumberDefeated,
+          }));
+
+          if (currentNumberDefeated >= route.defeatNumber!) {
+            const connections = route.connections;
+            if (connections.length) {
+              dispatch(selectRoute({routeId: connections[0]}))
+            }
+            connections.forEach(conn => {
+              dispatch(editRoute({
+                ...listOfRoutes[conn],
+                accessible: true,
+                visible: true,
+              }));
+            });
+          }
+
           if (shouldCatch()) {
             const caught = Math.random() > 0.5;
             

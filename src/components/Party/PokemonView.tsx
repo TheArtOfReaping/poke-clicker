@@ -1,6 +1,5 @@
 import React from 'react';
-import { PartyPokemon } from 'App';
-import { getGenderIcon, getPokemonIcon, colors, typeToStyle, Types, calculateBaseDPS, calculateOtherStat, moves, StatName } from 'utils';
+import { PartyPokemon, getGenderIcon, getPokemonIcon, colors, typeToStyle, Types, calculateBaseDPS, calculateOtherStat, moves, StatName } from 'utils';
 import {classes} from 'typestyle';
 import {styles, getStat, getStatShorthand, getTypes, capitalize} from 'components/Party';
 import { Button } from 'components/Button';

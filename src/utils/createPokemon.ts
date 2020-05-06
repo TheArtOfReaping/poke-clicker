@@ -1,4 +1,4 @@
-import { PartyPokemon } from "App";
+import { PartyPokemon } from "utils";
 
 export const createPokemon = function createPokemon(partialPokemon: Partial<PartyPokemon>) {
     return {

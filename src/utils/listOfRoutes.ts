@@ -16,6 +16,7 @@ export interface Route {
     itemDrops?: {weight: number; item?: Item}[];
     defeatNumber?: number;
     region?: Region;
+    currentNumberDefeated?: number;
 }
 
 export const getItem = (itemName: ItemName) => listOfItems.find(item => item.name === itemName);
@@ -27,40 +28,42 @@ export const listOfRoutes: Route[] = [
     accessible: true,
     visible: true,
     background: 'route',
-    connections: [0],
+    connections: [1],
     pokemon: [
       { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
       { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
     ],
     defeatNumber: 5,
+    currentNumberDefeated: 0,
     region: Region.Kanto,
     itemDrops: [
         {
             weight: 2,
-            item: listOfItems.find(item => item.name === 'Poké Ball'),
+            item: getItem('Poké Ball'),
         },
         {
             weight: 0.01,
-            item: listOfItems.find(item => item.name === 'Rare Candy'),
+            item: getItem('Rare Candy'),
         },
         {
             weight: 1,
-            item: listOfItems.find(item => item.name === 'Potion'),
+            item: getItem('Potion'),
         },
         {
             weight: 0.05,
-            item: listOfItems.find(item => item.name === 'Super Potion'),
+            item: getItem('Super Potion'),
         }
     ],
   },
   {
     id: 1,
     name: 'Viridian City',
-    accessible: true,
+    accessible: false,
     visible: true,
     background: 'town',
-    defeatNumber: 0,
-    connections: [0, 2, 3],
+    defeatNumber: 5,
+    currentNumberDefeated: 0,
+    connections: [3, 2, 0],
     pokemon: [
       { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
       { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
@@ -69,10 +72,11 @@ export const listOfRoutes: Route[] = [
   {
     id: 2,
     name: 'Route 22',
-    accessible: true,
+    accessible: false,
     visible: true,
     background: 'route',
-    defeatNumber: 0,
+    defeatNumber: 5,
+    currentNumberDefeated: 0,
     connections: [1],
     pokemon: [
       { species: 'Rattata', minLevel: 3, maxLevel: 5, rate: 0.3 },
@@ -103,10 +107,11 @@ export const listOfRoutes: Route[] = [
   {
     id: 3,
     name: 'Route 2',
-    accessible: true,
+    accessible: false,
     visible: true,
     connections: [1, 4],
     defeatNumber: 10,
+    currentNumberDefeated: 0,
     pokemon: [
       {
         species: 'Caterpie',
@@ -137,10 +142,11 @@ export const listOfRoutes: Route[] = [
   {
     id: 4,
     name: 'Viridian Forest',
-    accessible: true,
+    accessible: false,
     visible: true,
     connections: [5],
     defeatNumber: 10,
+    currentNumberDefeated: 0,
     pokemon: [
       {
         species: 'Caterpie',
@@ -186,6 +192,8 @@ export const listOfRoutes: Route[] = [
     accessible: true,
     visible: true,
     connections: [4, 6],
+    defeatNumber: 5,
+    currentNumberDefeated: 0,
     pokemon: [],
   },
   { id: 6, name: 'Route 3', accessible: false, visible: true, connections: [],
@@ -195,13 +203,14 @@ export const listOfRoutes: Route[] = [
   },
   { id: 7, name: 'Mt. Moon', accessible: false, visible: true,
   connections: [0],
+  defeatNumber: 5,
+    currentNumberDefeated: 0,
     pokemon: [
       { species: 'Clefairy', minLevel: 10, maxLevel: 14, rate: 0.01 },
       { species: 'Geodude', minLevel: 10, maxLevel: 14, rate: 0.19 },
       { species: 'Zubat', minLevel: 10, maxLevel: 14, rate: 0.5 },
       { species: 'Paras', minLevel: 10, maxLevel: 14, rate: 0.2 },
     ],
-    defeatNumber: 10,
     region: Region.Kanto,
   itemDrops: [
     {
@@ -237,13 +246,17 @@ export const listOfRoutes: Route[] = [
       item: listOfItems.find(item => item.name === 'Helix Fossil'),
     }
 ] },
-  { id: 8, name: 'Route 4', accessible: false, visible: true, pokemon: [], connections: [] },
-  { id: 9, name: 'Cerulean City', accessible: false, visible: true, pokemon: [], connections: [] },
+  { id: 8, name: 'Route 4', accessible: false, visible: true, pokemon: [], connections: [], defeatNumber: 5,
+  currentNumberDefeated: 0, },
+  { id: 9, name: 'Cerulean City', accessible: false, visible: true, pokemon: [], connections: [], defeatNumber: 5,
+  currentNumberDefeated: 0, },
   {
     id: 10,
     name: 'Route 5',
     accessible: false,
     visible: true,
+    defeatNumber: 5,
+    currentNumberDefeated: 0,
     pokemon: [
 
     ],

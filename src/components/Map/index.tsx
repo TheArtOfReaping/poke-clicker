@@ -2,12 +2,10 @@ import React from 'react';
 import { Panel } from '../../components';
 import { Button } from 'components/Button';
 import { style, classes } from 'typestyle';
-import { listOfRoutes } from 'utils/listOfRoutes';
 import { PanelProps } from 'components/Panel';
 import { ExpBar } from 'components/ExpBar';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectRoute, openDialog } from 'actions';
-import { styles } from 'styles';
+import { selectRoute, openDialog, State } from 'actions';
 
 export const RoutesList = style({
   textAlign: 'left',
@@ -17,6 +15,7 @@ export const Route = style({
   fontSize: '1.25rem',
   cursor: 'pointer',
   opacity: '0.7',
+  pointerEvents: 'none',
   //display: 'none',
   transition: '200ms all',
   alignItems: 'center',
@@ -30,6 +29,7 @@ export const Route = style({
 
 export const AccessibleRoute = style({
   opacity: '1',
+  pointerEvents: 'all',
 });
 
 export const VisibleRoute = style({
@@ -51,6 +51,8 @@ export interface MapProps {
 export type Map = React.FunctionComponent<MapProps>;
 export function Map({panelProps}: MapProps) {
   const selectedRoute = useSelector((state: any) => state.selections.selectedRoute);
+  const listOfRoutes = useSelector<State, State['map']>(state => state.map);
+
   const dispatch = useDispatch();
   return (
     <Panel name="Map" {...panelProps}>
@@ -75,8 +77,8 @@ export function Map({panelProps}: MapProps) {
             onClick={e => dispatch(selectRoute({routeId: r.id}))}
           >
             {r.name}
-            {r.id === selectedRoute && <ExpBar totalExpNeeded={r.defeatNumber || 0} currentExpProgress={2} />}
-            {((r?.defeatNumber || 0) > 0) && r.id === selectedRoute && <div style={{fontSize: '0.8rem'}}>2/{r?.defeatNumber}</div>}
+            {r.id === selectedRoute && <ExpBar totalExpNeeded={r.defeatNumber || 0} currentExpProgress={r?.currentNumberDefeated} />}
+            {((r?.defeatNumber || 0) > 0) && r.id === selectedRoute && <div style={{fontSize: '0.8rem'}}>{r?.currentNumberDefeated}/{r?.defeatNumber}</div>}
           </div>
         ))}
       </div>

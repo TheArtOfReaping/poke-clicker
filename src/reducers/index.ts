@@ -1,13 +1,29 @@
-import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action, EDIT_POKEMON, EDIT_ENEMY, OPEN_DIALOG, CREATE_NEW_ENEMY, Enemy, AWARD_MONEY, EDIT_TRAINER, EDIT_GAME } from 'actions';
-import { PartyPokemon } from 'App';
+import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action, EDIT_ROUTE, EDIT_POKEMON, EDIT_ENEMY, OPEN_DIALOG, CREATE_NEW_ENEMY, AWARD_MONEY, EDIT_TRAINER, EDIT_GAME } from 'actions';
+import { PartyPokemon, Enemy } from 'utils';
 import { expRequiredForumla } from 'utils';
 import { Nature } from 'utils/Nature';
-import { Trainer } from 'components';
+import { Trainer, RoutesList } from 'components';
+import { listOfRoutes } from 'utils/listOfRoutes';
 
 export function inventory(state = [], action: any) {
   switch (action.type) {
     case USE_MOVE:
       return state;
+    default:
+      return state;
+  }
+}
+
+export function map(state = listOfRoutes, action: any) {
+  switch (action.type) {
+    case EDIT_ROUTE:
+      return [
+        ...state.filter(routes => routes.id !== action.payload.id),
+        {
+          ...state.find(routes => routes.id === action.payload.id),
+          ...action.payload.route,
+        }
+      ].sort((a, b) => a.id - b.id);
     default:
       return state;
   }
@@ -279,4 +295,5 @@ export const reducers = {
   enemy,
   trainer,
   game,
+  map,
 };

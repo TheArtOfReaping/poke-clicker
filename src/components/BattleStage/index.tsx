@@ -1,16 +1,16 @@
 import React from 'react';
 import { HPBar, ExpBar, Move, Panel, OptionsPanel, ItemIcon } from '../../components';
 import { Types, calculateBaseDPS, moves, Pokemon, getSpecies, generateRewards, ZIndexMap, speciesToNumber } from 'utils';
-import { PartyPokemon } from '../../App';
+import { PartyPokemon, Enemy } from 'utils';
 import { stylesheet, media, keyframes, classes } from 'typestyle';
-import { listOfRoutes } from 'utils/listOfRoutes';
 import { colors } from 'utils/colors';
 import { Pokemart } from './Pokemart';
 import { getGenderIcon } from 'utils';
+import {listOfRoutes} from 'utils/listOfRoutes';
 import { getSpeciesValue, getStat } from 'components/Party';
 import { clamp } from 'ramda';
 import { useSelector } from 'react-redux';
-import { State, Enemy, selectRoute } from 'actions';
+import { State, selectRoute } from 'actions';
 import { FieldEffects } from './FieldEffects';
 import { PokemonStorage } from './PokemonStorage';
 
@@ -182,6 +182,7 @@ export function BattleStage({
   const preRoute = useSelector<State, number>(state => state.selections.selectedRoute);
   const selectedRoute = preRoute == null ? 0 : preRoute;
   const selectedDialog = useSelector<State, number>(state => state.selections.selectedDialog);
+  //const listOfRoutes = useSelector<State, State['map']>(state => state.map);
 
   const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 1, 'height');
   const determineSize = (species?: string, dynamax?: boolean) => clamp(dynamax ? 360 : 164, dynamax ? 640 : 360, height * 20) + 'px';
