@@ -2,6 +2,7 @@ import { clamp } from 'ramda';
 import { Nullable } from './Nullable';
 
 export * from './models';
+export * from './data';
 
 export * from './calculateHp';
 export * from './calculateOtherStat';
@@ -28,6 +29,7 @@ export * from './ZIndexMap';
 export * from './moneyFormula';
 export * from './listOfMoves';
 export * from './GameScheduler';
+export * from './Region';
 
 export const calculateBaseDPS = (level: number, spAtk?: number, atk?: number, speed?: number) => {
   if (spAtk == null || atk == null || speed == null) {

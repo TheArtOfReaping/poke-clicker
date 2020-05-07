@@ -1,8 +1,7 @@
 import { v4 as createId } from 'uuid';
 import { ItemName } from 'utils';
-import { PartyPokemon, Enemy } from 'utils';
+import { PartyPokemon, Enemy, Trainer } from 'utils';
 import { omit } from 'ramda';
-import { Trainer } from 'components';
 import { Route } from 'utils/listOfRoutes';
 
 export interface Field {

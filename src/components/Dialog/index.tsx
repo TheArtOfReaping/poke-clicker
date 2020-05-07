@@ -20,8 +20,10 @@ const styles = stylesheet({
     },
     DialogClose: {
         position: 'absolute',
-        top: '0',
+        top: '-1rem',
         right: '0',
+        fontSize: '200%',
+        cursor: 'pointer',
     },
     DialogChildWrapper: {
         display: 'flex',
@@ -31,6 +33,7 @@ const styles = stylesheet({
 export enum DialogKind {
     Pokemart = 1,
     Storage = 2,
+    TrainerCustomization = 3,
 }
 
 export interface DialogProps {

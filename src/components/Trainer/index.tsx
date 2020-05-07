@@ -2,9 +2,10 @@ import React from 'react';
 import { stylesheet, classes } from 'typestyle';
 import { Panel, PanelProps } from 'components/Panel';
 import { colors } from 'utils/colors';
-import { Region } from 'utils/listOfRoutes';
-import { useSelector } from 'react-redux';
-import { State } from 'actions';
+import { Trainer, Region } from 'utils';
+import { useSelector, useDispatch } from 'react-redux';
+import { State, openDialog } from 'actions';
+import { DialogKind } from 'components/Dialog';
 
 const styles = stylesheet({
   TrainerInner: {
@@ -29,20 +30,20 @@ const styles = stylesheet({
     height: '88px',
     width: '88px',
     position: 'relative',
+    imageRendering: 'pixelated',
+  },
+  EditClothingButton: {
+    cursor: 'pointer',
+    borderRadius: '4px',
+    $nest: {
+      '&:hover': {
+        background: colors.secondary.get(),
+      }
+    }
   }
 });
 
-export type Clothing = {};
 
-export interface Trainer {
-  name?: Trainer;
-  clothing?: Clothing;
-  startDate?: number;
-  regionsVisited?: Set<Region>;
-  score?: number;
-  money?: number;
-  bp?: number;
-}
 
 export interface TrainerProps {
   username?: string;
@@ -50,20 +51,25 @@ export interface TrainerProps {
   panelProps?: Partial<PanelProps>;
 }
 
+export function TrainerImage({trainer, className, imgClassName}: {trainer: Trainer, className?: string, imgClassName?: string}) {
+  return <div className={classes(styles.DataWrapper, styles.TrainerImageWrapper, className)}>
+    <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/bald-dawn.png`} />
+    {trainer.clothing?.hair && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.hair.img}.png`} />}
+    {trainer.clothing?.headgear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.headgear.img}.png`} />}
+  </div>
+}
+
 export function TrainerPanel({ panelProps, username }: TrainerProps) {
+  const dispatch = useDispatch();
   const trainer = useSelector<State, Trainer>(state => state.trainer);
   return (
     <Panel name="Trainer" {...panelProps}>
       <div className={styles.TrainerInner}>
         <div className={styles.TrainerInfo}>
-          <div className={classes(styles.DataWrapper, styles.TrainerImageWrapper)}>
-            <img className={styles.TrainerImage} src={`./images/trainer/bald-dawn.png`} />
-            <img className={styles.TrainerImage} src={`./images/trainer/blue-hair.png`} />
-            <img className={styles.TrainerImage} src={`./images/trainer/red-hat.png`} />
-          </div>
+          <TrainerImage trainer={trainer} className={''} imgClassName={''} />
           
           <div className={styles.DataWrapper}>{username}</div>
-          <div className={styles.DataWrapper}>Edit Clothing</div>
+          <div onClick={e => dispatch(openDialog({selectedDialog: DialogKind.TrainerCustomization}))} className={classes(styles.DataWrapper, styles.EditClothingButton)}>Edit Clothing</div>
         </div>
         <div className={styles.TrainerInfo}>
           <div className={styles.DataWrapper}>Start Date: {trainer?.startDate || '03/01/2020'}</div>

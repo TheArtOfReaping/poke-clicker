@@ -12,6 +12,8 @@ import { useSelector } from 'react-redux';
 import { State, selectRoute } from 'actions';
 import { FieldEffects } from './FieldEffects';
 import { PokemonStorage } from './PokemonStorage';
+import { DialogKind } from 'components/Dialog';
+import { TrainerCustomization } from 'components/Trainer/TrainerCustomization';
 
 const basicAttackAnimation = keyframes({
   '0%': {
@@ -204,8 +206,9 @@ export function BattleStage({
   return (
     <div className="battle-wrapper">
       {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
-      {selectedDialog === 2 && <PokemonStorage />}
-      {selectedDialog === 1 && <Pokemart />}
+      {selectedDialog === DialogKind.Storage && <PokemonStorage />}
+      {selectedDialog === DialogKind.Pokemart && <Pokemart />}
+      {selectedDialog === DialogKind.TrainerCustomization && <TrainerCustomization />}
             <div
               className={styles.BattleStage}
               style={{

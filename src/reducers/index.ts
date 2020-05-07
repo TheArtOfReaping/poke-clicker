@@ -1,9 +1,9 @@
 import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action, EDIT_ROUTE, EDIT_POKEMON, EDIT_ENEMY, OPEN_DIALOG, CREATE_NEW_ENEMY, AWARD_MONEY, EDIT_TRAINER, EDIT_GAME } from 'actions';
-import { PartyPokemon, Enemy } from 'utils';
+import { PartyPokemon, Enemy, Trainer, StyleCategory } from 'utils';
 import { expRequiredForumla } from 'utils';
 import { Nature } from 'utils/Nature';
-import { Trainer, RoutesList } from 'components';
 import { listOfRoutes } from 'utils/listOfRoutes';
+import { getStyleItem } from 'utils/data';
 
 export function inventory(state = [], action: any) {
   switch (action.type) {
@@ -269,7 +269,13 @@ export function game(state = {healing: 0}, action: any) {
   }
 }
 
-export function trainer(state: Trainer = {}, action: any) {
+export function trainer(state: Trainer = {
+  clothing: {
+    headgear: getStyleItem('Red Hat'),
+    hair: getStyleItem('Blue Hair'),
+    footwear: getStyleItem('Black Boots'),
+  }
+}, action: any) {
   switch (action.type) {
     case AWARD_MONEY:
       return {

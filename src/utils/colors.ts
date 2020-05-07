@@ -34,6 +34,7 @@ export const colors = {
   black: createPalette('#000'),
   white: createPalette('#fff'),
   gold: createPalette('#ffe587'),
+  red: createPalette('#e33939'),
 };
 
 
