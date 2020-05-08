@@ -32,8 +32,8 @@
 					"defaultAuthentication": {
 						"authenticationType": "API_KEY",
 						"apiKeyConfig": {
-							"description": "pokeClickerAPIKey",
-							"apiKeyExpirationDays": "31"
+							"description": "",
+							"apiKeyExpirationDays": "365"
 						}
 					}
 				}

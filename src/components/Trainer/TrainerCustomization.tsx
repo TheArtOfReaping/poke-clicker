@@ -30,17 +30,20 @@ const styles = stylesheet({
     },
     AdditionalTrainerImage: {
         height: '240px',
-        margin: '8px',
+        //margin: '8px',
     },
     TrainerStyleItem: {
         //background: colors.primary.tint2,
         imageRendering: 'pixelated',
+        width: '80px',
+        height: '80px',
     },
     TrainerStyleWrapper: {
         display: 'flex',
         background: colors.primary.shade2,
         flexDirection: 'column',
         justifyContent: 'center',
+        alignItems: 'center',
         height: '110px',
         margin: '8px',
         width: '110px',
@@ -93,8 +96,8 @@ const styles = stylesheet({
 export function TrainerStyleItem({clothing, onClick, category}: {clothing?: StyleItem, onClick?: () => void, category?: StyleCategory}) {
     return <div onClick={onClick} className={styles.TrainerStyleWrapper}>
         <div className={styles.StyleItemCategory}>{category}</div>
-    {clothing && <img className={styles.TrainerStyleItem} src={`./images/trainer/${clothing.img}.png`} />}
-    <span>{clothing?.name || 'None'}</span>
+        {clothing && <img alt='' className={styles.TrainerStyleItem} src={`./images/trainer/${clothing.img}.png`} />}
+        <span>{clothing?.name || 'None'}</span>
 </div>
 }
 

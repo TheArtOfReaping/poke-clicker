@@ -9,6 +9,7 @@ export enum StyleCategory {
     Jacket = 'jacket',
     Bottoms = 'bottoms',
     Footwear = 'footwear',
+    Bag = 'bag',
   }
   
   export type StyleItem<T = any> = {
@@ -27,14 +28,15 @@ export enum StyleCategory {
     jacket?: StyleItem<StyleCategory.Jacket>;
     bottoms?: StyleItem<StyleCategory.Bottoms>;
     footwear?: StyleItem<StyleCategory.Footwear>;
+    bag?: StyleItem<StyleCategory.Bag>;
     skinColor?: SkinColor;
   };
 
   export enum SkinColor {
-      Peach,
-      Brown,
-      Black,
-      Olive,
+      Peach = '#edbcab',
+      Brown = '#453125',
+      Black = '#1f1712',
+      Olive = '#f0e7c2',
   }
   
   export interface Trainer {

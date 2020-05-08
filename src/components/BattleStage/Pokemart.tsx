@@ -161,7 +161,7 @@ export function Pokemart({}: PokemartProps) {
         fetchy()
     }, [effectDependency])
 
-
+    console.log(dailyDeal);
     
     return <Dialog kind={DialogKind.Pokemart} title='Pokémart'>
         <>

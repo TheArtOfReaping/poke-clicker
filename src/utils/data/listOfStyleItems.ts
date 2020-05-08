@@ -9,6 +9,12 @@ export const listOfStyleItems: StyleItem[] = [
         img: 'red-hat',
     },
     {
+        name: 'Pink Hat',
+        category: StyleCategory.Headgear,
+        price: 2000,
+        img: 'pink-hat',
+    },
+    {
         name: 'Blue Hair',
         category: StyleCategory.Hair,
         price: 10,
@@ -25,6 +31,18 @@ export const listOfStyleItems: StyleItem[] = [
         category: StyleCategory.Footwear,
         price: 10,
         img: 'black-boots',
+    },
+    {
+        name: 'Mint Boots',
+        category: StyleCategory.Footwear,
+        price: 10,
+        img: 'mint-boots',
+    },
+    {
+        name: 'Black Coat',
+        category: StyleCategory.Jacket,
+        price: 1,
+        img: 'black-coat',
     }
 
 ]

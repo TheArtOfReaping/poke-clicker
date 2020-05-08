@@ -273,7 +273,8 @@ export function trainer(state: Trainer = {
   clothing: {
     headgear: getStyleItem('Red Hat'),
     hair: getStyleItem('Blue Hair'),
-    footwear: getStyleItem('Black Boots'),
+    footwear: getStyleItem('Mint Boots'),
+    jacket: getStyleItem('Black Coat'),
   }
 }, action: any) {
   switch (action.type) {

@@ -53,9 +53,11 @@ export interface TrainerProps {
 
 export function TrainerImage({trainer, className, imgClassName}: {trainer: Trainer, className?: string, imgClassName?: string}) {
   return <div className={classes(styles.DataWrapper, styles.TrainerImageWrapper, className)}>
-    <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/bald-dawn.png`} />
+    <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/base-dawn.png`} />
     {trainer.clothing?.hair && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.hair.img}.png`} />}
     {trainer.clothing?.headgear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.headgear.img}.png`} />}
+    {trainer.clothing?.footwear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.footwear.img}.png`} />}
+    {trainer.clothing?.jacket && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.jacket.img}.png`} />}
   </div>
 }
 
