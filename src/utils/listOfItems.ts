@@ -74,6 +74,7 @@ export interface Item {
     price?: number;
     heal?: number;
     description?: string;
+    readonly id: number;
 }
 
 export const listOfItems: Item[] = [
@@ -81,10 +82,11 @@ export const listOfItems: Item[] = [
     folder: 'ball',
     img: 'poke',
     name: 'Poké Ball',
-    quantity: 0,
+    quantity: 10,
     catchRate: 1,
     price: 200,
     description: `The most basic ball. Base catch rate: 1`,
+    id: 0,
   },
   {
     folder: 'ball',
@@ -94,6 +96,7 @@ export const listOfItems: Item[] = [
     catchRate: 2,
     price: 1000,
     description: `A second-tier ball. Base catch rate: 2`,
+    id: 1,
   },
   {
     folder: 'ball',
@@ -103,15 +106,17 @@ export const listOfItems: Item[] = [
     catchRate: 3,
     price: 2000,
     description: `An advanced ball. Base catch rate: 3`,
+    id: 2,
   },
   {
     folder: 'medicine',
     img: 'potion',
     name: 'Potion',
-    quantity: 0,
+    quantity: 10,
     price: 100,
     heal: 20,
-    description: `Heals 20 dmg.`
+    description: `Heals 20 dmg.`,
+    id: 3,
   },
   {
     folder: 'medicine',
@@ -120,7 +125,8 @@ export const listOfItems: Item[] = [
     quantity: 0,
     price: 500,
     heal: 50,
-    description: `Heals 50 dmg.`
+    description: `Heals 50 dmg.`,
+    id: 4,
   },
   {
     folder: 'medicine',
@@ -130,6 +136,7 @@ export const listOfItems: Item[] = [
     price: 3000,
     heal: 300,
     description: `Heals 300 dmg in auto-mode and 100% in manual mode.`,
+    id: 5,
   },
   {
     folder: 'medicine',
@@ -138,6 +145,7 @@ export const listOfItems: Item[] = [
     quantity: 0,
     price: 4800,
     description: `Raises a Pokémon's level by 1.`,
+    id: 6,
   },
   {
     folder: 'ball',
@@ -151,7 +159,8 @@ export const listOfItems: Item[] = [
             return 3.5;
         }
         return 1;
-    }
+    },
+    id: 7,
   },
   {
     folder: 'medicine',
@@ -161,6 +170,7 @@ export const listOfItems: Item[] = [
     price: 1500,
     description: `A medicine that heals 120 dmg.`,
     heal: 120,
+    id: 8,
   },
   {
     folder: 'tm',
@@ -168,6 +178,7 @@ export const listOfItems: Item[] = [
     name: 'Close Combat',
     quantity: 0,
     number: 39,
+    id: 9,
   },
   {
     folder: 'tm',
@@ -175,12 +186,14 @@ export const listOfItems: Item[] = [
     name: 'Iron Head',
     quantity: 0,
     number: 17,
+    id: 10,
   },
   {
     folder: 'mega-stone',
     img: 'abomasite',
     name: 'Abomasite',
     quantity: 0,
+    id: 11,
   },
   {
     folder: 'partner-gift',
@@ -188,23 +201,27 @@ export const listOfItems: Item[] = [
     name: 'Small Bouquet',
     quantity: 0,
     new: true,
+    id: 12,
   },
   {
     folder: 'berry',
     img: 'liechi',
     name: 'Liechi Berry',
     quantity: 0,
+    id: 13,
   },
   {
     folder: 'fossil',
     name: 'Helix Fossil',
     img: 'helix',
     quantity: 0,
+    id: 14,
   },
   {
     folder: 'fossil',
     name: 'Dome Fossil',
     img: 'dome',
     quantity: 0,
+    id: 15,
   }
 ];

@@ -1,14 +1,22 @@
-import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action, EDIT_ROUTE, EDIT_POKEMON, EDIT_ENEMY, OPEN_DIALOG, CREATE_NEW_ENEMY, AWARD_MONEY, EDIT_TRAINER, EDIT_GAME } from 'actions';
-import { PartyPokemon, Enemy, Trainer, StyleCategory } from 'utils';
+import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action, EDIT_ROUTE, EDIT_POKEMON, EDIT_ENEMY, OPEN_DIALOG, CREATE_NEW_ENEMY, AWARD_MONEY, EDIT_TRAINER, EDIT_GAME, EDIT_ITEM } from 'actions';
+import { PartyPokemon, Enemy, Trainer, StyleCategory, listOfItems } from 'utils';
 import { expRequiredForumla } from 'utils';
 import { Nature } from 'utils/Nature';
 import { listOfRoutes } from 'utils/listOfRoutes';
 import { getStyleItem } from 'utils/data';
 
-export function inventory(state = [], action: any) {
+export function inventory(state = listOfItems, action: any) {
   switch (action.type) {
     case USE_MOVE:
       return state;
+    case EDIT_ITEM:
+      return [
+        ...state.filter(items => items.id !== action.payload.id),
+        {
+          ...state.find(items => items.id === action.payload.id),
+          ...action.payload.item,
+        }
+      ].sort((a, b) => a.id - b.id);;
     default:
       return state;
   }
@@ -270,6 +278,7 @@ export function game(state = {healing: 0}, action: any) {
 }
 
 export function trainer(state: Trainer = {
+  money: 0,
   clothing: {
     headgear: getStyleItem('Red Hat'),
     hair: getStyleItem('Blue Hair'),

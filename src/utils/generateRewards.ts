@@ -1,7 +1,7 @@
 import { Pokemon } from "utils";
-import { Item, listOfItems } from "./listOfItems";
-import { listOfRoutes } from "./listOfRoutes";
+import { Item } from "./listOfItems";
 import { clamp } from "ramda";
+import { State } from "actions";
 
 export type RouteItem = {weight: number, item?: Item};
 
@@ -10,7 +10,8 @@ export interface GenerateRewardsArgs {
     speciesLevel?: number;
     pokemonLevel?: number;
     routeItems?: RouteItem[];
-
+    inventory: State['inventory'];
+    callback: (i?: Item) => void;
 }
 
 export function pickRandomWeighted(items: GenerateRewardsArgs['routeItems']) {
@@ -42,7 +43,9 @@ export const determineRewardsAmount = function determineRewardsAmount(speciesLev
 export function generateRewards({
     routeItems,
     speciesLevel,
+    inventory,
     pokemonLevel,
+    callback,
 }: GenerateRewardsArgs) {
     const rewardsAmount = determineRewardsAmount(speciesLevel, pokemonLevel)
     let rewards: (RouteItem | undefined)[] = [];
@@ -51,10 +54,12 @@ export function generateRewards({
     for (let i = 0; i < rewardsAmount; i++) {
         const routeItem = pickRandomWeighted(routeItems);
         rewards.push(routeItem);
-        const foundItem = listOfItems.find(i => i.name === routeItem?.item?.name)
-        if (foundItem != null) {
-            foundItem.quantity += 1;
-        }
+        const foundItem = inventory.find(i => i.name === routeItem?.item?.name)
+
+        callback(foundItem);
+        
+
+        
     }
 
     return rewards;

@@ -1,8 +1,10 @@
 import React, { useState, ImgHTMLAttributes } from 'react';
 import { style, classes, stylesheet } from 'typestyle';
 import { Panel, PanelProps, panel } from '../Panel';
-import { listOfItems, Item } from 'utils';
+import { Item } from 'utils';
 import { colors } from 'utils/colors';
+import { useSelector } from 'react-redux';
+import { State } from 'actions';
 
 const styles = stylesheet({
   ItemQuantity: {
@@ -184,7 +186,8 @@ export function InventoryItem({item, idx, contextId, isContextMenu, onClick, onC
   </div>
 }
 
-export function Inventory({ inventory = [], panelProps }: InventoryProps) {
+export function Inventory({ panelProps }: InventoryProps) {
+  const inventory = useSelector<State, State['inventory']>(state => state.inventory);
   const [isContextMenu, setContextMenu] = useState(false);
   const [isOverlay, setOverlay] = useState(false);
   const [contextId, setContextId] = useState(-1);
@@ -245,7 +248,7 @@ export function Inventory({ inventory = [], panelProps }: InventoryProps) {
           })}
         </div>
 
-        {listOfItems.filter(item => selectedCategory ? item.folder === selectedCategory : true).map((item, idx) => (
+        {inventory.filter(item => selectedCategory ? item.folder === selectedCategory : true).map((item, idx) => (
           <InventoryItem contextId={contextId} isContextMenu={isContextMenu} item={item} onClick={onClick} onClickToss={onClickToss} idx={idx} />
         ))}
       </div>

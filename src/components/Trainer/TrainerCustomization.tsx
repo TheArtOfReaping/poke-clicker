@@ -4,7 +4,7 @@ import { DialogKind, Dialog } from 'components/Dialog';
 import { State, editTrainer } from 'actions';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyledSprite } from 'components/Party/StyledSprite';
-import { colors, Stat, StyleItem, getCategoryStyleItems, StyleCategory, getStyleItem } from 'utils';
+import { colors, Stat, StyleItem, getCategoryStyleItems, StyleCategory, getStyleItem, Trainer } from 'utils';
 import { Button } from 'components/Button';
 import { PartyPokemon } from 'utils';
 import { PokemonView } from 'components/Party/PokemonView';
@@ -115,27 +115,24 @@ export function TrainerCustomization() {
         }
     }))
 
+    const CategoryStyleItem = ({trainer, category}:{trainer: Trainer, category: StyleCategory}) => <TrainerStyleItem category={category} onClick={() => setSelectedCategory(category)} clothing={trainer.clothing?.[category]} />
+
     return <Dialog kind={DialogKind.Storage} title='Trainer Customization' className={styles.Dialog}>
         <div className={styles.TrainerCustomWrapper}>
 
             <div className={styles.TrainerCustomSelections}>
                 <div className={styles.Column}>
-                    <TrainerStyleItem category={StyleCategory.Headgear} onClick={() => setSelectedCategory(StyleCategory.Headgear)} clothing={trainer.clothing?.headgear} />
-                    <TrainerStyleItem category={StyleCategory.Hair} onClick={() => setSelectedCategory(StyleCategory.Hair)} clothing={trainer.clothing?.hair} />
-                    <TrainerStyleItem category={StyleCategory.Eyewear} onClick={() => setSelectedCategory(StyleCategory.Eyewear)} clothing={trainer.clothing?.eyewear} />
+                    {[StyleCategory.Headgear, StyleCategory.Hair, StyleCategory.Eyewear, StyleCategory.Bag].map(cat => <CategoryStyleItem trainer={trainer} category={cat} />)}
                 </div>
 
                 <div className={styles.Column}>
                     <TrainerImage trainer={trainer} className={styles.BaseTrainerImage} imgClassName={styles.AdditionalTrainerImage} />
                     <div className={styles.Row}>
-                        <TrainerStyleItem category={StyleCategory.Bottoms} onClick={() => setSelectedCategory(StyleCategory.Bottoms)} clothing={trainer.clothing?.bottoms} />
-                        <TrainerStyleItem category={StyleCategory.Footwear} onClick={() => setSelectedCategory(StyleCategory.Footwear)} clothing={trainer.clothing?.footwear} />
+                        {[StyleCategory.Bottoms, StyleCategory.Footwear].map(cat => <CategoryStyleItem trainer={trainer} category={cat} />)}
                     </div>
                 </div>
                 <div className={styles.Column}>
-                    <TrainerStyleItem category={StyleCategory.Neckwear} onClick={() => setSelectedCategory(StyleCategory.Neckwear)} clothing={trainer.clothing?.neckwear} />
-                    <TrainerStyleItem category={StyleCategory.Shirt} onClick={() => setSelectedCategory(StyleCategory.Shirt)} clothing={trainer.clothing?.shirt} />
-                    <TrainerStyleItem category={StyleCategory.Jacket} onClick={() => setSelectedCategory(StyleCategory.Jacket)} clothing={trainer.clothing?.jacket} />
+                    {[StyleCategory.Neckwear, StyleCategory.Shirt, StyleCategory.Jacket].map(cat => <CategoryStyleItem trainer={trainer} category={cat} />)}
                 </div>
                 <div className={styles.Column}>
                     <div onClick={selectItem('')} className={classes(styles.ItemName, trainer.clothing![selectedCategory] == null ? styles.ItemNameSelected : '')}>{'None'}</div>

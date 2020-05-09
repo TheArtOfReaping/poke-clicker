@@ -15,7 +15,7 @@ import {
 import { Party, getStat } from './components/Party';
 import clamp from 'ramda/src/clamp';
 import { useSelector, useDispatch } from 'react-redux';
-import { editPokemon, createNewEnemy, editEnemy, addPokemon, awardMoney, editGame, Game, selectPokemon, editRoute, selectRoute } from 'actions';
+import { editPokemon, createNewEnemy, editEnemy, addPokemon, awardMoney, editGame, Game, selectPokemon, editRoute, selectRoute, editItem } from 'actions';
 import { style, media } from 'typestyle';
 import { State } from 'actions';
 import { SpeciesName } from 'utils/SpeciesName';
@@ -73,7 +73,12 @@ const p = {
   achievements: true,
 }
 
-const shouldCatch = () => true;
+const shouldCatch = () => {
+  //const hasBalls = state.inventory.some(item => item.folder === 'ball');
+
+
+  return true;
+};
 
 const getMove = (id?: number) => id == null ? {coolDown: 0} : moves.find(m => m.id === id);
 
@@ -87,11 +92,12 @@ function App(props: any) {
   const listOfRoutes = useSelector<State, State['map']>(state => state.map);
   const selectedRoute = routePrep == null ? 0 : routePrep;
   const route = listOfRoutes[selectedRoute];
-  console.log(useSelector<State, State['selections']>(state => state.selections).selectedRoute);
   const selectedDialog = useSelector<State, number>(state => state.selections.selectedDialog);
+
+  const inventory = useSelector<State, State['inventory']>(state => state.inventory);
+  console.log(inventory);
   
   const pokeId = useSelector<State, number>(state => state.selections.selectedPokemon);
-  console.log(pokeId);
   const [enemySpeciesData, setEnemySpeciesData] = useState<Pokemon | undefined>();
   const pokemon = team[pokeId];
 
@@ -175,7 +181,6 @@ function App(props: any) {
       if (healing >= totalHealth) {
         useableTeam.forEach((pokemon, id) => {
           const {species, level} = pokemon;
-          console.log(getMaxHp(speciesToNumber(species)));
           dispatch(editPokemon({
             id,
             currentHp: getMaxHp(speciesToNumber(species), level)
@@ -207,7 +212,16 @@ function App(props: any) {
           generateRewards({
             speciesLevel: enemy.level,
             pokemonLevel: pokemon.level,
-            routeItems: listOfRoutes[selectedRoute].itemDrops
+            inventory,
+            routeItems: listOfRoutes[selectedRoute].itemDrops,
+            callback: (foundItem) => {
+              if (foundItem != null) {
+                dispatch(editItem({
+                    ...foundItem,
+                    quantity: foundItem.quantity + 1,
+                }))
+              }
+            }
           });
 
 
@@ -234,9 +248,7 @@ function App(props: any) {
 
           if (shouldCatch()) {
             const caught = Math.random() > 0.5;
-            
             const pos = last(team.sort((a, b) => a!.position - b!.position))?.position;
-            console.log('pos', pos);
 
             if (caught) {
               generateNewEnemy();
@@ -276,8 +288,6 @@ function App(props: any) {
             }
           } else {
             console.log('Pokemon was not caught!');
-
-            console.log(pokemon.currentExp);
 
             
 

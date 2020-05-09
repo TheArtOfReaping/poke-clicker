@@ -1,8 +1,9 @@
 import { v4 as createId } from 'uuid';
-import { ItemName } from 'utils';
+import { ItemName, Item } from 'utils';
 import { PartyPokemon, Enemy, Trainer } from 'utils';
 import { omit } from 'ramda';
 import { Route } from 'utils/listOfRoutes';
+import { InventoryItem } from 'components';
 
 export interface Field {
   weather: string;
@@ -31,6 +32,7 @@ export interface State {
   trainer: Trainer;
   game: Game;
   map: Route[];
+  inventory: Item[];
 }
 
 export type RELEASE_POKEMON = '@team/RELEASE_POKEMON';
@@ -57,6 +59,9 @@ export const EDIT_GAME: EDIT_GAME = '@game/EDIT_GAME';
 export type EDIT_ROUTE = '@map/EDIT_ROUTE';
 export const EDIT_ROUTE: EDIT_ROUTE = '@map/EDIT_ROUTE';
 
+export type EDIT_ITEM = '@inventory/EDIT_ITEM';
+export const EDIT_ITEM: EDIT_ITEM = '@inventory/EDIT_ITEM';
+
 export type Index = {
   id: string;
   moveId: number;
@@ -69,7 +74,7 @@ export type Index = {
   field: State['field'];
 };
 export type Type = USE_MOVE | ADD_POKEMON | ADD_ITEM | SELECT_POKEMON | EDIT_POKEMON | EDIT_ENEMY | CREATE_NEW_ENEMY | OPEN_DIALOG | AWARD_MONEY |
-  EDIT_TRAINER | EDIT_GAME | SELECT_ROUTE | EDIT_ROUTE;
+  EDIT_TRAINER | EDIT_GAME | SELECT_ROUTE | EDIT_ROUTE | EDIT_ITEM;
 export type Payload<P> = { payload: { [K in keyof P]?: P[K] } };
 export interface Data<T extends Type> {
   readonly type: T & Type;
@@ -158,6 +163,15 @@ export const editRoute: Action<EDIT_ROUTE, Partial<Route>> = (route) => ({
     //id: createId(),
     id: route.id,
     route: omit(['id'], route),
+  },
+});
+
+export const editItem: Action<EDIT_ITEM, Partial<Item>> = (item) => ({
+  type: EDIT_ITEM,
+  payload: {
+    //id: createId(),
+    id: item.id,
+    item: omit(['id'], item),
   },
 });
 
