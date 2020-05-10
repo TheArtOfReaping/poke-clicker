@@ -5,6 +5,8 @@ export enum Region {
   Kanto = 'Kanto',
 }
 
+export type RoutePokemon = {species: SpeciesName; minLevel: number; maxLevel: number; rate: number};
+
 export interface Route {
     id: number;
     name: string;
@@ -12,14 +14,15 @@ export interface Route {
     visible: boolean;
     background?: string;
     connections: number[];
-    pokemon: {species: SpeciesName; minLevel: number; maxLevel: number; rate: number}[];
+    pokemon: RoutePokemon[];
+    fishingPokemon?: (RoutePokemon & {method: ItemName})[];
     itemDrops?: {weight: number; item?: Item}[];
     defeatNumber?: number;
     region?: Region;
     currentNumberDefeated?: number;
 }
 
-export const getItem = (itemName: ItemName) => listOfItems.find(item => item.name === itemName);
+export const getItem = (itemName: ItemName, loi: Item[] = listOfItems) => loi.find(item => item.name === itemName);
 
 export const listOfRoutes: Route[] = [
   {
@@ -33,7 +36,7 @@ export const listOfRoutes: Route[] = [
       { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
       { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
     ],
-    defeatNumber: 5,
+    defeatNumber: 10,
     currentNumberDefeated: 0,
     region: Region.Kanto,
     itemDrops: [
@@ -68,6 +71,9 @@ export const listOfRoutes: Route[] = [
       { species: 'Pidgey', minLevel: 2, maxLevel: 4, rate: 0.5 },
       { species: 'Rattata', minLevel: 2, maxLevel: 4, rate: 0.5 },
     ],
+    fishingPokemon: [
+      { species: 'Magikarp', minLevel: 5, maxLevel: 5, rate: 1, method: 'Old Rod'},
+    ]
   },
   {
     id: 2,
@@ -189,7 +195,7 @@ export const listOfRoutes: Route[] = [
   {
     id: 5,
     name: 'Pewter City',
-    accessible: true,
+    accessible: false,
     visible: true,
     connections: [6, 5],
     defeatNumber: 5,

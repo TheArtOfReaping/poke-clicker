@@ -4,7 +4,7 @@ import { Panel, PanelProps, panel } from '../Panel';
 import { Item } from 'utils';
 import { colors } from 'utils/colors';
 import { useSelector } from 'react-redux';
-import { State } from 'actions';
+import { State } from 'state';
 
 const styles = stylesheet({
   ItemQuantity: {
@@ -181,7 +181,7 @@ export function InventoryItem({item, idx, contextId, isContextMenu, onClick, onC
     <span
       className={styles.ItemQuantity}
     >
-      x{item.quantity}
+      {item.folder === 'key-item' ? 'KEY' : `x${item.quantity}`}
     </span>
   </div>
 }
@@ -249,7 +249,7 @@ export function Inventory({ panelProps }: InventoryProps) {
         </div>
 
         {inventory.filter(item => selectedCategory ? item.folder === selectedCategory : true).map((item, idx) => (
-          <InventoryItem contextId={contextId} isContextMenu={isContextMenu} item={item} onClick={onClick} onClickToss={onClickToss} idx={idx} />
+          <InventoryItem key={idx} contextId={contextId} isContextMenu={isContextMenu} item={item} onClick={onClick} onClickToss={onClickToss} idx={idx} />
         ))}
       </div>
     </Panel>

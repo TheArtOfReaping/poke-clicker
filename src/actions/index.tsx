@@ -1,39 +1,15 @@
 import { v4 as createId } from 'uuid';
-import { ItemName, Item } from 'utils';
-import { PartyPokemon, Enemy, Trainer } from 'utils';
+import { ItemName, Item, Pokedex, StyleItem, PartyPokemon, Enemy, Trainer,
+  Field, Selections, Game,
+} from 'utils';
 import { omit } from 'ramda';
 import { Route } from 'utils/listOfRoutes';
 import { InventoryItem } from 'components';
-
-export interface Field {
-  weather: string;
-  room: string;
-  terrain: string;
-  hazards: string;
-}
-
-export interface Game {
-  healing: number;
-
-}
+import { SpeciesName } from 'utils/SpeciesName';
 
 
-export interface Selections {
-  selectedRoute: number;
-  selectedPokemon: number;
-  selectedDialog: number;
-}
 
-export interface State {
-  team: PartyPokemon[];
-  field: Field;
-  selections: Selections;
-  enemy: Enemy;
-  trainer: Trainer;
-  game: Game;
-  map: Route[];
-  inventory: Item[];
-}
+
 
 export type RELEASE_POKEMON = '@team/RELEASE_POKEMON';
 export const RELEASE_POKEMON: RELEASE_POKEMON = '@team/RELEASE_POKEMON';
@@ -62,6 +38,15 @@ export const EDIT_ROUTE: EDIT_ROUTE = '@map/EDIT_ROUTE';
 export type EDIT_ITEM = '@inventory/EDIT_ITEM';
 export const EDIT_ITEM: EDIT_ITEM = '@inventory/EDIT_ITEM';
 
+export type ADD_CAUGHT = '@pokedex/ADD_CAUGHT';
+export const ADD_CAUGHT: ADD_CAUGHT = '@pokedex/ADD_CAUGHT';
+
+export type ADD_SEEN = '@pokedex/ADD_SEEN';
+export const ADD_SEEN: ADD_SEEN = '@pokedex/ADD_SEEN';
+
+export type EDIT_STYLE_ITEM = '@styleItems/EDIT_STYLE_ITEM';
+export const EDIT_STYLE_ITEM: EDIT_STYLE_ITEM = '@styleItems/EDIT_STYLE_ITEM';
+
 export type Index = {
   id: string;
   moveId: number;
@@ -71,10 +56,10 @@ export type Index = {
   itemName: ItemName;
   quantity: number;
   pokemonId: string;
-  field: State['field'];
+  field: Field;
 };
 export type Type = USE_MOVE | ADD_POKEMON | ADD_ITEM | SELECT_POKEMON | EDIT_POKEMON | EDIT_ENEMY | CREATE_NEW_ENEMY | OPEN_DIALOG | AWARD_MONEY |
-  EDIT_TRAINER | EDIT_GAME | SELECT_ROUTE | EDIT_ROUTE | EDIT_ITEM;
+  EDIT_TRAINER | EDIT_GAME | SELECT_ROUTE | EDIT_ROUTE | EDIT_ITEM | ADD_SEEN | ADD_CAUGHT | EDIT_STYLE_ITEM;
 export type Payload<P> = { payload: { [K in keyof P]?: P[K] } };
 export interface Data<T extends Type> {
   readonly type: T & Type;
@@ -175,6 +160,14 @@ export const editItem: Action<EDIT_ITEM, Partial<Item>> = (item) => ({
   },
 });
 
+export const editStyleItem: Action<EDIT_STYLE_ITEM, Partial<StyleItem>> = (styleItem) => ({
+  type: EDIT_STYLE_ITEM,
+  payload: {
+    //id: createId(),
+    id: styleItem.id,
+    styleItem: omit(['id'], styleItem),
+  },
+});
 
 export type ADD_ITEM = '@inventory/ADD_ITEM';
 export const ADD_ITEM: ADD_ITEM = '@inventory/ADD_ITEM';
@@ -255,4 +248,26 @@ export const editGame: Action<EDIT_GAME, Game> = (game) => ({
     id: createId(),
     game,
   }
+});
+
+export type FlatDexEntry = {
+  species: SpeciesName,
+  caught?: boolean,
+  seen?: boolean,
+}
+
+export const addCaught: Action<ADD_CAUGHT, FlatDexEntry> = (payload) => ({
+  type: ADD_CAUGHT,
+  payload: {
+    id: createId(),
+    ...payload,
+  },
+})
+
+export const addSeen: Action<ADD_SEEN, FlatDexEntry> = (payload) => ({
+  type: ADD_SEEN,
+  payload: {
+    id: createId(),
+    ...payload,
+  },
 })

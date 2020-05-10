@@ -4,7 +4,8 @@ import { Panel, PanelProps } from 'components/Panel';
 import { colors } from 'utils/colors';
 import { Trainer, Region } from 'utils';
 import { useSelector, useDispatch } from 'react-redux';
-import { State, openDialog } from 'actions';
+import { openDialog } from 'actions';
+import { State } from 'state';
 import { DialogKind } from 'components/Dialog';
 
 const styles = stylesheet({
@@ -27,8 +28,8 @@ const styles = stylesheet({
     left: 0,
   },
   TrainerImageWrapper: {
-    height: '88px',
-    width: '88px',
+    height: '80px',
+    width: '80px',
     position: 'relative',
     imageRendering: 'pixelated',
   },
@@ -53,11 +54,14 @@ export interface TrainerProps {
 
 export function TrainerImage({trainer, className, imgClassName}: {trainer: Trainer, className?: string, imgClassName?: string}) {
   return <div className={classes(styles.DataWrapper, styles.TrainerImageWrapper, className)}>
+    {trainer.clothing?.background && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.background.img}.png`} />}
     <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/base-dawn.png`} />
     {trainer.clothing?.hair && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.hair.img}.png`} />}
     {trainer.clothing?.headgear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.headgear.img}.png`} />}
     {trainer.clothing?.footwear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.footwear.img}.png`} />}
     {trainer.clothing?.jacket && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.jacket.img}.png`} />}
+    {trainer.clothing?.neckwear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.neckwear.img}.png`} />}
+    {trainer.clothing?.eyewear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.eyewear.img}.png`} />}
   </div>
 }
 
@@ -79,7 +83,7 @@ export function TrainerPanel({ panelProps, username }: TrainerProps) {
           <div className={styles.DataWrapper}>Score: {trainer?.score || 0}</div>
         </div>
         <div className={styles.TrainerInfo}>
-          <div className={styles.DataWrapper}>Money: ${trainer?.money}</div>
+          <div className={styles.DataWrapper}>Money: ${trainer?.money?.toFixed(0)}</div>
           <div className={styles.DataWrapper}>BP: {trainer?.bp}</div>
         </div>
       </div>

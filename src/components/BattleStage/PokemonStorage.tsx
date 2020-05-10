@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {stylesheet, classes} from 'typestyle';
 import { DialogKind, Dialog } from 'components/Dialog';
-import { State } from 'actions';
+import { State } from 'state';
 import { useSelector } from 'react-redux';
 import { StyledSprite } from 'components/Party/StyledSprite';
 import { colors, Stat } from 'utils';
@@ -138,7 +138,7 @@ export function PokemonStorage() {
                 {getLocationTag() && <div className={classes(styles.LocationTag, styles.LocationTagDaycare)}>{getLocationTag}</div>}
                 <StyledSprite member={poke} />
                 <div className={styles.InfoBar}>
-                    <div>{poke?.nickname} lv.{poke?.level}</div>
+                    {poke?.isEgg ? <div>Egg</div> : <div>{poke?.nickname} lv.{poke?.level}</div>}
                     {(poke?.shiny || poke?.superShiny) && <img className={styles.SpecialAttributeImg} src='./images/ui/shiny-star.png' />}
                     {poke?.favorite && <img className={styles.SpecialAttributeImg} src='./images/ui/favorite-heart.png' />}
                 </div>

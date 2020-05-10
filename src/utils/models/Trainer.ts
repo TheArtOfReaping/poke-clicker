@@ -10,6 +10,7 @@ export enum StyleCategory {
     Bottoms = 'bottoms',
     Footwear = 'footwear',
     Bag = 'bag',
+    Background = 'background',
   }
   
   export type StyleItem<T = any> = {
@@ -17,6 +18,8 @@ export enum StyleCategory {
     price?: number,
     category?: T,
     img: string,
+    quantity: number;
+    id: number;
   }
   
   export type ClothingComposite = {
@@ -30,6 +33,7 @@ export enum StyleCategory {
     footwear?: StyleItem<StyleCategory.Footwear>;
     bag?: StyleItem<StyleCategory.Bag>;
     skinColor?: SkinColor;
+    background?: StyleItem<StyleCategory.Background>;
   };
 
   export enum SkinColor {

@@ -17,7 +17,19 @@ export const createCSSFilter = (canEvolve?: boolean, isFainted?: boolean, superS
 
 export function StyledSprite({member, extraStyles}:StyledSpriteProps) {
     const canEvolve = false;
-    const isFainted = member?.currentHp === 0;
+    const isEgg = member?.isEgg;
+    const isFainted = member?.currentHp === 0 && !isEgg;
+    if (isEgg) {
+      return <img
+        style={{
+          height: '16px',
+          marginLeft: '2rem',
+          marginRight: '4px',
+          imageRendering: 'pixelated',
+        }}
+        src={'./images/ui/egg.png'}
+      />
+    }
     return <img 
         style={{ height: '64px', imageRendering: 'pixelated', ...createCSSFilter(canEvolve, isFainted, member?.superShiny, member?.superShinySeed), ...extraStyles }}
         alt={member.species}

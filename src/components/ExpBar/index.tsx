@@ -1,4 +1,5 @@
 import React from 'react';
+import { colors } from 'utils';
 
 export interface ExpBarProps {
   width?: number;
@@ -31,7 +32,7 @@ export function ExpBar({
         style={{
           height: '0.5rem',
           border: '1px solid white',
-          background: `linear-gradient(to right, ${baseColor}, ${baseColor} ${percent}%, black ${percent}%, black)`,
+          background: `linear-gradient(to right, ${baseColor}, ${baseColor} ${percent}%, ${colors.primary.shade3} ${percent}%, ${colors.primary.shade3})`,
           transition: '200ms all',
           width: '10rem',
         }}

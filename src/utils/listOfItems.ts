@@ -1,5 +1,3 @@
-import { Types } from "./Types";
-import { Route } from "./listOfRoutes";
 import { accentedE } from "./accentedE";
 
 export type ItemName = 'Poké Ball' |
@@ -18,7 +16,13 @@ export type ItemName = 'Poké Ball' |
     'Dome Fossil' |
     'Great Ball' |
     'Moon Stone' |
-    'Max Potion'
+    'Max Potion' |
+    'Old Rod' |
+    'Good Rod' |
+    'Super Rod' |
+    'Shiny Charm' |
+    'Amulet Coin' |
+    'Oran Berry' 
 ;
 
 export type ItemFolder = 'apricorn' |
@@ -61,7 +65,7 @@ export type ItemFolder = 'apricorn' |
   'z-crystals'
 ;
 
-export type CatchRateFunction = ({type, routes}:{type:Types; routes?: Route[]}) => number;
+export type CatchRateFunction = () => number;
 export interface Item {
     folder: ItemFolder;
     img: string;
@@ -82,8 +86,8 @@ export const listOfItems: Item[] = [
     folder: 'ball',
     img: 'poke',
     name: 'Poké Ball',
-    quantity: 10,
-    catchRate: 1,
+    quantity: 2,
+    catchRate: 255,
     price: 200,
     description: `The most basic ball. Base catch rate: 1`,
     id: 0,
@@ -154,10 +158,11 @@ export const listOfItems: Item[] = [
     quantity: 0,
     price: 800,
     description: `A type of ball that works best on aquatic Pok${accentedE}mon.`,
-    catchRate: ({type}) => {
-        if (type === Types.Water) {
-            return 3.5;
-        }
+    catchRate: () => {
+        // if (type === Types.Water) {
+        //     return 3.5;
+        // }
+        // return 1;
         return 1;
     },
     id: 7,
@@ -223,5 +228,51 @@ export const listOfItems: Item[] = [
     img: 'dome',
     quantity: 0,
     id: 15,
-  }
+  },
+  {
+    folder: 'key-item',
+    img: 'old-rod',
+    name: 'Old Rod',
+    quantity: 1,
+    price: 0,
+    description: 'Allows capture of fish Pokémon',
+    id: 16,
+  },
+  {
+    folder: 'key-item',
+    img: 'shiny-charm',
+    name: 'Shiny Charm',
+    quantity: 1,
+    price: 0,
+    description: 'Increases rate of shiny Pokémon',
+    id: 17,
+  },
+  {
+    folder: 'evo-item',
+    img: 'moon-stone',
+    name: 'Moon Stone',
+    quantity: 1,
+    price: 3500,
+    description: `Evolves certain species of Pokémon`,
+    id: 18,
+  },
+  {
+    folder: 'hold-item',
+    img: 'amulet-coin',
+    name: 'Amulet Coin',
+    quantity: 1,
+    price: 100000,
+    description: `Doubles money from battle.`,
+    id: 19,
+  },
+  {
+    folder: 'berry',
+    img: 'oran',
+    name: 'Oran Berry',
+    quantity: 10,
+    price: 20,
+    heal: 10,
+    description: `Heals 10 dmg.`,
+    id: 20,
+  },
 ];

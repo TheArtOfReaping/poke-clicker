@@ -9,7 +9,8 @@ import { PartyPokemon } from 'utils';
 import { color } from 'csx';
 import { HealBar } from 'components/ExpBar/HealBar';
 import { useDispatch, useSelector } from 'react-redux';
-import { editPokemon, openDialog, State } from 'actions';
+import { editPokemon, openDialog } from 'actions';
+import { State } from 'state';
 import { take } from 'ramda';
 import { positionalSort } from 'utils/positionalSort';
 import { DialogKind } from 'components/Dialog';
@@ -127,6 +128,14 @@ export const styles = stylesheet({
         background: '#9f5ac7',
       },
     },
+  },
+  EggStatus: {
+    padding: '0.25rem',
+    border: '1px solid',
+    borderColor: colors.pink.get(),
+    margin: '0.25rem',
+    borderRadius: '0.25rem',
+    width: '8rem',
   },
   GrayScale: {
     filter: 'grayscale(100%)',
@@ -247,7 +256,7 @@ export function Party({ party, panelProps }: PartyProps) {
     <Panel name="Party" {...panelProps}>
       <HealBar currentHealth={healing} totalHealth={totalHealth} baseColor={colors.pink.get()} />
       {take(6, party.sort(positionalSort)).map((member, idx) => {
-        const isFainted = member?.currentHp === 0;
+        const isFainted = member?.currentHp === 0 && !member?.isEgg;
         const canEvolve = idx === 4;
 
         const id = speciesToNumber(member?.species) || 1;
@@ -277,13 +286,15 @@ export function Party({ party, panelProps }: PartyProps) {
                       left: '52px',
                       color: colors.gold.get()
                     }}>★</div>}
-              <div className="fs-small">
+              {member?.isEgg ? <div className="fs-small">
+                Egg
+              </div> : <div className="fs-small">
                 {member.nickname} lv. {member.level}
-              </div>
-              <div className={styles.BattleStatWrapper}>
+              </div>}
+              {!member?.isEgg && <div className={styles.BattleStatWrapper}>
                 <HPBar width="10rem" currentHp={member.currentHp} totalHp={hp} />
                 <ExpBar totalExpNeeded={member?.expRequired} currentExpProgress={member.currentExp} />
-              </div>
+              </div>}
             </div>
             {activeId === idx && (
               <PokemonView pokemon={member} hp={hp} id={id} idx={idx} />

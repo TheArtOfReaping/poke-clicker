@@ -3,9 +3,10 @@ import { stylesheet, classes } from "typestyle";
 import { getItem } from 'utils/listOfRoutes';
 import { colors } from 'utils/colors';
 import { ItemIcon } from 'components/Inventory';
-import { Item, dateAsRng, Nullable } from 'utils';
+import { Item, dateAsRng, Nullable, listOfStyleItems, StyleItem, getStyleItem, StyleCategory } from 'utils';
 import { Button } from 'components/Button';
-import { State, editTrainer, editItem } from 'actions';
+import {  editTrainer, editItem, editStyleItem } from 'actions';
+import { State } from 'state';
 import { useDispatch, useSelector } from 'react-redux';
 import * as queries from 'graphql/queries';
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
@@ -22,6 +23,7 @@ const styles = stylesheet({
         paddingTop: '1rem',
         position: 'relative',
         margin: '0.25rem',
+        background: colors.primary.get(),
     },
     SellPanel: {
         width: '50%',
@@ -89,6 +91,10 @@ const styles = stylesheet({
         justifyContent: 'flex-end',
         marginRight: '4px',
         maxWidth: '40px',
+    },
+    BoutiquePanel: {
+        position: 'relative',
+        marginTop: '2rem',
     }
 
 })
@@ -105,7 +111,7 @@ export interface PokemartProps {
 
 }
 
-export type BuyOrSellFunction = ({
+export type BuyOrSellFunction<T = Item> = ({
     type,
     item,
     sellPrice,
@@ -114,7 +120,7 @@ export type BuyOrSellFunction = ({
     buyAmount,
 }: {
     type?: 'Buy' | 'Sell',
-    item?: Item,
+    item?: T,
     sellPrice: Nullable<number>,
     buyPrice: number,
     sellAmount: number,
@@ -133,25 +139,51 @@ export function MartItem({item, type, dailyDeal, onClick}: {item?: Item, type?: 
     const canSell = (item?.quantity || 0) - sellAmount.value >= 0;
     const inventory = useSelector<State, State['inventory']>(state => state.inventory);
 
-    console.log('canBuy? ', canBuy);
     // [NOTE] Indicates item is not for sale
     if (type === 'Sell' && !sellPrice) return null;
     return <div className={classes(styles.PurchaseItem, dailyDeal && styles.DailyDealItem)}>
         <ItemIcon img={item?.img} folder={item?.folder} />
         <span className={classes(styles.ItemName, dailyDeal && styles.DailyDealName)}>{item?.name}</span>
         {dailyDeal && <span className={styles.DailyDealTag}>DAILY DEAL!</span>}
+        {<span className={styles.DailyDealTag}>Owned: {item?.quantity}</span>}
         {type === 'Buy' && <input className={styles.MartItemInput} type='number' min='1' onChange={buyAmount.onChange} value={buyAmount.value} />}
         {type === 'Sell' && <input className={styles.MartItemInput} type='number' min='1' max={item?.quantity} {...sellAmount} onChange={sellAmount.onChange} value={sellAmount.value} />}
         <Button onClick={e => onClick({type, item, sellPrice, buyPrice: itemPrice, sellAmount: sellAmount.value, buyAmount: buyAmount.value})} disabled={type === 'Buy' ? !canBuy : !canSell} className={classes(styles.MartButton, styles[type === 'Sell' ?  'SellButton' : 'BuyButton'])} value={type === 'Sell' ? `SELL $${sellPrice}` : `BUY $${itemPrice * buyAmount.value}`} />
     </div>;
 }
 
-export const sellingFilter = (item: Item) => (item?.quantity || 0) > 0;
+export function BoutiqueItem({item, type, onClick}: {item?: StyleItem, type?: 'Sell' | 'Buy', onClick: BuyOrSellFunction<StyleItem>}) {
+    // TODO: Be warned, sellAmount & buyAmount are implicity any types
+    const sellAmount = useInput(1);
+    const buyAmount = useInput(1);
+    const money = useSelector<State, number | undefined>(state => state?.trainer?.money);
+    const itemPrice = item?.price || 0;
+    const sellPrice = slashPrice(itemPrice);
+    const canBuy = money && (money) - (itemPrice * buyAmount.value) >= 0;
+    const canSell = (item?.quantity || 0) - sellAmount.value >= 0;
+    const inventory = useSelector<State, State['inventory']>(state => state.inventory);
+
+    // [NOTE] Indicates item is not for sale
+    if (type === 'Sell' && !sellPrice) return null;
+    return <div className={classes(styles.PurchaseItem)}>
+        <img src={`./images/trainer/${item?.img}.png`} />
+        <div>
+            <span className={classes(styles.ItemName)}>{item?.name}</span>
+            {<span className={styles.DailyDealTag}>Owned: {item?.quantity}</span>}
+        </div>
+        {type === 'Buy' && <input className={styles.MartItemInput} type='number' min='1' onChange={buyAmount.onChange} value={buyAmount.value} />}
+        {type === 'Sell' && <input className={styles.MartItemInput} type='number' min='1' max={item?.quantity} {...sellAmount} onChange={sellAmount.onChange} value={sellAmount.value} />}
+        <Button onClick={e => onClick({type, item, sellPrice, buyPrice: itemPrice, sellAmount: sellAmount.value, buyAmount: buyAmount.value})} disabled={type === 'Buy' ? !canBuy : !canSell} className={classes(styles.MartButton, styles[type === 'Sell' ?  'SellButton' : 'BuyButton'])} value={type === 'Sell' ? `SELL $${sellPrice}` : `BUY $${itemPrice * buyAmount.value}`} />
+    </div>;
+}
+
+export const sellingFilter = (item: {quantity: number}) => (item?.quantity || 0) > 0;
 
 export function Pokemart({}: PokemartProps) {
     const dispatch = useDispatch();
     const [dailyDeal, setDailyDeal] = useState<{item?: Item, price?: number}>({item: undefined, price: undefined});
     const inventory = useSelector<State, State['inventory']>(state => state.inventory);
+    const styleItems = useSelector<State, State['styleItems']>(state => state.styleItems);
     const trainer = useSelector<State, State['trainer']>(state => state.trainer);
     async function fetchy() {
         const allDailyDeals = await API.graphql(graphqlOperation(queries.listDailyDeals));
@@ -161,7 +193,7 @@ export function Pokemart({}: PokemartProps) {
         setDailyDeal({item: getItem(ddItem), price: ddPrice});      
     }
 
-    const rng = 9 || Math.ceil(dateAsRng() * 100);
+    const rng = 10 || Math.ceil(dateAsRng() * 100);
     console.log(rng);
 
     const extraItems: Record<number, (Item | undefined)[]> = {
@@ -176,6 +208,15 @@ export function Pokemart({}: PokemartProps) {
         getItem('Great Ball'),
         ...(extraItems[rng] == null ? [] : extraItems[rng]),
     ];
+
+    const extraBoutiqueItems: Record<number, (StyleItem | undefined)[]> = {
+        10: [getStyleItem('Pink Hat'), getStyleItem('Dimmahat')]
+    }
+
+    const boutiqueItems = [
+        getStyleItem('Red Hat'),
+        ...(extraBoutiqueItems[rng] == null ? [] : extraBoutiqueItems[rng]),
+    ]
 
     const buyOrSellItem: BuyOrSellFunction = ({type,
         item,
@@ -198,6 +239,38 @@ export function Pokemart({}: PokemartProps) {
             }
     }
 
+    const buyOrSellStyleItem: BuyOrSellFunction<StyleItem> = ({type,
+        item,
+        sellPrice,
+        buyPrice,
+        sellAmount,
+        buyAmount}) => {
+            const foundItem = styleItems.find(inv => inv.id === item?.id);
+            if (foundItem) {
+                if (type === 'Sell') {
+                    const quantity = (foundItem?.quantity || 0) - Number.parseInt(sellAmount as any);
+                    dispatch(editTrainer({...trainer, money: (trainer?.money || 0) + (sellPrice || 0)}));
+                    dispatch(editStyleItem({...foundItem, quantity}));
+                    if (quantity <= 0) {
+                        const category: StyleCategory = foundItem.category;
+                        if (trainer.clothing![category]!.id === item?.id) {
+                            dispatch(editTrainer({
+                                clothing: {
+                                    ...trainer.clothing,
+                                    [category]: undefined,
+                                }
+                            }))
+                        }
+                    }
+                } else if (type === 'Buy') {
+                    dispatch(editTrainer({...trainer, money: (trainer?.money || 0) - (buyPrice || 0)}));
+                    dispatch(editStyleItem({...foundItem, quantity: (foundItem?.quantity || 0) + Number.parseInt(buyAmount as any)}))
+                }
+            } else {
+                return;
+            }
+    }
+
     const effectDependency = dailyDeal.item?.name;
     useEffect(() => {
         fetchy()
@@ -211,10 +284,16 @@ export function Pokemart({}: PokemartProps) {
                 <div className={styles.PanelHeading}>Buy</div>
                 {dailyDeal.item && dailyDeal.price ? <MartItem onClick={buyOrSellItem} item={{...dailyDeal.item, price: dailyDeal.price}} dailyDeal={true} type='Buy' /> : null}
                 {martItems.map((item, idx) => <MartItem key={idx} onClick={buyOrSellItem} item={item} type='Buy' />)}
+
+                <div className={styles.BoutiquePanel}>
+                    <div className={styles.PanelHeading}>Boutique</div>
+                    {boutiqueItems.map((item, idx) => <BoutiqueItem key={idx} onClick={buyOrSellStyleItem} item={item} type='Buy' />)}
+                </div>
             </div>
             <div className={styles.MartPanel}>
             <div className={styles.PanelHeading}>Sell</div>
                 {inventory.filter(sellingFilter).map((item, idx) => <MartItem key={idx} onClick={buyOrSellItem} item={item} type='Sell' />)}
+                {styleItems.filter(sellingFilter).map((item, idx) => <BoutiqueItem key={idx} onClick={buyOrSellStyleItem} item={item} type='Sell' />)}
             </div>
         </>
     </Dialog>;

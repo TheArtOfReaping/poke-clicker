@@ -1,7 +1,7 @@
 import { Pokemon } from "utils";
 import { Item } from "./listOfItems";
 import { clamp } from "ramda";
-import { State } from "actions";
+import { State } from 'state';
 
 export type RouteItem = {weight: number, item?: Item};
 

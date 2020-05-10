@@ -27,7 +27,7 @@ export function PokemonView({
     return <div className={classes(styles.ExpandedView, pokemon?.shiny && styles.ExpandedViewShiny)}>
     <div className={styles.PokemonData}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <img
+        {!pokemon?.isEgg ? <img
           style={{
             height: '128px',
             marginTop: '-32px',
@@ -36,14 +36,26 @@ export function PokemonView({
           }}
           alt={pokemon.species}
           src={getPokemonIcon(pokemon.species, pokemon.shiny)}
-        />
+        /> : <img
+          style={{
+            height: '64px',
+            imageRendering: 'pixelated',
+          }}
+          src={'./images/ui/egg.png'}
+        />}
         
-        <span>{pokemon?.pokeball && <span className={styles.ItemIcon}><ItemIcon {...getItem(pokemon.pokeball)} /></span>}{pokemon.species} {getGenderIcon(pokemon.gender)} lv.{pokemon.level}</span><span>{(pokemon?.shiny || pokemon?.superShiny) && <img className={styles.SpecialAttributeImg} src='./images/ui/shiny-star.png' />}
-        {pokemon?.favorite && <img className={styles.SpecialAttributeImg} src='./images/ui/favorite-heart.png' />}</span>
+        <span>
+          {pokemon?.pokeball &&<span className={styles.ItemIcon}><ItemIcon {...getItem(pokemon.pokeball)} /></span>}
+          {pokemon?.isEgg ? 'Egg' : <span>{pokemon.species} {getGenderIcon(pokemon.gender)} lv.{pokemon.level}</span>}
+        </span>
+        <span>
+          {(pokemon?.shiny || pokemon?.superShiny) && <img className={styles.SpecialAttributeImg} src='./images/ui/shiny-star.png' />}
+          {pokemon?.favorite && <img className={styles.SpecialAttributeImg} src='./images/ui/favorite-heart.png' />}
+        </span>
         
-        <div style={{display: 'flex', margin: '0 auto'}}>{getTypes(id)?.map(type => <div style={{...typeToStyle(capitalize(type.type.name) as Types), width: '3rem'}}>{capitalize(type.type.name)}</div>)}</div>
+        <div style={{display: 'flex', margin: '0 auto'}}>{getTypes(id)?.map((type, key) => <div key={key} style={{...typeToStyle(capitalize(type.type.name) as Types), width: '3rem'}}>{capitalize(type.type.name)}</div>)}</div>
       </div>
-      <div className={styles.PokemonStats}>
+      {!pokemon?.isEgg ? <div className={styles.PokemonStats}>
         <div className={styles.PokemonStat}>
           <span>HP</span>
           <span>{hp}</span>
@@ -56,11 +68,16 @@ export function PokemonView({
           </div>
           })
         }
-      </div>
-      <div>
+      </div> : <div className={styles.EggStatus}>
+        This egg looks like it's quite a while away from hatching...  
+      </div>}
+      {!pokemon?.isEgg && <div>
         <div className={styles.DPSBadge}>DPS: {calculateBaseDPS(pokemon.level, getStat(id, 'special-attack'), getStat(id, 'attack'), getStat(id, 'speed'))}</div>
         <div className={styles.DPSBadge}>
           Ability: {pokemon?.ability || 'None'}
+        </div>
+        <div className={styles.DPSBadge}>
+          Nature: {pokemon?.nature || 'None'}
         </div>
         <div className={styles.DPSBadge}>
           Item: {pokemon?.item || 'None'}
@@ -68,9 +85,9 @@ export function PokemonView({
         <div className={styles.DPSBadge}>
          ❤❤❤
         </div>
-      </div>
+      </div>}
     </div>
-    <div className={styles.MoveSet}>
+    {!pokemon?.isEgg && <div className={styles.MoveSet}>
       {pokemon?.moves?.map((moveId: number) => {
         const move = moves.find((m) => m.id === moveId);
         const rank = pokemon?.moveRanks?.[moveId];
@@ -86,8 +103,8 @@ export function PokemonView({
           )
         );
       })}
-    </div>
-    <div className={styles.PokemonOptions}>
+    </div>}
+    {!pokemon.isEgg && <div className={styles.PokemonOptions}>
       <Button onClick={e => console.log(pokemon, pokemon.id, id, idx)} className={styles.PokemonOptionsButton} options={{smallFont: true}} value={!pokemon?.favorite ? "Favorite" : "Unfavorite"} />
       {/* {party.length > 1 && (
         <Button className={styles.PokemonOptionsButton} options={{ smallFont: true }} value="Release" />
@@ -99,6 +116,6 @@ export function PokemonView({
       />
       <Button className={styles.PokemonOptionsButton} options={{ smallFont: true }} value="Mark" />
       <Button className={styles.PokemonOptionsButton} options={{ smallFont: true }} value="Evolve" />
-    </div>
+    </div>}
   </div>
 }

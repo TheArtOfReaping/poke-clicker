@@ -9,11 +9,13 @@ import { getGenderIcon } from 'utils';
 import { getSpeciesValue, getStat } from 'components/Party';
 import { clamp } from 'ramda';
 import { useSelector } from 'react-redux';
-import { State, selectRoute } from 'actions';
+import { selectRoute } from 'actions';
+import { State, GameMode, coreService } from 'state';
 import { FieldEffects } from './FieldEffects';
 import { PokemonStorage } from './PokemonStorage';
 import { DialogKind } from 'components/Dialog';
 import { TrainerCustomization } from 'components/Trainer/TrainerCustomization';
+import { ToastContainer } from 'react-toastify';
 
 const basicAttackAnimation = keyframes({
   '0%': {
@@ -144,6 +146,13 @@ const styles = stylesheet({
     verticalAlign: 'middle',
     marginLeft: '4px',
   },
+  Toast: {
+    position: 'relative',
+    bottom: 0,
+  },
+  DarkToast: {
+    background: colors.primary.shade2,
+  }
 });
 
 
@@ -206,9 +215,16 @@ export function BattleStage({
   return (
     <div className="battle-wrapper">
       {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
+      {coreService.state.value === GameMode.SelectingStarter &&
+        <div>
+          select a starter bitch
+          <button onClick={e => coreService.send('STARTER_SELECTION')} >Do It</button>
+        </div>
+      }
       {selectedDialog === DialogKind.Storage && <PokemonStorage />}
       {selectedDialog === DialogKind.Pokemart && <Pokemart />}
       {selectedDialog === DialogKind.TrainerCustomization && <TrainerCustomization />}
+              
             <div
               className={styles.BattleStage}
               style={{
@@ -219,8 +235,21 @@ export function BattleStage({
               <FieldEffects />
 
               <StageMessage message={enemy?.currentHp === 0 ? message : null} />
+              <ToastContainer
+                className={styles.Toast}
+                toastClassName={styles.DarkToast}
+                position="bottom-left"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
 
-              <div className={styles.EnemyPokemon}>
+              {enemy?.species != null ? <div className={styles.EnemyPokemon}>
 
                 <img
                   className={classes(isFainted && 'fainted', styles.EnemyPokemonSprite)}
@@ -235,7 +264,7 @@ export function BattleStage({
                   alt={enemy?.species}
                   src={`https://img.pokemondb.net/sprites/black-white/anim/${
                     enemy?.shiny ? 'shiny' : 'normal'
-                  }/${enemy?.species.toLowerCase()}.gif`}
+                  }/${enemy?.species?.toLowerCase()}.gif`}
                 />
                 <div
                   style={{
@@ -243,7 +272,7 @@ export function BattleStage({
                     top: '10px',
                     left: '0',
                     padding: '1rem',
-                    background: '#222',
+                    background: colors.primary.shade1,
                     boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
                     clipPath: `polygon(0 0, 100% 0, 94% 100%, 0% 100%)`,
                   }}
@@ -254,7 +283,7 @@ export function BattleStage({
                   
                   {enemy?.currentHp != null && <HPBar showHp={false} totalHp={enemy.maxHp} currentHp={enemy?.currentHp} />}
                 </div>
-              </div>
+              </div> : null}
 
               {!isPokemonFainted && <div className="active-pokemon">
                 <img
@@ -267,7 +296,7 @@ export function BattleStage({
                   alt={pokemon?.species}
                   src={`https://img.pokemondb.net/sprites/black-white/anim/back-${
                     pokemon?.shiny ? 'shiny' : 'normal'
-                  }/${pokemon?.species.toLowerCase()}.gif`}
+                  }/${pokemon?.species?.toLowerCase()}.gif`}
                 />
 
                 <div
@@ -276,7 +305,7 @@ export function BattleStage({
                     bottom: '10px',
                     right: '0',
                     padding: '1rem',
-                    background: '#222',
+                    background: colors.primary.shade1,
                     boxShadow: '0 0 1rem rgba(0,0,0,0.33)',
                     
                   }}

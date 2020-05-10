@@ -18,3 +18,5 @@ export const captureFormula = ({
     statusBonus
   );
 };
+
+export const shouldBeCaught = (args: CaptureFormulaArgs) => 255 < captureFormula(args);

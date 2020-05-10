@@ -1,6 +1,7 @@
 import React from 'react';
 import { colors } from 'utils/colors';
 import { color } from 'csx';
+import { ZIndexMap } from 'utils';
 
 export interface HealBarProps {
   width?: number;
@@ -35,14 +36,27 @@ export function HealBar({
           height: '0.8rem',
           border: '1px solid white',
           borderRadius: '.5rem',
-          background: `linear-gradient(to right, ${baseColor}, ${baseColor} ${percent}%, ${colors.primary.get()} ${percent}%, ${colors.primary.get()})`,
+          background: colors.primary.get(),
           transition: '200ms all',
           width: '100%',
           display: 'flex',
           justifyContent: 'flex-start',
           alignItems: 'left',
+          position: 'relative',
+          overflow: 'hidden',
         }}
-      ><span style={{fontSize: '0.5rem', marginLeft: '4px' }}>❤</span></div>
+      >
+        <div style={{
+          background: baseColor,
+          width: `${percent}%`,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          transition: '200ms width',
+          height: '0.8rem',
+        }}>
+        </div>
+        <span style={{fontSize: '0.5rem', marginLeft: '4px', position: 'relative', zIndex: ZIndexMap.Heart }}>❤</span></div>
     </div>
   );
 }

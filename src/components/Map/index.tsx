@@ -5,7 +5,8 @@ import { style, classes } from 'typestyle';
 import { PanelProps } from 'components/Panel';
 import { ExpBar } from 'components/ExpBar';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectRoute, openDialog, State } from 'actions';
+import { selectRoute, openDialog } from 'actions';
+import {State} from 'state';
 
 export const RoutesList = style({
   textAlign: 'left',

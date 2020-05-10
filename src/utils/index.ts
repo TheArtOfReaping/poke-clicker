@@ -28,7 +28,6 @@ export * from './typeToColor';
 export * from './ZIndexMap';
 export * from './moneyFormula';
 export * from './listOfMoves';
-export * from './GameScheduler';
 export * from './Region';
 
 export const calculateBaseDPS = (level: number, spAtk?: number, atk?: number, speed?: number) => {

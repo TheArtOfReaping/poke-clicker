@@ -2,6 +2,8 @@ import React from 'react';
 import { Panel, PanelProps } from 'components/Panel';
 import { listOfPokemon, getPokemonIcon, colors } from 'utils';
 import { stylesheet, classes } from 'typestyle';
+import { useSelector } from 'react-redux';
+import { State } from 'state';
 
 export const styles = stylesheet({
   PokedexIcon: {
@@ -52,16 +54,10 @@ export interface PokedexProps {
   panelProps?: Partial<PanelProps>;
 }
 
-const dex: any = {
-  Bulbasaur: { seen: true, caught: true },
-  Ivysaur: { seen: true, caught: false },
-  Pidgey: { seen: true, caught: true },
-  Rattata: { seen: true, caught: true },
-  Pidgeot: { seen: true, caught: false },
-};
 
 //`https://github.com/msikma/pokesprite/blob/master/pokemon-gen8/regular/${poke.toLowerCase()}.png?raw=true`
 export function Pokedex({ seen, caught, total, panelProps }: PokedexProps) {
+  const dex = useSelector<State, State['pokedex']>(state => state.pokedex);
   return (
     <Panel name="Pokédex" {...panelProps}>
       <div className={classes(styles.InnerPanel, styles.Scrollbar)}>

@@ -1,9 +1,11 @@
-import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action, EDIT_ROUTE, EDIT_POKEMON, EDIT_ENEMY, OPEN_DIALOG, CREATE_NEW_ENEMY, AWARD_MONEY, EDIT_TRAINER, EDIT_GAME, EDIT_ITEM } from 'actions';
+import { USE_MOVE, ADD_POKEMON, SELECT_POKEMON, SELECT_ROUTE, Action, EDIT_ROUTE, EDIT_POKEMON, EDIT_ENEMY, OPEN_DIALOG, CREATE_NEW_ENEMY, AWARD_MONEY, EDIT_TRAINER, EDIT_GAME, EDIT_ITEM, ADD_SEEN, ADD_CAUGHT, EDIT_STYLE_ITEM } from 'actions';
 import { PartyPokemon, Enemy, Trainer, StyleCategory, listOfItems } from 'utils';
 import { expRequiredForumla } from 'utils';
 import { Nature } from 'utils/Nature';
 import { listOfRoutes } from 'utils/listOfRoutes';
-import { getStyleItem } from 'utils/data';
+import { getStyleItem, listOfStyleItems } from 'utils/data';
+import { SpeciesName } from 'utils/SpeciesName';
+import { Pokedex } from 'utils/models/Pokedex';
 
 export function inventory(state = listOfItems, action: any) {
   switch (action.type) {
@@ -15,6 +17,21 @@ export function inventory(state = listOfItems, action: any) {
         {
           ...state.find(items => items.id === action.payload.id),
           ...action.payload.item,
+        }
+      ].sort((a, b) => a.id - b.id);;
+    default:
+      return state;
+  }
+}
+
+export function styleItems(state = listOfStyleItems, action: any) {
+  switch (action.type) {
+    case EDIT_STYLE_ITEM:
+      return [
+        ...state.filter(items => items.id !== action.payload.id),
+        {
+          ...state.find(items => items.id === action.payload.id),
+          ...action.payload.styleItem,
         }
       ].sort((a, b) => a.id - b.id);;
     default:
@@ -95,6 +112,20 @@ export const initialTeamState: PartyPokemon[] = [
     pokeball: 'Ultra Ball',
     friendship: 255,
   },
+  {
+    id: 7,
+    nickname: 'Squirtle',
+    species: 'Squirtle',
+    level: 1,
+    isEgg: true,
+    position: 1,
+    currentHp: 0,
+    shiny: false,
+    gender: 'm',
+    ability: 'Torrent',
+    moves: [1],
+    expRequired: expRequiredForumla(1, 'Fast'),
+  },
   // {
   //   id: 6,
   //   nickname: 'Fargo',
@@ -163,13 +194,13 @@ export const initialTeamState: PartyPokemon[] = [
   // }
 ]
 
-const initialEnemyState: Enemy = {
-  level: 2,
-  currentHp: 20,
-  maxHp: 20,
-  shiny: false,
-  gender: 'm',
-  species: 'Pidgey',
+const initialEnemyState: any = {
+  // level: 2,
+  // currentHp: 20,
+  // maxHp: 20,
+  // shiny: false,
+  // gender: 'm',
+  // species: 'Pidgey',
 };
 
 // export function selectedPokemon(state = '', action: any) {
@@ -189,7 +220,6 @@ export function selections(state = {selectedRoute: 0, selectedPokemon: 0, select
         selectedRoute: action.payload.routeId,
       }
     case SELECT_POKEMON:
-      console.log('state + pokemonId', state, action.payload.pokemonId);
       return {
         ...state,
         selectedPokemon: action.payload.pokemonId,
@@ -253,13 +283,24 @@ export function field(state = {}, action: any) {
   }
 }
 
-export function pokedex(state = {}, action: any) {
+export function pokedex(state: Pokedex = {
+  Bulbasaur: { seen: true, caught: true },
+  Ivysaur: { seen: true, caught: false },
+  Pidgeot: { seen: true, caught: false },
+}, action: any) {
   switch (action.type) {
-    case 'ADD_SEEN':
+    case ADD_SEEN:
+      const speciesData = state[action.payload.species as SpeciesName] ? state[action.payload.species as SpeciesName] : {seen: false, caught: false};
       return {
         ...state,
-        [action.payload.species]: {seen: action.payload.seen},
-      }
+        [action.payload.species]: {...speciesData, seen: action.payload.seen},
+      };
+    case ADD_CAUGHT:
+      const speciesDataCaught = state[action.payload.species as SpeciesName] ? state[action.payload.species as SpeciesName] : {seen: false, caught: false};
+      return {
+        ...state,
+        [action.payload.species]: {...speciesDataCaught, caught: action.payload.caught}
+      };
     default:
       return state;
   }
@@ -284,6 +325,9 @@ export function trainer(state: Trainer = {
     hair: getStyleItem('Blue Hair'),
     footwear: getStyleItem('Mint Boots'),
     jacket: getStyleItem('Black Coat'),
+    neckwear: getStyleItem('White Scarf'),
+    eyewear: getStyleItem('Black Rim Glasses'),
+    background: getStyleItem('Deep Sea Background'),
   }
 }, action: any) {
   switch (action.type) {
@@ -311,5 +355,6 @@ export const reducers = {
   enemy,
   trainer,
   game,
+  styleItems,
   map,
 };
