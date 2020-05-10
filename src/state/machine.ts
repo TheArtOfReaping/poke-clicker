@@ -1,4 +1,7 @@
-import { createMachine, interpret, Machine } from 'xstate';
+import { createMachine, interpret, Machine, actions, Interpreter } from 'xstate';
+import { SpeciesName } from 'utils/SpeciesName';
+
+const {assign, send} = actions
 
 export enum GameMode {
     DamagingEnemy = 'enemyBeingDamaged',
@@ -13,6 +16,8 @@ export enum GameMode {
     SelectingStarter = 'selectingStarter',
     SelectedStarter = 'selectedStarter',
     EncounteringWildPokemon = 'encounteringWildPokemon',
+    RewardUser = 'rewardUser',
+    ReplaceUser = 'replaceUser',
 }
 
 export enum MachineType {
@@ -26,7 +31,7 @@ export const battleMachine = createMachine({
     states: {
         [GameMode.EncounteringWildPokemon]: {
             on: {
-                DAMAGE_ENEMY: GameMode.DamagedEnemy,
+                DAMAGE_ENEMY: GameMode.DamagingEnemy,
             }
         },
         // [GameMode.DamagingEnemy]: {
@@ -55,33 +60,63 @@ export interface CoreStateSchema {
             }
         },
         [GameMode.EncounteringWildPokemon]: {},
-        [GameMode.DamagingEnemy]: {}
+        [GameMode.DamagingEnemy]: {},
+        [GameMode.DamagedEnemy]: {},
+        [GameMode.DamagingUser]: {},
+        [GameMode.DamagedUser]: {},
+        [GameMode.RewardUser]: {},
+        [GameMode.ReplaceUser]: {},
     }
 }
 
 export type CoreStateEvent =
-    | { type: 'STARTER_SELECTION' }
+    | { type: 'STARTER_SELECTION', selection: SpeciesName  }
     | { type: 'START_ENCOUNTER' }
     | { type: 'BATTLE' }
+    | { type: 'KNOCKED_OUT' }
 ;
 
 export interface CoreStateContext {
-
+    starter: SpeciesName | null;
 }
 
 export const coreMachine = Machine<CoreStateContext, CoreStateSchema, CoreStateEvent>({
     id: MachineType.Core,
     initial: GameMode.SelectingStarter,
+    context: {
+        starter: null,
+    },
     states: {
         [GameMode.SelectingStarter]: {
             on: {
-                STARTER_SELECTION: GameMode.SelectedStarter,
+                STARTER_SELECTION: {
+                    target: GameMode.SelectedStarter,
+                    actions: assign({
+                        starter: (_, event) => {
+                            console.log('Selecting Starter...');
+                            return event.selection
+                        }
+                    })
+                },
             },
         },
         [GameMode.SelectedStarter]: {
             on: {
-                START_ENCOUNTER: GameMode.EncounteringWildPokemon,
+                STARTER_SELECTION: {
+                    target: GameMode.SelectedStarter,
+                    actions: [
+                        assign({
+                            starter: (_, event) => {
+                                console.log('Selecting Starter...');
+                                return event.selection
+                            }
+                        }),
+                        //send(GameMode.EncounteringWildPokemon)
+                    ]
+                },
+                START_ENCOUNTER: [GameMode.EncounteringWildPokemon]
             },
+
             //...battleMachine,
         },
         [GameMode.EncounteringWildPokemon]: {
@@ -89,12 +124,35 @@ export const coreMachine = Machine<CoreStateContext, CoreStateSchema, CoreStateE
                 BATTLE: GameMode.DamagingEnemy,
             }
         },
-        [GameMode.DamagingEnemy]: {}
+        [GameMode.DamagingEnemy]: {
+            on: {
+                BATTLE: GameMode.DamagedEnemy,
+            }
+        },
+        [GameMode.DamagedEnemy]: {
+            on: {
+                BATTLE: GameMode.DamagingUser,
+                KNOCKED_OUT: GameMode.RewardUser,
+            }
+        },
+        [GameMode.DamagingUser]: {
+            on: {
+                BATTLE: GameMode.DamagedUser,
+            }
+        },
+        [GameMode.DamagedUser]: {
+            on: {
+                BATTLE: GameMode.DamagingEnemy,
+                KNOCKED_OUT: GameMode.ReplaceUser,
+            }
+        },
+        [GameMode.ReplaceUser]: {},
+        [GameMode.RewardUser]: {},
         
     }
 });
 
 
-export const coreService = interpret(coreMachine)
-    .onTransition(state => console.log(state.value))
+export const coreService: Interpreter<CoreStateContext, CoreStateSchema, CoreStateEvent> = interpret(coreMachine)
+    .onTransition(state => console.log(state.value, state.actions, state.context))
     .start();

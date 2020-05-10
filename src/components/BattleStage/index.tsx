@@ -16,6 +16,8 @@ import { PokemonStorage } from './PokemonStorage';
 import { DialogKind } from 'components/Dialog';
 import { TrainerCustomization } from 'components/Trainer/TrainerCustomization';
 import { ToastContainer } from 'react-toastify';
+import { StarterSelection } from './StarterSelection';
+import { Main } from 'components/Main';
 
 const basicAttackAnimation = keyframes({
   '0%': {
@@ -217,15 +219,22 @@ export function BattleStage({
       {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
       {coreService.state.value === GameMode.SelectingStarter &&
         <div>
-          select a starter bitch
-          <button onClick={e => coreService.send('STARTER_SELECTION')} >Do It</button>
+          <div style={{display: 'flex'}}>
+            <StarterSelection onClick={e=>coreService.send('STARTER_SELECTION', {selection: 'Bulbasaur'})} species={'Bulbasaur'} />
+            <StarterSelection onClick={e=>coreService.send('STARTER_SELECTION', {selection: 'Charmander'})} species={'Charmander'} />
+            <StarterSelection onClick={e=>coreService.send('STARTER_SELECTION', {selection: 'Squirtle'})} species={'Squirtle'} />
+          </div>
+          <div>
+            Would you like to nickname your starter? You can always change it later.
+            <input type='text' placeholder='Nickname' />
+          </div>
         </div>
       }
       {selectedDialog === DialogKind.Storage && <PokemonStorage />}
       {selectedDialog === DialogKind.Pokemart && <Pokemart />}
       {selectedDialog === DialogKind.TrainerCustomization && <TrainerCustomization />}
               
-            <div
+      {coreService.state.value !== GameMode.SelectingStarter && <div
               className={styles.BattleStage}
               style={{
                 backgroundImage: `url(./images/backgrounds/${listOfRoutes[selectedRoute].background || 'route'}.png)`,
@@ -321,7 +330,7 @@ export function BattleStage({
                   <div className={styles.DPSBadge}></div>
                 </div>
               </div>}
-            </div>
+            </div>}
 
             <div style={{ display: 'flex', marginTop: '0.5rem', width: '800px' }}>
               {pokemon?.moves?.map((moveId, idx) => {

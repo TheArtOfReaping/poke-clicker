@@ -155,17 +155,17 @@ export function App(props: AppProps) {
   const enemySpecies: SpeciesName = enemy.species;
 
 
-  const species = getSpecies(speciesToNumber(pokemon.species)).then((res) => res);
+  const species = getSpecies(speciesToNumber(pokemon?.species)).then((res) => res);
 
   const enemyId = speciesToNumber(enemySpecies);
   getSpecies(enemyId).then(res => setEnemySpeciesData(res));
   const enemyMaxHp = enemyId ? calculateHP(enemy.level, getStat(enemyId, 'hp')) : enemyHp;
   const useableTeam = take(6, team);
-  const isWipedOut = useableTeam.reduce((prev, curr) => prev + curr.currentHp, 0) === 0;
+  const isWipedOut = useableTeam.reduce((prev, curr) => prev + curr.currentHp, 0) === 0 && !!useableTeam.length;
 
 
   
-  const speciesId = speciesToNumber(pokemon.species);
+  const speciesId = speciesToNumber(pokemon?.species);
   const maxHp = speciesId ? calculateHP(pokemon.level, getStat(speciesId, 'hp')) : 0;
   const getMaxHp = (id?: number, level?: number) => id && level ? calculateHP(level, getStat(id, 'hp')) : 0;
   const getBaseDPS = (speciesId?: number, level?: number) => speciesId && level ? calculateBaseDPS(
@@ -218,6 +218,10 @@ export function App(props: AppProps) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      if (!pokemon?.species) {
+        return;
+      }
+
       const totalHealth = useableTeam.reduce((prev, curr) => {
         return prev + calculateHP(curr.level, getStat(speciesToNumber(curr.species) || 0, 'hp'));
       }, 0);
@@ -489,7 +493,7 @@ export function App(props: AppProps) {
             </div>
 
             <div style={{width: '41%', margin: '0 0.25rem', }}>
-              <Panel name='Battle'>
+              <Panel name='Main'>
                 <BattleStage
                   username={props.authData.username}
                   maxHp={maxHp}
