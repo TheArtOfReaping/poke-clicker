@@ -9,6 +9,7 @@ export const getDailyDeal = /* GraphQL */ `
       title
       content
       price
+      date
     }
   }
 `;
@@ -24,6 +25,7 @@ export const listDailyDeals = /* GraphQL */ `
         title
         content
         price
+        date
       }
       nextToken
     }

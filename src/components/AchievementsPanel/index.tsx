@@ -10,8 +10,8 @@ const styles = stylesheet({
     flexWrap: 'wrap',
   },
   Achievement: {
-    height: '2rem',
-    width: '2rem',
+    height: '40px',
+    width: '40px',
     //border: '1px solid rgb(255, 255, 255, 0.3)',
     margin: '2px',
     filter: 'grayscale(100%)',
@@ -37,10 +37,15 @@ export function AchivementsPanel({panelProps}: AchievementsPanelProps) {
     <Panel name="Achievements" {...panelProps}>
       <div className={styles.AchievementWrapper}>
         {[
-          {
-            name: 'First Steps',
-            obtained: true,
-          },
+          // {
+          //   name: 'First Steps Alt',
+          //   obtained: true,
+          //   description: 'Awarded to trainers who\'ve taken their first steps in their journey.',
+          // },
+          // {
+          //   name: 'Boutique Star',
+          //   obtained: true,
+          // },
           {
             name: 'First Route Clear',
             obtained: false,
@@ -112,6 +117,7 @@ export function AchivementsPanel({panelProps}: AchievementsPanelProps) {
               <img
                 alt={achievement.name}
                 title={achievement.name}
+                style={{imageRendering: 'pixelated'}}
                 src={`./images/achievements/${achievement.name
                   .toLowerCase()
                   .replace(/\s/g, '-')}.png`}

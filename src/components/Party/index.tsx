@@ -251,6 +251,11 @@ export function Party({ party, panelProps }: PartyProps) {
     return prev + calculateHP(curr.level, getStat(speciesToNumber(curr.species) || 0, 'hp'));
   }, 0);
 
+  if (!party.length) {
+    return <Panel name="Party" {...panelProps}>
+      You have no Pokémon! Get one from the Professor's lab!
+    </Panel>
+  }  
 
   return (
     <Panel name="Party" {...panelProps}>

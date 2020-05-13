@@ -1,6 +1,7 @@
 import React from 'react';
 import { stylesheet, classes } from 'typestyle';
 import { colors } from 'utils/colors';
+import { Button as AntButton } from 'antd';
 
 export const styles = stylesheet({
   Base: {
@@ -44,7 +45,7 @@ export enum Intent {
 }
 
 export interface ButtonProps {
-  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e?: React.MouseEvent<HTMLElement>) => void;
   value?: any;
   intent?: Intent;
   disabled?: boolean;
@@ -60,17 +61,20 @@ export function Button({
   className,
   disabled,
   options,
+  ...buttonProps
 }: ButtonProps) {
   return (
-    <button
+    <AntButton
       disabled={disabled}
       className={classes(styles.Base, options?.smallFont && styles.SmallFont, className, disabled && styles.Disabled)}
       onClick={onClick}
+      type='primary'
+      {...buttonProps}
     >
       {options?.image && (
         <img className={styles.Image} alt="" src={options.image} />
       )}
       {value}
-    </button>
+    </AntButton>
   );
 }

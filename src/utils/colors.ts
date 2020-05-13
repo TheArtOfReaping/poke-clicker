@@ -22,6 +22,10 @@ export const createPalette = function createPalette(c: string) {
     fadeOut2: color(c).fadeOut(0.4).toString(),
     fadeOut3: color(c).fadeOut(0.6).toString(),
     fadeOut4: color(c).fadeOut(0.8).toString(),
+    desaturate1: color(c).desaturate(0.2).toString(),
+    desaturate2: color(c).desaturate(0.4).toString(),
+    desaturate3: color(c).desaturate(0.6).toString(),
+    desaturate4: color(c).desaturate(0.8).toString(),
   }
 }
 

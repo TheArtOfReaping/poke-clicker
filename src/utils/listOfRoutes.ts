@@ -55,6 +55,10 @@ export const listOfRoutes: Route[] = [
         {
             weight: 0.05,
             item: getItem('Super Potion'),
+        },
+        {
+            weight: 1,
+            item: getItem('Oran Berry'),
         }
     ],
   },

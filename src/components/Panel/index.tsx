@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { style, classes } from 'typestyle';
-import { styles } from '../../styles';
+import { style, classes, stylesheet } from 'typestyle';
 import { colors } from 'utils';
 
 export interface PanelProps {
@@ -34,40 +33,45 @@ export const panel = (height: PanelProps['height'], width: PanelProps['width'], 
   },
 });
 
-export const header = style({
-  display: 'flex',
-  //justifyContent: 'center',
-  alignItems: 'center',
-  borderBottom: '1px solid #444',
-  padding: '0.25rem',
-  height: '32px',
-});
+export const styles = stylesheet({
+  Header: {
+    display: 'flex',
+    //justifyContent: 'center',
+    alignItems: 'center',
+    borderBottom: '1px solid #444',
+    padding: '0.25rem',
+    height: '32px',
+  },
+  Body: {
+    padding: '1rem',
+  },
+  CollapsedBody: {
+    display: 'none',
+  },
+  Overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0,0,0,0.85)',
+    zIndex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  OverlayCloser: {
+    position: 'absolute',
+    top: '0.5rem',
+    right: '0.5rem',
+    cursor: 'pointer',
+  },
+  PanelToolbar: {
 
-export const body = style({
-  padding: '1rem',
-});
-
-export const CollapsedBody = style({
-  display: 'none',
-});
-
-export const Overlay = style({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: 'rgba(0,0,0,0.85)',
-  zIndex: 1,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-});
-export const OverlayCloser = style({
-  position: 'absolute',
-  top: '0.5rem',
-  right: '0.5rem',
-  cursor: 'pointer',
+  },
+  PanelToolbarItem: {
+    
+  }
 });
 
 export type Panel = React.FunctionComponent<PanelProps>;
@@ -89,14 +93,14 @@ export function Panel({
   return (
     <div className={classes(panel(height, width, isCollapsed), className && className)}>
       {overlay && (
-        <div className={Overlay}>
-          <div onClick={onClickOverlay} className={OverlayCloser}>
+        <div className={styles.Overlay}>
+          <div onClick={onClickOverlay} className={styles.OverlayCloser}>
             x
           </div>
           {overlayChildren}
         </div>
       )}
-      <header className={header}>
+      <header className={styles.Header}>
         <img
           style={{ marginRight: '0.25rem', height: '24px' }}
           src={`./images/panel-icons/${name
@@ -105,16 +109,19 @@ export function Panel({
           alt=""
         />
         <span>{name}</span>
-        <div
-          onClick={(e) => setCollapsed(!isCollapsed)}
-          style={{
-            marginLeft: 'auto',
-            fontSize: '1rem',
-            cursor: 'pointer',
-            fontWeight: 'bold',
-          }}
-        >
-          {isCollapsed ? '+' : '—'}
+        <div className={styles.PanelToolbar}>
+          <div
+            onClick={(e) => setCollapsed(!isCollapsed)}
+            className={styles.PanelToolbarItem}
+            style={{
+              marginLeft: 'auto',
+              fontSize: '1rem',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+          >
+            {isCollapsed ? '+' : '—'}
+          </div>
         </div>
       </header>
       <div className={classes(body, isCollapsed && CollapsedBody)}>

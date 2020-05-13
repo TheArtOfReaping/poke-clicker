@@ -1,16 +1,15 @@
 import React from 'react';
-import { HPBar, ExpBar, Move, Panel, OptionsPanel, ItemIcon } from '../../components';
-import { Types, calculateBaseDPS, moves, Pokemon, getSpecies, generateRewards, ZIndexMap, speciesToNumber } from 'utils';
+import { HPBar, ExpBar, Move } from '../../components';
+import { moves, ZIndexMap, speciesToNumber } from 'utils';
 import { PartyPokemon, Enemy } from 'utils';
 import { stylesheet, media, keyframes, classes } from 'typestyle';
 import { colors } from 'utils/colors';
 import { Pokemart } from './Pokemart';
 import { getGenderIcon } from 'utils';
-import { getSpeciesValue, getStat } from 'components/Party';
+import { getSpeciesValue } from 'components/Party';
 import { clamp } from 'ramda';
 import { useSelector } from 'react-redux';
-import { selectRoute } from 'actions';
-import { State, GameMode, coreService } from 'state';
+import { State, GameMode, coreService, coreMachine } from 'state';
 import { FieldEffects } from './FieldEffects';
 import { PokemonStorage } from './PokemonStorage';
 import { DialogKind } from 'components/Dialog';
@@ -18,6 +17,12 @@ import { TrainerCustomization } from 'components/Trainer/TrainerCustomization';
 import { ToastContainer } from 'react-toastify';
 import { StarterSelection } from './StarterSelection';
 import { Main } from 'components/Main';
+import { SpeciesName } from 'utils/SpeciesName';
+import { useInput } from 'rooks';
+import { Input, Button } from 'antd';
+import { useMachine } from '@xstate/react';
+import { StarterSelector } from './StarterSelector';
+import { SpeciesProvider } from 'components/SpeciesProvider';
 
 const basicAttackAnimation = keyframes({
   '0%': {
@@ -196,9 +201,10 @@ export function BattleStage({
   const selectedDialog = useSelector<State, number>(state => state.selections.selectedDialog);
   const listOfRoutes = useSelector<State, State['map']>(state => state.map);
 
-  const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 1, 'height');
-  const determineSize = (species?: string, dynamax?: boolean) => clamp(dynamax ? 360 : 164, dynamax ? 640 : 360, height * 20) + 'px';
-  const determinePosition = () => {
+
+  // const height = getSpeciesValue(speciesToNumber(pokemon?.species) || 1, 'height');
+  const determineSize = (height: number, dynamax?: boolean) => clamp(dynamax ? 360 : 164, dynamax ? 640 : 360, height * 20) + 'px';
+  const determinePosition = (height: number) => {
 
     const bottom = height > 10 ? -10 : 70
     const left = height > 10 ? -20 : 100
@@ -217,24 +223,12 @@ export function BattleStage({
   return (
     <div className="battle-wrapper">
       {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
-      {coreService.state.value === GameMode.SelectingStarter &&
-        <div>
-          <div style={{display: 'flex'}}>
-            <StarterSelection onClick={e=>coreService.send('STARTER_SELECTION', {selection: 'Bulbasaur'})} species={'Bulbasaur'} />
-            <StarterSelection onClick={e=>coreService.send('STARTER_SELECTION', {selection: 'Charmander'})} species={'Charmander'} />
-            <StarterSelection onClick={e=>coreService.send('STARTER_SELECTION', {selection: 'Squirtle'})} species={'Squirtle'} />
-          </div>
-          <div>
-            Would you like to nickname your starter? You can always change it later.
-            <input type='text' placeholder='Nickname' />
-          </div>
-        </div>
-      }
+      <StarterSelector />
       {selectedDialog === DialogKind.Storage && <PokemonStorage />}
       {selectedDialog === DialogKind.Pokemart && <Pokemart />}
       {selectedDialog === DialogKind.TrainerCustomization && <TrainerCustomization />}
               
-      {coreService.state.value !== GameMode.SelectingStarter && <div
+      {pokemon && <div
               className={styles.BattleStage}
               style={{
                 backgroundImage: `url(./images/backgrounds/${listOfRoutes[selectedRoute].background || 'route'}.png)`,
@@ -294,11 +288,11 @@ export function BattleStage({
                 </div>
               </div> : null}
 
-              {!isPokemonFainted && <div className="active-pokemon">
+              {!isPokemonFainted && <SpeciesProvider speciesNameOrId={pokemon?.species} render={poke => <div className="active-pokemon">
                 <img
                   style={{
-                    height: determineSize(pokemon?.species),
-                    ...determinePosition(),
+                    height: determineSize(poke!.height!, false),
+                    ...determinePosition(poke!.height),
                     filter: pokemon?.superShiny ? `hue-rotate(${pokemon?.superShinySeed || 0}deg)` : undefined,
                   }}
                   className={classes(styles.TeamPokemonSprite, styles.TeamPokemonSpriteFX)}
@@ -329,7 +323,8 @@ export function BattleStage({
                   />
                   <div className={styles.DPSBadge}></div>
                 </div>
-              </div>}
+              </div>
+              } />}
             </div>}
 
             <div style={{ display: 'flex', marginTop: '0.5rem', width: '800px' }}>
@@ -348,3 +343,6 @@ export function BattleStage({
           </div>
   );
 }
+
+export * from './Pokemart';
+export * from './PokemonStorage';

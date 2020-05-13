@@ -22,7 +22,10 @@ export type ItemName = 'Poké Ball' |
     'Super Rod' |
     'Shiny Charm' |
     'Amulet Coin' |
-    'Oran Berry' 
+    'Oran Berry'  |
+    'Sitrus Berry' |
+    'Aerial Ace' |
+    'Psychic'
 ;
 
 export type ItemFolder = 'apricorn' |
@@ -194,6 +197,14 @@ export const listOfItems: Item[] = [
     id: 10,
   },
   {
+    folder: 'tr',
+    img: 'flying',
+    name: 'Aerial Ace',
+    quantity: 1,
+    number: 41,
+    id: 21,
+  },
+  {
     folder: 'mega-stone',
     img: 'abomasite',
     name: 'Abomasite',
@@ -275,4 +286,24 @@ export const listOfItems: Item[] = [
     description: `Heals 10 dmg.`,
     id: 20,
   },
+  {
+    folder: 'berry',
+    img: 'sitrus',
+    name: 'Sitrus Berry',
+    quantity: 1,
+    price: 20,
+    heal: 10,
+    description: `Heals 30 dmg.`,
+    id: 20,
+  },
+  {
+    folder: 'tr',
+    img: 'psychic',
+    name: 'Psychic',
+    quantity: 0,
+    number: 29,
+    id: 21,
+  },
 ];
+
+const listOfItemNames = listOfItems.map(item => item.name);

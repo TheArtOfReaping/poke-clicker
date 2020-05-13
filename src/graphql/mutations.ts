@@ -12,6 +12,7 @@ export const createDailyDeal = /* GraphQL */ `
       title
       content
       price
+      date
     }
   }
 `;
@@ -25,6 +26,7 @@ export const updateDailyDeal = /* GraphQL */ `
       title
       content
       price
+      date
     }
   }
 `;
@@ -38,6 +40,7 @@ export const deleteDailyDeal = /* GraphQL */ `
       title
       content
       price
+      date
     }
   }
 `;

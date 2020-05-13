@@ -9,6 +9,7 @@ export const onCreateDailyDeal = /* GraphQL */ `
       title
       content
       price
+      date
     }
   }
 `;
@@ -19,6 +20,7 @@ export const onUpdateDailyDeal = /* GraphQL */ `
       title
       content
       price
+      date
     }
   }
 `;
@@ -29,6 +31,7 @@ export const onDeleteDailyDeal = /* GraphQL */ `
       title
       content
       price
+      date
     }
   }
 `;

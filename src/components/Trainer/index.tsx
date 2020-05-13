@@ -57,11 +57,11 @@ export function TrainerImage({trainer, className, imgClassName}: {trainer: Train
     {trainer.clothing?.background && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.background.img}.png`} />}
     <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/base-dawn.png`} />
     {trainer.clothing?.hair && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.hair.img}.png`} />}
+    {trainer.clothing?.eyewear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.eyewear.img}.png`} />}
     {trainer.clothing?.headgear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.headgear.img}.png`} />}
     {trainer.clothing?.footwear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.footwear.img}.png`} />}
     {trainer.clothing?.jacket && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.jacket.img}.png`} />}
     {trainer.clothing?.neckwear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.neckwear.img}.png`} />}
-    {trainer.clothing?.eyewear && <img className={classes(styles.TrainerImage, imgClassName)} src={`./images/trainer/${trainer.clothing.eyewear.img}.png`} />}
   </div>
 }
 

@@ -12,6 +12,7 @@ import * as queries from 'graphql/queries';
 import Amplify, { API, graphqlOperation } from 'aws-amplify';
 import { Dialog, DialogKind } from 'components/Dialog';
 import {useInput} from 'rooks';
+import {DateTime} from 'luxon';
 
 
 const styles = stylesheet({
@@ -70,6 +71,11 @@ const styles = stylesheet({
         backgroundImage: `linear-gradient(120deg, #f6d365 0%, #fda085 100%)`,
         color: colors.black.get(),
         transform: 'scale(1.05)',
+        paddingBottom: '8px',
+        marginTop: '14px',
+    },
+    DailyDealItemPlaceholder: {
+        height: '42px',
     },
     DailyDealTag: {
         marginLeft: '8px',
@@ -79,8 +85,39 @@ const styles = stylesheet({
         padding: '0.25rem',
         fontSize: '0.75rem',
     },
+    QuantityOwnedTag: {
+        marginLeft: '4px',
+        background: colors.primary.get(),
+        color: colors.white.get(),
+        padding: '0.25rem',
+        fontSize: '0.75rem',
+        borderRadius: '.25rem',
+        width: '4.5rem',
+        marginRight: '4px',
+    },
     DailyDealName: {
         fontWeight: 'bold',
+    },
+    DailyDealNotice: {
+        color: colors.white.fadeOut1,
+        position: 'absolute',
+        fontSize: '90%',
+        fontWeight: 'bold',
+        letterSpacing: '2px',
+        //left: 'calc(2.25rem - 4px)',
+        top: '-10px',
+        background: colors.red.get(),
+        clipPath: `polygon(90% 0, 100% 50%, 90% 100%, 0% 100%, 0% 50%, 0% 0%)`,
+        padding: '0 8px',
+        textAlign: 'center',
+    },
+    DailyDealContent: {
+        position: 'absolute',
+        bottom: '0',
+        fontSize: '90%',
+        left: '16px',
+        width: '80%',
+        textAlign: 'left',
     },
     MartItemInput: {
         background: colors.primary.get(),
@@ -95,6 +132,12 @@ const styles = stylesheet({
     BoutiquePanel: {
         position: 'relative',
         marginTop: '2rem',
+    },
+    BoutiqueItemName: {
+        margin: '2px 4px',
+    },
+    Sprite: {
+        imageRendering: 'pixelated',
     }
 
 })
@@ -127,7 +170,7 @@ export type BuyOrSellFunction<T = Item> = ({
     buyAmount: number,
 }) => void;
 
-export function MartItem({item, type, dailyDeal, onClick}: {item?: Item, type?: 'Sell' | 'Buy', dailyDeal?: boolean, onClick: BuyOrSellFunction}) {
+export function MartItem({item, type, dailyDeal, onClick}: {item?: Item & {content?: string}, type?: 'Sell' | 'Buy', dailyDeal?: boolean, onClick: BuyOrSellFunction}) {
     // TODO: Be warned, sellAmount & buyAmount are implicity any types
     const sellAmount = useInput(1);
     const buyAmount = useInput(1);
@@ -143,9 +186,12 @@ export function MartItem({item, type, dailyDeal, onClick}: {item?: Item, type?: 
     if (type === 'Sell' && !sellPrice) return null;
     return <div className={classes(styles.PurchaseItem, dailyDeal && styles.DailyDealItem)}>
         <ItemIcon img={item?.img} folder={item?.folder} />
-        <span className={classes(styles.ItemName, dailyDeal && styles.DailyDealName)}>{item?.name}</span>
-        {dailyDeal && <span className={styles.DailyDealTag}>DAILY DEAL!</span>}
-        {<span className={styles.DailyDealTag}>Owned: {item?.quantity}</span>}
+        <span className={classes(styles.ItemName, dailyDeal && styles.DailyDealName)}>
+            {item?.name}
+        </span>
+        {dailyDeal && <div className={styles.DailyDealContent}>{item?.content}</div>}
+        {dailyDeal && <span className={styles.DailyDealNotice}>DAILY DEAL!</span>}
+        {<span className={styles.QuantityOwnedTag}>Owned: {item?.quantity}</span>}
         {type === 'Buy' && <input className={styles.MartItemInput} type='number' min='1' onChange={buyAmount.onChange} value={buyAmount.value} />}
         {type === 'Sell' && <input className={styles.MartItemInput} type='number' min='1' max={item?.quantity} {...sellAmount} onChange={sellAmount.onChange} value={sellAmount.value} />}
         <Button onClick={e => onClick({type, item, sellPrice, buyPrice: itemPrice, sellAmount: sellAmount.value, buyAmount: buyAmount.value})} disabled={type === 'Buy' ? !canBuy : !canSell} className={classes(styles.MartButton, styles[type === 'Sell' ?  'SellButton' : 'BuyButton'])} value={type === 'Sell' ? `SELL $${sellPrice}` : `BUY $${itemPrice * buyAmount.value}`} />
@@ -166,10 +212,10 @@ export function BoutiqueItem({item, type, onClick}: {item?: StyleItem, type?: 'S
     // [NOTE] Indicates item is not for sale
     if (type === 'Sell' && !sellPrice) return null;
     return <div className={classes(styles.PurchaseItem)}>
-        <img src={`./images/trainer/${item?.img}.png`} />
-        <div>
-            <span className={classes(styles.ItemName)}>{item?.name}</span>
-            {<span className={styles.DailyDealTag}>Owned: {item?.quantity}</span>}
+        <img className={classes(styles.Sprite)} src={`./images/trainer/${item?.img}.png`} />
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+            <span className={classes(styles.ItemName, styles.BoutiqueItemName)}>{item?.name}</span>
+            {<span className={styles.QuantityOwnedTag}>Owned: {item?.quantity}</span>}
         </div>
         {type === 'Buy' && <input className={styles.MartItemInput} type='number' min='1' onChange={buyAmount.onChange} value={buyAmount.value} />}
         {type === 'Sell' && <input className={styles.MartItemInput} type='number' min='1' max={item?.quantity} {...sellAmount} onChange={sellAmount.onChange} value={sellAmount.value} />}
@@ -181,16 +227,20 @@ export const sellingFilter = (item: {quantity: number}) => (item?.quantity || 0)
 
 export function Pokemart({}: PokemartProps) {
     const dispatch = useDispatch();
-    const [dailyDeal, setDailyDeal] = useState<{item?: Item, price?: number}>({item: undefined, price: undefined});
+    const [dailyDeal, setDailyDeal] = useState<{item?: Item, price?: number, content?:string}>({item: undefined, price: undefined, content: undefined});
     const inventory = useSelector<State, State['inventory']>(state => state.inventory);
     const styleItems = useSelector<State, State['styleItems']>(state => state.styleItems);
     const trainer = useSelector<State, State['trainer']>(state => state.trainer);
     async function fetchy() {
-        const allDailyDeals = await API.graphql(graphqlOperation(queries.listDailyDeals));
-        const dailyDeal = (allDailyDeals as any)?.data?.listDailyDeals?.items[0];
+        const date = DateTime.local().toLocaleString();
+        const allDailyDeals = await API.graphql(graphqlOperation(queries.listDailyDeals, {
+            filter: {date: {eq: date}
+            }}));
+        const dailyDeal = (allDailyDeals as any)?.data?.listDailyDeals.items[0];
         const ddItem = dailyDeal.title;
         const ddPrice = dailyDeal.price;
-        setDailyDeal({item: getItem(ddItem), price: ddPrice});      
+        const ddContent = dailyDeal.content;
+        setDailyDeal({item: getItem(ddItem), price: ddPrice, content: ddContent});      
     }
 
     const rng = 10 || Math.ceil(dateAsRng() * 100);
@@ -282,7 +332,9 @@ export function Pokemart({}: PokemartProps) {
         <>
             <div className={styles.MartPanel}>
                 <div className={styles.PanelHeading}>Buy</div>
-                {dailyDeal.item && dailyDeal.price ? <MartItem onClick={buyOrSellItem} item={{...dailyDeal.item, price: dailyDeal.price}} dailyDeal={true} type='Buy' /> : null}
+                
+                {dailyDeal.item && dailyDeal.price ? <MartItem onClick={buyOrSellItem} item={{...dailyDeal.item, price: dailyDeal.price, content: dailyDeal.content}} dailyDeal={true} type='Buy' /> : null}
+                {!dailyDeal.item && <div className={classes(styles.PurchaseItem, styles.DailyDealItem, styles.DailyDealItemPlaceholder)}></div>}
                 {martItems.map((item, idx) => <MartItem key={idx} onClick={buyOrSellItem} item={item} type='Buy' />)}
 
                 <div className={styles.BoutiquePanel}>

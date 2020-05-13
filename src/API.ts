@@ -7,12 +7,14 @@ export type CreateDailyDealInput = {
   title: string,
   content: string,
   price?: number | null,
+  date: string,
 };
 
 export type ModelDailyDealConditionInput = {
   title?: ModelStringInput | null,
   content?: ModelStringInput | null,
   price?: ModelIntInput | null,
+  date?: ModelStringInput | null,
   and?: Array< ModelDailyDealConditionInput | null > | null,
   or?: Array< ModelDailyDealConditionInput | null > | null,
   not?: ModelDailyDealConditionInput | null,
@@ -75,6 +77,7 @@ export type UpdateDailyDealInput = {
   title?: string | null,
   content?: string | null,
   price?: number | null,
+  date?: string | null,
 };
 
 export type DeleteDailyDealInput = {
@@ -86,6 +89,7 @@ export type ModelDailyDealFilterInput = {
   title?: ModelStringInput | null,
   content?: ModelStringInput | null,
   price?: ModelIntInput | null,
+  date?: ModelStringInput | null,
   and?: Array< ModelDailyDealFilterInput | null > | null,
   or?: Array< ModelDailyDealFilterInput | null > | null,
   not?: ModelDailyDealFilterInput | null,
@@ -119,6 +123,7 @@ export type CreateDailyDealMutation = {
     title: string,
     content: string,
     price: number | null,
+    date: string,
   } | null,
 };
 
@@ -134,6 +139,7 @@ export type UpdateDailyDealMutation = {
     title: string,
     content: string,
     price: number | null,
+    date: string,
   } | null,
 };
 
@@ -149,6 +155,7 @@ export type DeleteDailyDealMutation = {
     title: string,
     content: string,
     price: number | null,
+    date: string,
   } | null,
 };
 
@@ -163,6 +170,7 @@ export type GetDailyDealQuery = {
     title: string,
     content: string,
     price: number | null,
+    date: string,
   } | null,
 };
 
@@ -181,6 +189,7 @@ export type ListDailyDealsQuery = {
       title: string,
       content: string,
       price: number | null,
+      date: string,
     } | null > | null,
     nextToken: string | null,
   } | null,
@@ -193,6 +202,7 @@ export type OnCreateDailyDealSubscription = {
     title: string,
     content: string,
     price: number | null,
+    date: string,
   } | null,
 };
 
@@ -203,6 +213,7 @@ export type OnUpdateDailyDealSubscription = {
     title: string,
     content: string,
     price: number | null,
+    date: string,
   } | null,
 };
 
@@ -213,5 +224,6 @@ export type OnDeleteDailyDealSubscription = {
     title: string,
     content: string,
     price: number | null,
+    date: string,
   } | null,
 };

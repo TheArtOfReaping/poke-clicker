@@ -20,6 +20,10 @@ export enum GameMode {
     ReplaceUser = 'replaceUser',
 }
 
+export const isStarterMode = (g: GameMode) => GameMode.SelectedStarter === g || GameMode.SelectingStarter === g;
+export const isInBattle = (g: GameMode) => GameMode.DamagedEnemy === g || GameMode.DamagedUser === g ||
+    GameMode.DamagingEnemy === g || GameMode.DamagingUser === g || GameMode.EncounteringWildPokemon === g;
+
 export enum MachineType {
     Core = 'core',
     Battle = 'battle',
@@ -114,7 +118,7 @@ export const coreMachine = Machine<CoreStateContext, CoreStateSchema, CoreStateE
                         //send(GameMode.EncounteringWildPokemon)
                     ]
                 },
-                START_ENCOUNTER: [GameMode.EncounteringWildPokemon]
+                START_ENCOUNTER: GameMode.EncounteringWildPokemon
             },
 
             //...battleMachine,

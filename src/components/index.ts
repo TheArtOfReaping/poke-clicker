@@ -10,3 +10,4 @@ export * from './Pokedex';
 export * from './AchievementsPanel';
 export * from './OptionsPanel';
 export * from './Trainer';
+export * from './Pokemart';

@@ -5,3 +5,4 @@ export * from './Pokedex';
 export * from './Game';
 export * from './Field';
 export * from './Selections';
+export * from './Quest';
