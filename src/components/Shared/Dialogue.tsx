@@ -1,10 +1,12 @@
-import React, { useState, Component } from 'react';
+import React, { useState, Component, useEffect } from 'react';
 import { stylesheet } from 'typestyle';
 import { Card } from 'components/Card';
 import { Sprite } from './Sprite';
 import { colors } from 'utils';
 import { clamp } from 'ramda';
 import Typist from 'react-typist';
+import { RedoOutlined } from '@ant-design/icons';
+import { OnClick } from 'components/Panel';
 
 
 export type DialogueText = React.ReactNode[];
@@ -29,13 +31,19 @@ export const styles = stylesheet({
         marginLeft: 'auto',
         height: '60px',
     },
+    DialogueHeader: {
+        display: 'flex',
+        padding: '0.25rem',
+        background: colors.primary.get(),
+    },
     DialogueSpeaker: {
         fontWeight: 'bold',
         textAlign: 'left',
-        padding: '0.25rem',
-        background: colors.primary.get(),
         color: colors.secondary.get(),
         textTransform: 'uppercase',
+    },
+    DialogueRefresh: {
+        marginLeft: 'auto',
     }
 });
 
@@ -46,11 +54,26 @@ export interface DialogueProps {
 
 export function Dialogue({character, text}: DialogueProps) {
     const [current, setCurrent] = useState(0);
+    const max = text.length - 1;
 
-    const onClick = (_: any) => setCurrent(clamp(0, text.length - 1, current + 1));
+    useEffect(() => {
+        console.log(current);
+    }, [current]);
+
+    const onClick: OnClick = (e: any) => {
+        setCurrent(clamp(0, max, current + 1));
+    }
 
     return <Card className={styles.Dialogue} onClick={onClick} options={{padding: false}}>
-        <div className={styles.DialogueSpeaker}>{character}</div>
+        <div className={styles.DialogueHeader}>
+            <div className={styles.DialogueSpeaker}>{character}</div>
+            {current === 0 && <div className={styles.DialogueRefresh}>
+                <RedoOutlined onClick={e => {
+                    e.stopPropagation();
+                    setCurrent(0);
+                }} />
+            </div>}
+        </div>
         <div className={styles.DialogueInner}>
             <div className={styles.DialogueText}>
                 <Typist key={current} avgTypingDelay={10} cursor={{show: false}} onTypingDone={() => console.log('done')} >{text.find((_, idx) => idx === current)}</Typist>
