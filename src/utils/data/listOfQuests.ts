@@ -29,7 +29,7 @@ export const listOfQuests: Quest[] = [
         id: 3,
         
         title: `Slowpoke Showdown`,
-        description: `Have a starting contest with Slowpoke in Pewter City`,
+        description: `Have a staring contest with Slowpoke in Pewter City`,
         rank: 'D',
         accepted: false,
         rewards: [

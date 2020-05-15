@@ -6,7 +6,7 @@ import { graphqlOperation, API } from 'aws-amplify';
 import { ItemIcon } from 'components/Inventory';
 import { getItem } from 'utils/listOfRoutes';
 import { DateTime } from 'luxon';
-import { ItemName, colors, listOfItems } from 'utils';
+import { ItemName, colors, listOfItems, OnChange } from 'utils';
 import { useInput } from 'rooks';
 import moment from 'moment';
 import { Input, Select, DatePicker, Button } from 'antd';
@@ -184,7 +184,6 @@ export function DailyDealItem({item, price, discount, content, date, onEdit}: an
 const discountRaw = (a?: number, b?: number) => a && b && (100 - ((a / b) * 100));
 const discount = (a?: number, b?: number) => `${discountRaw(a, b)?.toFixed(0)}%`;
 
-export type OnChange = (e?: ChangeEvent<HTMLElement>) => void;
 
 export function DailyDealEditor() {
     const content: {value: string, onChange: OnChange} = useInput('');

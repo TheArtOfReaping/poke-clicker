@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, Children } from 'react';
 import { style, classes, stylesheet } from 'typestyle';
 import { colors } from 'utils';
-import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined, InfoCircleOutlined, SettingOutlined } from '@ant-design/icons';
+
+export enum ToolbarItem {
+  Info = 'info',
+  Collapser = 'collapser',
+}
 
 export interface PanelProps {
   name: string;
@@ -14,6 +19,7 @@ export interface PanelProps {
   height?: string;
   width?: string;
   visible?: boolean;
+  toolbarItems?: ToolbarItem[];
 }
 
 export const panel = (height: PanelProps['height'], width: PanelProps['width'], isCollapsed: boolean) => style({
@@ -24,7 +30,7 @@ export const panel = (height: PanelProps['height'], width: PanelProps['width'], 
   border: '1px solid #444',
   borderRadius: '0.25rem',
   position: 'relative',
-  height: isCollapsed ? '32px' : height,
+  height: isCollapsed ? '42px' : height,
   width,
   overflow: 'auto',
   $nest: {
@@ -41,7 +47,8 @@ const styles = stylesheet({
     alignItems: 'center',
     borderBottom: '1px solid #444',
     padding: '0.25rem',
-    height: '32px',
+    height: '42px',
+    overflow: 'hidden',
   },
   Body: {
     padding: '1rem',
@@ -68,27 +75,56 @@ const styles = stylesheet({
     cursor: 'pointer',
   },
   PanelToolbar: {
-    borderRadius: '50%',
-    padding: '0.25rem',
+    //borderRadius: '5rem',
+    padding: '0.5rem',
+    //margin: '0.5rem',
+    paddingRight: '1rem',
+    marginRight: '-0.5rem',
     marginLeft: 'auto',
-    background: colors.primary.shade1,
+    background: colors.primary.shade2,
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
     width: '5rem',
+    clipPath: `polygon(14% 0, 100% 0%, 100% 100%, 0% 100%)`,
   },
   PanelToolbarItem: {
-    width: '24px',
-    height: '24px',
+    width: '1.5rem',
+    height: '1.5rem',
     borderRadius: '50%',
-    background: colors.primary.shade2,
+    border: '1px solid transparent',
+    background: colors.primary.shade3,
     padding: '0.5rem',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: '4px',
+    fontSize: '0.8rem !important',
+    $nest: {
+      '&:hover': {
+        borderColor: 'white',
+        background: colors.primary.tint3,
+        transition: '200ms all',
+      }
+    }
   }
 });
+
+export type OnClick = (e?: React.MouseEvent) => void;
+
+export function PanelToolbarItem({onClick, children}: {onClick?: OnClick, children: React.ReactNode}) {
+  return <div
+    onClick={onClick}
+    className={styles.PanelToolbarItem}
+    style={{
+      fontSize: '1rem',
+      cursor: 'pointer',
+      fontWeight: 'bold',
+    }}
+  >
+    {children}
+  </div>
+}
 
 export type Panel = React.FunctionComponent<PanelProps>;
 export function Panel({
@@ -100,11 +136,21 @@ export function Panel({
   visible = true,
   overlayChildren = null,
   overlay = false,
+  toolbarItems = [ToolbarItem.Collapser],
   onClickOverlay = (e) => null,
 }: PanelProps) {
   const [isCollapsed, setCollapsed] = useState(false);
 
   if (!visible) return null;
+
+  const toolbars = {
+    [ToolbarItem.Collapser]: <PanelToolbarItem onClick={(e) => setCollapsed(!isCollapsed)}>
+      {isCollapsed ? <PlusOutlined /> : <MinusOutlined />}
+    </PanelToolbarItem>,
+    [ToolbarItem.Info]: <PanelToolbarItem>
+      <SettingOutlined />
+    </PanelToolbarItem>
+  }
 
   return (
     <div className={classes(panel(height, width, isCollapsed), className && className)}>
@@ -126,17 +172,7 @@ export function Panel({
         />
         <span>{name}</span>
         <div className={styles.PanelToolbar}>
-          <div
-            onClick={(e) => setCollapsed(!isCollapsed)}
-            className={styles.PanelToolbarItem}
-            style={{
-              fontSize: '1rem',
-              cursor: 'pointer',
-              fontWeight: 'bold',
-            }}
-          >
-            {isCollapsed ? <PlusOutlined /> : <MinusOutlined />}
-          </div>
+          {toolbarItems.map(tbi => toolbars[tbi])}
         </div>
       </header>
       <div className={classes(styles.Body, isCollapsed && styles.CollapsedBody)}>

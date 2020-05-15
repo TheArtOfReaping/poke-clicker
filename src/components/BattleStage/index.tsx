@@ -16,7 +16,7 @@ import { DialogKind } from 'components/Dialog';
 import { TrainerCustomization } from 'components/Trainer/TrainerCustomization';
 import { ToastContainer } from 'react-toastify';
 import { StarterSelection } from './StarterSelection';
-import { Main } from 'components/Main';
+import { Main } from 'components/Main/Main';
 import { SpeciesName } from 'utils/SpeciesName';
 import { useInput } from 'rooks';
 import { Input, Button } from 'antd';
@@ -224,9 +224,6 @@ export function BattleStage({
     <div className="battle-wrapper">
       {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
       <StarterSelector />
-      {selectedDialog === DialogKind.Storage && <PokemonStorage />}
-      {selectedDialog === DialogKind.Pokemart && <Pokemart />}
-      {selectedDialog === DialogKind.TrainerCustomization && <TrainerCustomization />}
               
       {pokemon && <div
               className={styles.BattleStage}

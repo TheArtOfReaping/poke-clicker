@@ -1,8 +1,2 @@
-
-
-export interface MainProps {
-    
-}
-export function Main(mainProps: MainProps) {
-
-}
+export * from './DialogManager';
+export * from './Main';

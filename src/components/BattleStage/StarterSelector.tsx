@@ -7,13 +7,17 @@ import { useInput } from 'rooks';
 import { StarterSelection } from './StarterSelection';
 import { SpeciesName } from 'utils/SpeciesName';
 import {style} from 'typestyle';
-import { useDispatch } from 'react-redux';
-import { addPokemon } from 'actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { addPokemon, addSeen, createNewEnemy } from 'actions';
 import { createPokemon } from 'utils/createPokemon';
 import { Sprite } from 'components/Shared';
 import { accentedE } from 'utils/accentedE';
 import { Card } from 'components/Card';
 import { Dialogue } from 'components/Shared/Dialogue';
+import { determineShiny, speciesToNumber, choose, calculateHP, determineAbility } from 'utils';
+import { listOfNatures } from 'utils/Nature';
+import { State } from 'state';
+import { getStat } from 'components/Party';
 
 const button = style({width: '10rem', marginTop: '2rem', justifyContent: 'center'});
 
@@ -32,6 +36,8 @@ export function ProfessorOakBlurb() {
 export function StarterSelector() {
     const dispatch = useDispatch();
     const [state, send] = useMachine(coreMachine);
+    const map = useSelector<State, State['map']>(state => state.map);
+    const selectedRoute = useSelector<State, State['selections']['selectedRoute']>(state => state.selections.selectedRoute);
     const {starter} = state.context;
     const nickname = useInput('');
 
@@ -46,7 +52,29 @@ export function StarterSelector() {
             nickname: nickname.value ? nickname.value : starter,
             level: 5,
             currentHp: 20,
+            nature: choose(listOfNatures),
+            ability: determineAbility(starter),
         })));
+
+        const routeEnemy = choose(map[selectedRoute]?.pokemon);
+        const generateNewEnemy = () => {
+          const getMaxHp = (id?: number, level?: number) => id && level ? calculateHP(level, getStat(id, 'hp')) : 0;
+          dispatch(createNewEnemy({
+            level: routeEnemy.maxLevel,
+            maxHp: getMaxHp(speciesToNumber(routeEnemy.species), routeEnemy.maxLevel),
+            currentHp: getMaxHp(speciesToNumber(routeEnemy.species), routeEnemy.maxLevel),
+            species: routeEnemy.species,
+            isWild: true,
+            gender: choose(['m', 'f']),
+            nature: choose(listOfNatures),
+            ...determineShiny(),
+          }));
+          dispatch(addSeen({
+            species: routeEnemy.species,
+            seen: true,
+          }));
+        }
+        generateNewEnemy();
     }
 
     return starterMode(state.value as GameMode) ?

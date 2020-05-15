@@ -12,14 +12,20 @@ export interface DialogManagerProps {
 export function DialogManager({}: DialogManagerProps) {
     const id = useSelector<State, number>(state => state.selections.selectedDialog);
 
-    switch (id) {
-        case DialogKind.Storage:
-            return <PokemonStorage />;
-        case DialogKind.Pokemart:
-            return <Pokemart />;
-        case DialogKind.TrainerCustomization:
-            return <TrainerCustomization />
-        default:
-            return null;
-    }
+    // switch (id) {
+    //     case DialogKind.Storage:
+    //         return <PokemonStorage />;
+    //     case DialogKind.Pokemart:
+    //         return <Pokemart />;
+    //     case DialogKind.TrainerCustomization:
+    //         return <TrainerCustomization />
+    //     default:
+    //         return null;
+    // }
+
+    return <>
+        {id === DialogKind.Storage && <PokemonStorage />}
+        {id === DialogKind.Pokemart && <Pokemart />}
+        {id === DialogKind.TrainerCustomization && <TrainerCustomization />}
+    </>
 }

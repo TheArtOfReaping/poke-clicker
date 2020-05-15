@@ -1,7 +1,7 @@
 //@ts-ignore
 import * as Pokedex from 'pokeapi-js-wrapper';
 
-export interface Ability {}
+export interface DataAbility {}
 
 export interface Form {}
 
@@ -19,7 +19,7 @@ interface Type {
 export type StatName = 'hp' | 'attack' | 'defense' | 'special-defense' | 'special-attack' | 'speed';
 
 export interface PokemonData {
-    abilities: Ability[];
+    abilities: DataAbility[];
     base_experience: number;
     forms: Form[];
     game_indices: any;
