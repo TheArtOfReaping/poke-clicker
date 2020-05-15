@@ -29,6 +29,7 @@ const styles = stylesheet({
         cursor: 'pointer',
         transition: '200ms all',
         margin: '4px',
+        marginTop: '2rem',
         $nest: {
             '&:hover': {
                 //background: colors.primary.shade3,

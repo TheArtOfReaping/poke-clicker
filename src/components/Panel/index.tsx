@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { style, classes, stylesheet } from 'typestyle';
 import { colors } from 'utils';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
 export interface PanelProps {
   name: string;
@@ -33,7 +34,7 @@ export const panel = (height: PanelProps['height'], width: PanelProps['width'], 
   },
 });
 
-export const styles = stylesheet({
+const styles = stylesheet({
   Header: {
     display: 'flex',
     //justifyContent: 'center',
@@ -67,10 +68,25 @@ export const styles = stylesheet({
     cursor: 'pointer',
   },
   PanelToolbar: {
-
+    borderRadius: '50%',
+    padding: '0.25rem',
+    marginLeft: 'auto',
+    background: colors.primary.shade1,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '5rem',
   },
   PanelToolbarItem: {
-    
+    width: '24px',
+    height: '24px',
+    borderRadius: '50%',
+    background: colors.primary.shade2,
+    padding: '0.5rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: '4px',
   }
 });
 
@@ -114,17 +130,16 @@ export function Panel({
             onClick={(e) => setCollapsed(!isCollapsed)}
             className={styles.PanelToolbarItem}
             style={{
-              marginLeft: 'auto',
               fontSize: '1rem',
               cursor: 'pointer',
               fontWeight: 'bold',
             }}
           >
-            {isCollapsed ? '+' : '—'}
+            {isCollapsed ? <PlusOutlined /> : <MinusOutlined />}
           </div>
         </div>
       </header>
-      <div className={classes(body, isCollapsed && CollapsedBody)}>
+      <div className={classes(styles.Body, isCollapsed && styles.CollapsedBody)}>
         {children}
       </div>
     </div>

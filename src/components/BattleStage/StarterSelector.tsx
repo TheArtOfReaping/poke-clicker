@@ -22,7 +22,6 @@ export const starterMode = (gm: GameMode) => gm === GameMode.SelectingStarter ||
 export function ProfessorOakBlurb() {
     return <Dialogue text={[
         `Welcome to the world of Pok${accentedE}mon! I\'m Professor Oak. (Click on this card to continue reading.)`,
-        `Let\'s not beat around the bush--you've done this before.`,
         `This is an idle Pok${accentedE}mon game with an emphasis on resource management.`,
         `I hope you can enjoy this game as much as I did creating it!`,
         `I've left one of three starter Pok${accentedE}mon here for you to choose.`,

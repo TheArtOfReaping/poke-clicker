@@ -4,6 +4,8 @@ import { Card } from 'components/Card';
 import { Sprite } from './Sprite';
 import { colors } from 'utils';
 import { clamp } from 'ramda';
+import Typist from 'react-typist';
+
 
 export type DialogueText = React.ReactNode[];
 
@@ -51,7 +53,7 @@ export function Dialogue({character, text}: DialogueProps) {
         <div className={styles.DialogueSpeaker}>{character}</div>
         <div className={styles.DialogueInner}>
             <div className={styles.DialogueText}>
-                {text.find((_, idx) => idx === current)}
+                <Typist key={current} avgTypingDelay={10} cursor={{show: false}} onTypingDone={() => console.log('done')} >{text.find((_, idx) => idx === current)}</Typist>
             </div>
             <Sprite className={styles.DialogueCharacter} src={`./images/characters/${character.toLowerCase()}.png`} />
         </div>
