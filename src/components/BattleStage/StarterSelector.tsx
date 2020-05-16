@@ -14,11 +14,12 @@ import { Sprite } from 'components/Shared';
 import { accentedE } from 'utils/accentedE';
 import { Card } from 'components/Card';
 import { Dialogue } from 'components/Shared/Dialogue';
-import { determineShiny, speciesToNumber, choose, calculateHP, determineAbility, getSpecies } from 'utils';
+import { determineShiny, speciesToNumber, choose, calculateHP, determineAbility, getSpecies, Pokemon } from 'utils';
 import { listOfNatures } from 'utils/Nature';
 import { State } from 'state';
 import { getStat } from 'components/Party';
 import { generateWildPokemonMoves } from 'utils/generateWildPokemonMoves';
+import { log } from 'utils';
 
 const button = style({width: '10rem', marginTop: '2rem', justifyContent: 'center'});
 
@@ -47,27 +48,28 @@ export function StarterSelector() {
     const onClick = async (e?: any) => {
         send('START_ENCOUNTER');
         const species = await getSpecies(speciesToNumber(starter!));
-        const level = 5;
-        console.log(generateWildPokemonMoves({ moves: species?.moves, level }));
+        const level = 34;
+        const getMaxHp = ({level, stats}: {level: number, stats?: Pokemon['stats']}) => calculateHP(level, getStat(0, 'hp', false, stats))
+        log(generateWildPokemonMoves({ moves: species?.moves, level }));
         starter && dispatch(addPokemon(createPokemon({
             id: '000',
             position: 0,
             species: starter,
             nickname: nickname.value ? nickname.value : starter,
             level,
-            currentHp: 20,
+            currentHp: calculateHP(level, getStat(level, 'hp', false, species?.stats)),
             nature: choose(listOfNatures),
             ability: determineAbility(starter),
             moves: generateWildPokemonMoves({ moves: species?.moves, level }),
         })));
 
+        const enemySpecies = await getSpecies(speciesToNumber(starter!));
         const routeEnemy = choose(map[selectedRoute]?.pokemon);
         const generateNewEnemy = () => {
-          const getMaxHp = (id?: number, level?: number) => id && level ? calculateHP(level, getStat(id, 'hp')) : 0;
           dispatch(createNewEnemy({
             level: routeEnemy.maxLevel,
-            maxHp: getMaxHp(speciesToNumber(routeEnemy.species), routeEnemy.maxLevel),
-            currentHp: getMaxHp(speciesToNumber(routeEnemy.species), routeEnemy.maxLevel),
+            maxHp: getMaxHp({ level: routeEnemy.maxLevel, stats: enemySpecies?.stats }),
+            currentHp: getMaxHp({ level: routeEnemy.maxLevel, stats: enemySpecies?.stats }),
             species: routeEnemy.species,
             isWild: true,
             gender: choose(['m', 'f']),

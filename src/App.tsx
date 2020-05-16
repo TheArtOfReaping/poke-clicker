@@ -36,6 +36,7 @@ import { getItem } from 'utils/listOfRoutes';
 import { Admin } from 'components/Admin';
 import { QuestLog } from 'components/QuestLog';
 import { Main } from 'components/Main';
+import { border } from 'csx';
 
 // Prevent this bug: https://github.com/aws-amplify/amplify-cli/issues/1770
 Amplify.configure({
@@ -166,15 +167,15 @@ export function App(props: AppProps) {
 
   const enemyId = speciesToNumber(enemySpecies);
   getSpecies(enemyId).then(res => setEnemySpeciesData(res));
-  const enemyMaxHp = enemyId ? calculateHP(enemy.level, getStat(enemyId, 'hp')) : enemyHp;
+  // const enemyMaxHp = enemyId ? calculateHP(enemy.level, getStat(enemyId, 'hp')) : enemyHp;
   const useableTeam = take(6, team);
   const isWipedOut = useableTeam.reduce((prev, curr) => prev + curr.currentHp, 0) === 0 && !!useableTeam.length;
 
 
   
   const speciesId = speciesToNumber(pokemon?.species);
-  const maxHp = speciesId ? calculateHP(pokemon.level, getStat(speciesId, 'hp')) : 0;
-  const getMaxHp = (id?: number, level?: number) => id && level ? calculateHP(level, getStat(id, 'hp')) : 0;
+  // const maxHp = speciesId ? calculateHP(pokemon.level, getStat(speciesId, 'hp')) : 0;
+  // const getMaxHp = (id?: number, level?: number) => id && level ? calculateHP(level, getStat(id, 'hp')) : 0;
   const getBaseDPS = (speciesId?: number, level?: number) => speciesId && level ? calculateBaseDPS(
     level,
     getStat(
@@ -493,6 +494,10 @@ export function App(props: AppProps) {
               <div style={{display: 'flex'}}>
                 <OptionsPanel />
                 <Panel name='Console'>
+                  {(global as any)?.logs?.map((log: string, idx: number) => <div key={idx} style={{
+                    textAlign: 'left',
+                    border: border({color: colors.secondary.tint1, style: 'solid', width: '1px'})
+                  }}>{log}</div>)}
                 </Panel>
               </div>
             </div>

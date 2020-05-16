@@ -328,12 +328,13 @@ export function BattleStage({
               {pokemon?.moves?.map((m, idx) => {
                 const data = moves.find(move => toKebabCase(move.name) === m.move);
                 return data && <Move
-                damage={data.basePower}
-                totalTime={data.coolDown}
-                timeLeft={moveTimes[idx]}
-                type={data.type}
-                name={data.name}
-              />
+                  key={idx}
+                  damage={data.basePower}
+                  totalTime={data.coolDown}
+                  timeLeft={moveTimes[idx]}
+                  type={data.type}
+                  name={data.name}
+                />
               })}
             </div>
 

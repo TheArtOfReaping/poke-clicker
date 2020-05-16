@@ -75,7 +75,7 @@ export interface CoreStateSchema {
 
 export type CoreStateEvent =
     | { type: 'STARTER_SELECTION', selection: SpeciesName  }
-    | { type: 'START_ENCOUNTER' }
+    | { type: 'START_ENCOUNTER', selection: SpeciesName }
     | { type: 'BATTLE' }
     | { type: 'KNOCKED_OUT' }
 ;

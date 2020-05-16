@@ -8,6 +8,7 @@ import { editPokemon } from 'actions';
 import { color } from 'csx';
 import { ItemIcon } from 'components/Inventory';
 import { getItem } from 'utils/listOfRoutes';
+import { MoveSet } from './MoveSet';
 
 export interface PokemonViewProps {
     pokemon: PartyPokemon;
@@ -87,23 +88,7 @@ export function PokemonView({
         </div>
       </div>}
     </div>
-    {!pokemon?.isEgg && <div className={styles.MoveSet}>
-      {pokemon?.moves?.map(move => {
-        const data = moves.find(m => toKebabCase(m.name) === move.move);
-        const rank = move.rank;
-        return (
-          data && (
-            <div
-                className={styles.Move}
-                style={typeToStyle(data.type)}
-            >
-              <div className={styles.MoveName}>{data?.name}</div>
-              {rank &&  <div className={styles.MoveRank} style={{background: colors.black.tint1, color: colors.white.get()}}>{rank}</div>}
-            </div>
-          )
-        );
-      })}
-    </div>}
+    {!pokemon?.isEgg && <MoveSet pokemon={pokemon} />}
     {!pokemon.isEgg && <div className={styles.PokemonOptions}>
       <Button onClick={e => console.log(pokemon, pokemon.id, id, idx)} className={styles.PokemonOptionsButton} options={{smallFont: true}} value={!pokemon?.favorite ? "Favorite" : "Unfavorite"} />
       {/* {party.length > 1 && (

@@ -174,10 +174,13 @@ export const styles = stylesheet({
     justifyContent: 'space-between',
     // borderRadius: '.25rem',
     margin: '0 2px',
-    //padding: '2px',
-    width: '80px',
+    paddingLeft: '.25rem',
+    width: '8rem',
     fontSize: '0.8rem',
     height: '20px',
+    overflow: 'hidden',
+    borderRadius: '.25rem',
+    border: `1px solid ${colors.primary.shade2}`,
   },
   MoveName: {
     //borderRadius: '0.25rem',
@@ -225,7 +228,12 @@ export interface PartyProps {
 }
 
 export const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1, str.length);
-export const getStat = (id: number, stat: StatName) => dexEntries[id]?.stats?.find(s => s.stat.name === stat)?.base_stat;
+export const getStat = (id: number, stat: StatName, fromDexEntries: boolean = true, stats?: Pokemon['stats']) => {
+  if (!fromDexEntries) {
+    return stats?.find(s => s.stat.name === stat)?.base_stat
+  }
+  return dexEntries[id]?.stats?.find(s => s.stat.name === stat)?.base_stat;
+}
 
 export const getTypes = (id: number) => dexEntries[id]?.types;
 export const getSpeciesValue = (id: number, key: keyof Pokemon) => dexEntries[id]?.[key]

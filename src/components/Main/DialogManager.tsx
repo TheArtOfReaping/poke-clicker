@@ -11,18 +11,6 @@ export interface DialogManagerProps {
 
 export function DialogManager({}: DialogManagerProps) {
     const id = useSelector<State, number>(state => state.selections.selectedDialog);
-    console.log('dialogManager', id);
-
-    // switch (id) {
-    //     case DialogKind.Storage:
-    //         return <PokemonStorage />;
-    //     case DialogKind.Pokemart:
-    //         return <Pokemart />;
-    //     case DialogKind.TrainerCustomization:
-    //         return <TrainerCustomization />
-    //     default:
-    //         return null;
-    // }
 
     return <>
         {id === DialogKind.Storage && <PokemonStorage />}

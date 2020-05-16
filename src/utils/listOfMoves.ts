@@ -89,6 +89,27 @@ export const moves: Move[] = [
     },
     {
       id: createId(),
+      name: 'Water Gun',
+      type: Types.Water,
+      basePower: 20,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Tail Whip',
+      type: Types.Normal,
+      basePower: 20,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Scratch',
+      type: Types.Normal,
+      basePower: 20,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
       name: 'Protect',
       type: Types.Normal,
       basePower: 60,

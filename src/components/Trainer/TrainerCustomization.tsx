@@ -4,12 +4,7 @@ import { DialogKind, Dialog } from 'components/Dialog';
 import { editTrainer } from 'actions';
 import { State } from 'state';
 import { useSelector, useDispatch } from 'react-redux';
-import { StyledSprite } from 'components/Party/StyledSprite';
 import { colors, Stat, StyleItem, getCategoryStyleItems, StyleCategory, getStyleItem, Trainer } from 'utils';
-import { Button } from 'components/Button';
-import { PartyPokemon } from 'utils';
-import { PokemonView } from 'components/Party/PokemonView';
-import { color } from 'csx';
 import { TrainerImage } from '.';
 
 const styles = stylesheet({
