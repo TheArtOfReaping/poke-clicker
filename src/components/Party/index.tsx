@@ -15,7 +15,7 @@ import { take } from 'ramda';
 import { positionalSort } from 'utils/positionalSort';
 import { DialogKind } from 'components/Dialog';
 import { StyledSprite } from './StyledSprite';
-import { PokemonView } from './PokemonView';
+import { PokemonView } from 'components/PokemonView';
 
 export const styles = stylesheet({
   PokemonEntry: {

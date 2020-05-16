@@ -14,10 +14,11 @@ import { Sprite } from 'components/Shared';
 import { accentedE } from 'utils/accentedE';
 import { Card } from 'components/Card';
 import { Dialogue } from 'components/Shared/Dialogue';
-import { determineShiny, speciesToNumber, choose, calculateHP, determineAbility } from 'utils';
+import { determineShiny, speciesToNumber, choose, calculateHP, determineAbility, getSpecies } from 'utils';
 import { listOfNatures } from 'utils/Nature';
 import { State } from 'state';
 import { getStat } from 'components/Party';
+import { generateWildPokemonMoves } from 'utils/generateWildPokemonMoves';
 
 const button = style({width: '10rem', marginTop: '2rem', justifyContent: 'center'});
 
@@ -43,17 +44,21 @@ export function StarterSelector() {
 
     console.log(state);
 
-    const onClick = (e?: any) => {
+    const onClick = async (e?: any) => {
         send('START_ENCOUNTER');
+        const species = await getSpecies(speciesToNumber(starter!));
+        const level = 5;
+        console.log(generateWildPokemonMoves({ moves: species?.moves, level }));
         starter && dispatch(addPokemon(createPokemon({
             id: '000',
             position: 0,
             species: starter,
             nickname: nickname.value ? nickname.value : starter,
-            level: 5,
+            level,
             currentHp: 20,
             nature: choose(listOfNatures),
             ability: determineAbility(starter),
+            moves: generateWildPokemonMoves({ moves: species?.moves, level }),
         })));
 
         const routeEnemy = choose(map[selectedRoute]?.pokemon);

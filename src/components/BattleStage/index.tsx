@@ -1,6 +1,6 @@
 import React from 'react';
 import { HPBar, ExpBar, Move } from '../../components';
-import { moves, ZIndexMap, speciesToNumber } from 'utils';
+import { moves, ZIndexMap, speciesToNumber, toKebabCase } from 'utils';
 import { PartyPokemon, Enemy } from 'utils';
 import { stylesheet, media, keyframes, classes } from 'typestyle';
 import { colors } from 'utils/colors';
@@ -221,7 +221,7 @@ export function BattleStage({
   const message = '';
 
   return (
-    <div className="battle-wrapper">
+    <div>
       {wipedOut && <div style={{fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center'}} className={styles.Dialog}>You Wiped Out!<br/>{username} scurried back to the Pokémon Center and lost $3000...</div>}
       <StarterSelector />
               
@@ -325,14 +325,14 @@ export function BattleStage({
             </div>}
 
             <div style={{ display: 'flex', marginTop: '0.5rem', width: '800px' }}>
-              {pokemon?.moves?.map((moveId, idx) => {
-                const move = moves.find(m => m.id === moveId);
-                return move && <Move
-                damage={move.basePower}
-                totalTime={move.coolDown}
+              {pokemon?.moves?.map((m, idx) => {
+                const data = moves.find(move => toKebabCase(move.name) === m.move);
+                return data && <Move
+                damage={data.basePower}
+                totalTime={data.coolDown}
                 timeLeft={moveTimes[idx]}
-                type={move.type}
-                name={move.name}
+                type={data.type}
+                name={data.name}
               />
               })}
             </div>

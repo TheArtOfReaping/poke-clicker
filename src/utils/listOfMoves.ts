@@ -1,7 +1,8 @@
 import { Types } from 'utils';
+import { v4 as createId } from 'uuid';
 
 export interface Move {
-    id: number;
+    id: string | number;
     name: string;
     type: Types;
     basePower: number;
@@ -69,6 +70,41 @@ export const moves: Move[] = [
       id: 9,
       name: 'Air Slash',
       type: Types.Flying,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Bite',
+      type: Types.Dark,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Bubble',
+      type: Types.Water,
+      basePower: 20,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Protect',
+      type: Types.Normal,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Leech Seed',
+      type: Types.Grass,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Growl',
+      type: Types.Normal,
       basePower: 60,
       coolDown: 120,
     },

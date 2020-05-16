@@ -1,5 +1,6 @@
 //@ts-ignore
 import * as Pokedex from 'pokeapi-js-wrapper';
+import { Move } from './generateWildPokemonMoves';
 
 export interface DataAbility {}
 
@@ -28,7 +29,7 @@ export interface PokemonData {
     ids: number;
     is_default: boolean;
     location_area_encounters: string;
-    moves: any[];
+    moves: Move[];
     name: string;
     order: number;
     species: { name: StatName; url: string };

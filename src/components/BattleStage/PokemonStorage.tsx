@@ -7,7 +7,7 @@ import { StyledSprite } from 'components/Party/StyledSprite';
 import { colors, Stat } from 'utils';
 import { Button } from 'components/Button';
 import { PartyPokemon } from 'utils';
-import { PokemonView } from 'components/Party/PokemonView';
+import { PokemonView } from 'components/PokemonView';
 
 
 const styles = stylesheet({

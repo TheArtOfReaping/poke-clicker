@@ -11,6 +11,7 @@ export interface DialogManagerProps {
 
 export function DialogManager({}: DialogManagerProps) {
     const id = useSelector<State, number>(state => state.selections.selectedDialog);
+    console.log('dialogManager', id);
 
     // switch (id) {
     //     case DialogKind.Storage:

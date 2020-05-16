@@ -35,6 +35,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { getItem } from 'utils/listOfRoutes';
 import { Admin } from 'components/Admin';
 import { QuestLog } from 'components/QuestLog';
+import { Main } from 'components/Main';
 
 // Prevent this bug: https://github.com/aws-amplify/amplify-cli/issues/1770
 Amplify.configure({
@@ -148,12 +149,12 @@ export function App(props: AppProps) {
 
   const [simulationSpeed, setSimulationSpeed] = useState<number>(1000); 
 
-  const coolDown = (id: number) => getMove(pokemon?.moves?.[id])?.coolDown || 0;
+  //const coolDown = (id: number) => getMove(pokemon?.moves?.[id])?.coolDown || 0;
 
   
-  const [moveTimes, setMoveTimes] = useState(
-    [coolDown(0), coolDown(1), coolDown(2), coolDown(3)]
-  );
+  // const [moveTimes, setMoveTimes] = useState(
+  //   [coolDown(0), coolDown(1), coolDown(2), coolDown(3)]
+  // );
   
 
   
@@ -204,22 +205,6 @@ export function App(props: AppProps) {
 
 
   const routeEnemy = choose(listOfRoutes[selectedRoute]?.pokemon);
-  const generateNewEnemy = () => {
-    dispatch(createNewEnemy({
-      level: routeEnemy.maxLevel,
-      maxHp: getMaxHp(speciesToNumber(routeEnemy.species), routeEnemy.maxLevel),
-      currentHp: getMaxHp(speciesToNumber(routeEnemy.species), routeEnemy.maxLevel),
-      species: routeEnemy.species,
-      isWild: true,
-      gender: choose(['m', 'f']),
-      nature: choose(listOfNatures),
-      ...determineShiny(),
-    }));
-    dispatch(addSeen({
-      species: routeEnemy.species,
-      seen: true,
-    }));
-  }
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -504,14 +489,7 @@ export function App(props: AppProps) {
             </div>
 
             <div style={{width: '41%', margin: '0 0.25rem', }}>
-              <Panel name='Main'>
-                <BattleStage
-                  username={props.authData.username}
-                  maxHp={maxHp}
-                  enemy={enemy}
-                  wipedOut={isWipedOut}
-                pokemon={pokemon} isFainted={enemyHp === 0} moveTimes={moveTimes} />
-              </Panel>
+              <Main username={props.authData.username} />
               <div style={{display: 'flex'}}>
                 <OptionsPanel />
                 <Panel name='Console'>

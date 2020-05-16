@@ -31,6 +31,7 @@ export * from './ZIndexMap';
 export * from './moneyFormula';
 export * from './listOfMoves';
 export * from './Region';
+export * from './toKebabCase';
 
 export const calculateBaseDPS = (level: number, spAtk?: number, atk?: number, speed?: number) => {
   if (spAtk == null || atk == null || speed == null) {

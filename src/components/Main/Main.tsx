@@ -27,7 +27,7 @@ export function Main({
     const moveTimes = [1,1,1,1];
 
     return <>
-        <Panel name='Main'>
+        <Panel name='Main' toolbarItems={[]}>
             <BattleStage
                 username={username}
                 maxHp={maxHp}
@@ -35,7 +35,7 @@ export function Main({
                 wipedOut={isWipedOut}
                 pokemon={pokemon} isFainted={enemy?.currentHp === 0} moveTimes={moveTimes}
             />
+            <DialogManager />
         </Panel>
-        <DialogManager />
     </>
 }

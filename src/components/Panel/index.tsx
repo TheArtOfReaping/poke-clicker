@@ -87,6 +87,7 @@ const styles = stylesheet({
     alignItems: 'center',
     width: '5rem',
     clipPath: `polygon(14% 0, 100% 0%, 100% 100%, 0% 100%)`,
+    height: '100%',
   },
   PanelToolbarItem: {
     width: '1.5rem',

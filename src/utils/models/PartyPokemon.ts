@@ -22,9 +22,8 @@ export interface PartyPokemon {
   shiny?: boolean;
   superShiny?: boolean;
   superShinySeed?: number;
-  moves?: number[];
-  moveRanks?: {
-    moveId: number;
+  moves?: {
+    move: string;
     rank: number;
   }[];
   ivs?: {stat: StatName; value: number}[];
