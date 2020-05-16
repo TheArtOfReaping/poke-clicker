@@ -1,6 +1,7 @@
 import { head, tail, last, clamp, reverse } from "ramda";
 import { PartyPokemon } from 'utils';
 import { toKebabCase } from "./toKebabCase";
+import { log } from "utils";
 
 export interface VersionGroupDetail {
     level_learned_at: number;
@@ -40,7 +41,6 @@ export function getLearnableForWild(moves: Move[]) {
 }
 
 export function generateWildPokemonMoves({ moves, level }: { moves?: Move[], level: number }): PartyPokemon['moves'] {
-    console.log(moves, level);
     if (!moves) {
         return [{
             rank: 0,
@@ -48,10 +48,18 @@ export function generateWildPokemonMoves({ moves, level }: { moves?: Move[], lev
         }];
     }
     const learnableForWild = getLearnableForWild(moves);
-    const getLastLevelMove = last(learnableForWild.filter(move => (move?.level || 0) <= level));
+    const getLastLevelMove = head(learnableForWild.filter(move => move.level).filter(move => (move?.level || 0) <= level));
     const index = getLastLevelMove == null ? 0 : learnableForWild.indexOf(getLastLevelMove);
-    const start = clamp(0, Infinity, index - 3);
-    return learnableForWild.slice(start, index).map(move => ({move: move.name, rank: 0}));
+    const end = clamp(0, Infinity, index + 4);
+    console.log(
+        'learnableForWild',
+        learnableForWild,
+        'getLastLevelMove',
+        getLastLevelMove,
+        'index',
+        index,
+    )
+    return learnableForWild.slice(index, end).map(move => ({move: move.name, rank: 0}));
 }
 
 export function getMovesForLevel({ moves, level }: { moves?: Move[], level: number}) {

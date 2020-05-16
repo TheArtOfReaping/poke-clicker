@@ -7,7 +7,9 @@ export interface Move {
     type: Types;
     basePower: number;
     coolDown: number;
-  }
+}
+
+export const createMove = (data: Partial<Move>) => ({id: createId(), name: '', type: Types.Normal, basePower: 50, coolDown: 30})
 
 export const moves: Move[] = [
     {
@@ -124,7 +126,63 @@ export const moves: Move[] = [
     },
     {
       id: createId(),
+      name: 'Synthesis',
+      type: Types.Grass,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Worry Seed',
+      type: Types.Grass,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Growth',
+      type: Types.Normal,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Double Edge',
+      type: Types.Normal,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
       name: 'Growl',
+      type: Types.Normal,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Flamethrower',
+      type: Types.Fire,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Fire Fang',
+      type: Types.Fire,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Flame Burst',
+      type: Types.Fire,
+      basePower: 60,
+      coolDown: 120,
+    },
+    {
+      id: createId(),
+      name: 'Rage',
       type: Types.Normal,
       basePower: 60,
       coolDown: 120,

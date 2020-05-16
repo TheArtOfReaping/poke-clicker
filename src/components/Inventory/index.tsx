@@ -76,6 +76,20 @@ export const ContextMenu = style({
   border: '1px solid transparent',
   borderColor: colors.primary.inverse,
   boxShadow: '0 0 1rem rgba(0,0,0,0.1)',
+  transition: '250ms all',
+  $nest: {
+    '&::before': {
+      content: "''",
+      width: 0,
+      height: 0, 
+      borderTop: '10px solid transparent',
+      borderBottom: '10px solid transparent', 
+      borderRight: '10px solid white',
+      position: 'absolute',
+      bottom: '0.5rem',
+      left: '-10px',
+    }
+  }
 });
 export const ContextMenuItem = style({
   height: '1.5rem',
@@ -84,10 +98,11 @@ export const ContextMenuItem = style({
   width: '100%',
   alignItems: 'center',
   cursor: 'pointer',
-
+  transition: '250ms all',
   $nest: {
     '&:hover': {
       background: 'rgba(255, 255, 255, 0.2)',
+      transition: '250ms all',
     },
   },
 });
@@ -161,9 +176,6 @@ export function InventoryItem({item, idx, contextId, isContextMenu, onClick, onC
     {isContextMenu && contextId === idx && (
       <div className={ContextMenu}>
         <div className={ContextMenuItem}>Use</div>
-        <div onClick={onClickToss} className={ContextMenuItem}>
-          Toss
-        </div>
         <div className={ContextMenuItem} onClick={e => onClick(-1)}>Cancel</div>
       </div>
     )}

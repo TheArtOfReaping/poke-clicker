@@ -20,6 +20,7 @@ import { State } from 'state';
 import { getStat } from 'components/Party';
 import { generateWildPokemonMoves } from 'utils/generateWildPokemonMoves';
 import { log } from 'utils';
+import { v4 as createId } from 'uuid';
 
 const button = style({width: '10rem', marginTop: '2rem', justifyContent: 'center'});
 
@@ -52,7 +53,7 @@ export function StarterSelector() {
         const getMaxHp = ({level, stats}: {level: number, stats?: Pokemon['stats']}) => calculateHP(level, getStat(0, 'hp', false, stats))
         log(generateWildPokemonMoves({ moves: species?.moves, level }));
         starter && dispatch(addPokemon(createPokemon({
-            id: '000',
+            id: createId(),
             position: 0,
             species: starter,
             nickname: nickname.value ? nickname.value : starter,

@@ -202,6 +202,12 @@ export const styles = stylesheet({
   },
   PokemonActive: {
     marginLeft: '0.5rem',
+  },
+  AccessStorageButton: {
+    // position: 'absolute',
+    // bottom: '0.5rem',
+    // right: '0.5rem',
+    boxShadow: '0 0 4px rgba(0,0,0,0.33)',
   }
 });
 
@@ -317,7 +323,7 @@ export function Party({ party, panelProps }: PartyProps) {
       })}
 
       <Button
-        options={{ image: './images/ui/storage.png' }}
+        className={styles.AccessStorageButton}
         value="Access Storage"
         onClick={() => dispatch(openDialog({selectedDialog: DialogKind.Storage}))}
       />

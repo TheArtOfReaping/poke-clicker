@@ -6,6 +6,6 @@ declare namespace NodeJS {
 
 (global as any).logs = [];
 
-export function log(log: any) {
-    (global as any).logs.push(JSON.stringify(log));
+export function log(...log: any[]) {
+    log.forEach(g => (global as any).logs.push(JSON.stringify(g)));
 }
