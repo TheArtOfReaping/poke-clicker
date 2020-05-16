@@ -56,18 +56,14 @@ export function Dialogue({character, text}: DialogueProps) {
     const [current, setCurrent] = useState(0);
     const max = text.length - 1;
 
-    useEffect(() => {
-        console.log(current);
-    }, [current]);
-
-    const onClick: OnClick = (e: any) => {
+    const onClick: OnClick = (e) => {
         setCurrent(clamp(0, max, current + 1));
     }
 
     return <Card className={styles.Dialogue} onClick={onClick} options={{padding: false}}>
         <div className={styles.DialogueHeader}>
             <div className={styles.DialogueSpeaker}>{character}</div>
-            {current === 0 && <div className={styles.DialogueRefresh}>
+            {current === max && <div className={styles.DialogueRefresh}>
                 <RedoOutlined onClick={e => {
                     e.stopPropagation();
                     setCurrent(0);
@@ -76,7 +72,7 @@ export function Dialogue({character, text}: DialogueProps) {
         </div>
         <div className={styles.DialogueInner}>
             <div className={styles.DialogueText}>
-                <Typist key={current} avgTypingDelay={10} cursor={{show: false}} onTypingDone={() => console.log('done')} >{text.find((_, idx) => idx === current)}</Typist>
+                <Typist key={current} avgTypingDelay={10} cursor={{show: false}}>{text.find((_, idx) => idx === current)}</Typist>
             </div>
             <Sprite className={styles.DialogueCharacter} src={`./images/characters/${character.toLowerCase()}.png`} />
         </div>
