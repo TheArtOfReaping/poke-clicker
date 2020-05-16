@@ -12,6 +12,7 @@ import moment from 'moment';
 import { Input, Select, DatePicker, Button } from 'antd';
 import 'antd/dist/antd.css';
 import 'antd/dist/antd.dark.css';
+import { EditOutlined } from '@ant-design/icons';
 
 
 
@@ -177,7 +178,7 @@ export function DailyDealItem({item, price, discount, content, date, onEdit}: an
         <div className={classes(styles.DailyDealItemValue, styles.DailyDealItemMoney)}>{discount}</div>
         <div className={classes(styles.DailyDealItemValue, styles.DailyDealItemContent)}>{content}</div>
         <div className={classes(styles.DailyDealItemValue, styles.DailyDealItemDate)}>{date}</div>
-        <div onClick={onEdit} className={classes(styles.DailyDealItemValue)}>Edit</div>
+        <div onClick={onEdit} className={classes(styles.DailyDealItemValue)}><EditOutlined /></div>
     </div>
 }
 
