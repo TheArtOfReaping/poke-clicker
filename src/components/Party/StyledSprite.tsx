@@ -21,6 +21,7 @@ export function StyledSprite({member, extraStyles}:StyledSpriteProps) {
     const isFainted = member?.currentHp === 0 && !isEgg;
     if (isEgg) {
       return <img
+        alt='Egg'
         style={{
           height: '16px',
           marginLeft: '2rem',
