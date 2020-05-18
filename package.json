@@ -99,7 +99,7 @@
     "xstate": "^4.9.1"
   },
   "scripts": {
-    "prebuild": "echo 'amplify init --appId d2qsbgwevha9oh --envName production'",
+    "prebuild": "amplify push",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
