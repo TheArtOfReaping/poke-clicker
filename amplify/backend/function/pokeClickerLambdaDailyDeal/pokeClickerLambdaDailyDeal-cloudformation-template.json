@@ -62,7 +62,7 @@
 				"Runtime": "nodejs12.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "amplify-poke-clicker-production-214600-deployment",
+					"S3Bucket": "amplify-poke-clicker-production-101438-deployment",
 					"S3Key": "amplify-builds/pokeClickerLambdaDailyDeal-395448546e356570506f-build.zip"
 				}
 			}
