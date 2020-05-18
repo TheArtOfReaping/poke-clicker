@@ -1,5 +1,5 @@
-import { SpeciesName } from "./SpeciesName";
-import { choose } from "utils";
+import { SpeciesName } from './SpeciesName';
+import { choose } from 'utils';
 
 export enum Ability {
     Overgrow = 'Overgrow',
@@ -19,18 +19,18 @@ const getAbility = (hidden: boolean) => (regularAbilities: Ability[], hiddenAbil
     } else {
         return choose(regularAbilities);
     }
-}
+};
 
-export const determineAbility = function determineAbility (species: SpeciesName, hidden: boolean = false) {
+export const determineAbility = function determineAbility (species: SpeciesName, hidden = false) {
     const ab = getAbility(hidden);
     switch (species) {
-        case 'Bulbasaur':
-            return ab([Ability.Overgrow]);
-        case 'Charmander':
-            return ab([Ability.Blaze]);
-        case 'Squirtle':
-            return ab([Ability.Torrent]);
-        default:
-            return undefined;
+    case 'Bulbasaur':
+        return ab([Ability.Overgrow]);
+    case 'Charmander':
+        return ab([Ability.Blaze]);
+    case 'Squirtle':
+        return ab([Ability.Torrent]);
+    default:
+        return undefined;
     }
-}
+};

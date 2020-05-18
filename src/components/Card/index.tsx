@@ -40,5 +40,5 @@ export function Card({children, className, options, onClick}: CardProps) {
     const styles = cardStyles(options);
     return <div onClick={onClick} className={classes(styles.Card, className)}>
         {children}
-    </div>
+    </div>;
 }

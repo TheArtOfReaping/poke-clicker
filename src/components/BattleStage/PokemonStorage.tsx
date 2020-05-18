@@ -82,7 +82,7 @@ const styles = stylesheet({
         height: '0.5rem',
         imageRendering: 'pixelated',
     }
-})
+});
 
 export function pokemonSearch(searchString: string) {
     const normalize = (pokemonProp: string) => pokemonProp.toLowerCase();
@@ -92,12 +92,12 @@ export function pokemonSearch(searchString: string) {
         const value = searchStringSplit[1];
         return (pokemon: PartyPokemon) => (
             true
-        )
+        );
     } else {
         return (pokemon: PartyPokemon) => (
             normalize(pokemon.nickname).includes(searchString) ||
             normalize(pokemon.species).includes(searchString)
-        )
+        );
     }
 }
 
@@ -118,14 +118,14 @@ export function PokemonStorage() {
         else {
             setBoxSelections([poke.id]);
         }
-    }
+    };
 
     const onSearch = (e?: React.ChangeEvent<HTMLElement>) => {
         const searchString = (e?.target as any).value.trim().toLowerCase();
         setSearchTerm(searchString);
         setFilteredStorage(filteredStorage.filter(pokemonSearch(searchString)));
-        console.log(filteredStorage.filter(pokemonSearch(searchString)))
-    }
+        console.log(filteredStorage.filter(pokemonSearch(searchString)));
+    };
 
     return <Dialog kind={DialogKind.Storage} title='Storage' className={styles.Dialog}>
         <div className={styles.StorageBar}>

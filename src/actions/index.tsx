@@ -1,6 +1,6 @@
 import { v4 as createId } from 'uuid';
 import { ItemName, Item, Pokedex, StyleItem, PartyPokemon, Enemy, Trainer,
-  Field, Selections, Game,
+    Field, Selections, Game,
 } from 'utils';
 import { omit } from 'ramda';
 import { Route } from 'utils/listOfRoutes';
@@ -74,18 +74,18 @@ export type Action<T extends Type, P = unknown> = (
 export type USE_MOVE = '@battle/USE_MOVE';
 export const USE_MOVE: USE_MOVE = '@battle/USE_MOVE';
 
-export const useMove: Action<USE_MOVE, {moveId:number, actorId: number, targetId: number}> = ({
-  moveId,
-  actorId,
-  targetId,
-}) => ({
-  type: USE_MOVE,
-  payload: {
-    id: createId(),
+export const useMove: Action<USE_MOVE, {moveId: number; actorId: number; targetId: number}> = ({
     moveId,
     actorId,
     targetId,
-  },
+}) => ({
+    type: USE_MOVE,
+    payload: {
+        id: createId(),
+        moveId,
+        actorId,
+        targetId,
+    },
 });
 
 interface Pokemon {
@@ -102,31 +102,31 @@ export type ADD_POKEMON = '@team/ADD_POKEMON';
 export const ADD_POKEMON: ADD_POKEMON = '@team/ADD_POKEMON';
 
 export const addPokemon: Action<ADD_POKEMON, Partial<PartyPokemon>> = (pokemon) => ({
-  type: ADD_POKEMON,
-  payload: {
-    pokemon: {
-      ...pokemon,
-      id: createId(),
+    type: ADD_POKEMON,
+    payload: {
+        pokemon: {
+            ...pokemon,
+            id: createId(),
+        },
     },
-  },
 });
 
 
 
 export const editEnemy: Action<EDIT_ENEMY, Partial<Enemy>> = (enemy) => ({
-  type: EDIT_ENEMY,
-  payload: {
-    id: createId(),
-    enemy,
-  },
+    type: EDIT_ENEMY,
+    payload: {
+        id: createId(),
+        enemy,
+    },
 });
 
 export const createNewEnemy: Action<CREATE_NEW_ENEMY, Partial<Enemy>> = (enemy) => ({
-  type: CREATE_NEW_ENEMY,
-  payload: {
-    id: createId(),
-    enemy,
-  },
+    type: CREATE_NEW_ENEMY,
+    payload: {
+        id: createId(),
+        enemy,
+    },
 });
 
 
@@ -134,75 +134,75 @@ export type EDIT_POKEMON = '@team/EDIT_POKEMON';
 export const EDIT_POKEMON: EDIT_POKEMON = '@team/EDIT_POKEMON';
 
 export const editPokemon: Action<EDIT_POKEMON, Partial<PartyPokemon>> = (pokemon) => ({
-  type: EDIT_POKEMON,
-  payload: {
+    type: EDIT_POKEMON,
+    payload: {
     //id: createId(),
-    id: pokemon.id,
-    pokemon: omit(['id'], pokemon),
-  },
+        id: pokemon.id,
+        pokemon: omit(['id'], pokemon),
+    },
 });
 
 export const editRoute: Action<EDIT_ROUTE, Partial<Route>> = (route) => ({
-  type: EDIT_ROUTE,
-  payload: {
+    type: EDIT_ROUTE,
+    payload: {
     //id: createId(),
-    id: route.id,
-    route: omit(['id'], route),
-  },
+        id: route.id,
+        route: omit(['id'], route),
+    },
 });
 
 export const editItem: Action<EDIT_ITEM, Partial<Item>> = (item) => ({
-  type: EDIT_ITEM,
-  payload: {
+    type: EDIT_ITEM,
+    payload: {
     //id: createId(),
-    id: item.id,
-    item: omit(['id'], item),
-  },
+        id: item.id,
+        item: omit(['id'], item),
+    },
 });
 
 export const editStyleItem: Action<EDIT_STYLE_ITEM, Partial<StyleItem>> = (styleItem) => ({
-  type: EDIT_STYLE_ITEM,
-  payload: {
+    type: EDIT_STYLE_ITEM,
+    payload: {
     //id: createId(),
-    id: styleItem.id,
-    styleItem: omit(['id'], styleItem),
-  },
+        id: styleItem.id,
+        styleItem: omit(['id'], styleItem),
+    },
 });
 
 export type ADD_ITEM = '@inventory/ADD_ITEM';
 export const ADD_ITEM: ADD_ITEM = '@inventory/ADD_ITEM';
 
-export type AddItemArgs = {itemName: ItemName, quantity: number};
+export type AddItemArgs = {itemName: ItemName; quantity: number};
 export const addItem: Action<ADD_ITEM, AddItemArgs> = ({itemName, quantity}) => ({
-  type: ADD_ITEM,
-  payload: {
-    id: createId(),
-    itemName,
-    quantity,
-  }
-})
+    type: ADD_ITEM,
+    payload: {
+        id: createId(),
+        itemName,
+        quantity,
+    }
+});
 
 export type SelectPokemonArgs = {pokemonId: number};
 export type SELECT_POKEMON = '@team/SELECT_POKEMON';
 export const SELECT_POKEMON: SELECT_POKEMON = '@team/SELECT_POKEMON';
 
 export const selectPokemon: Action<SELECT_POKEMON, SelectPokemonArgs> = ({pokemonId}) => ({
-  type: SELECT_POKEMON,
-  payload: {
-    id: createId(),
-    pokemonId,
-  }
+    type: SELECT_POKEMON,
+    payload: {
+        id: createId(),
+        pokemonId,
+    }
 });
 
 export type SET_FIELD = '@field/SET_FIELD';
 export const SET_FIELD: SET_FIELD = '@field/SET_FIELD';
 
 export const setField: Action<ADD_POKEMON, Partial<Field>> = (field) => ({
-  type: ADD_POKEMON,
-  payload: {
-    id: createId(),
-    field,
-  },
+    type: ADD_POKEMON,
+    payload: {
+        id: createId(),
+        field,
+    },
 });
 
 export type SelectRouteArgs = {routeId: number};
@@ -210,64 +210,64 @@ export type SELECT_ROUTE = '@selections/SELECT_ROUTE';
 export const SELECT_ROUTE: SELECT_ROUTE = '@selections/SELECT_ROUTE';
 
 export const selectRoute: Action<SELECT_ROUTE, SelectRouteArgs> = ({routeId}) => ({
-  type: SELECT_ROUTE,
-  payload: {
-    id: createId(),
-    routeId,
-  }
+    type: SELECT_ROUTE,
+    payload: {
+        id: createId(),
+        routeId,
+    }
 });
 
 
 export const openDialog: Action<OPEN_DIALOG, {selectedDialog: number}> = ({selectedDialog}) => ({
-  type: OPEN_DIALOG,
-  payload: {
-    id: createId(),
-    selectedDialog,
-  }
-})
+    type: OPEN_DIALOG,
+    payload: {
+        id: createId(),
+        selectedDialog,
+    }
+});
 
 export const awardMoney: Action<AWARD_MONEY, Trainer> = ({money}) => ({
-  type: AWARD_MONEY,
-  payload: {
-    id: createId(),
-    money,
-  }
-})
+    type: AWARD_MONEY,
+    payload: {
+        id: createId(),
+        money,
+    }
+});
 
 export const editTrainer: Action<EDIT_TRAINER, Trainer> = (trainer) => ({
-  type: EDIT_TRAINER,
-  payload: {
-    id: createId(),
-    trainer,
-  }
-})
+    type: EDIT_TRAINER,
+    payload: {
+        id: createId(),
+        trainer,
+    }
+});
 
 export const editGame: Action<EDIT_GAME, Game> = (game) => ({
-  type: EDIT_GAME,
-  payload: {
-    id: createId(),
-    game,
-  }
+    type: EDIT_GAME,
+    payload: {
+        id: createId(),
+        game,
+    }
 });
 
 export type FlatDexEntry = {
-  species: SpeciesName,
-  caught?: boolean,
-  seen?: boolean,
+  species: SpeciesName;
+  caught?: boolean;
+  seen?: boolean;
 }
 
 export const addCaught: Action<ADD_CAUGHT, FlatDexEntry> = (payload) => ({
-  type: ADD_CAUGHT,
-  payload: {
-    id: createId(),
-    ...payload,
-  },
-})
+    type: ADD_CAUGHT,
+    payload: {
+        id: createId(),
+        ...payload,
+    },
+});
 
 export const addSeen: Action<ADD_SEEN, FlatDexEntry> = (payload) => ({
-  type: ADD_SEEN,
-  payload: {
-    id: createId(),
-    ...payload,
-  },
-})
+    type: ADD_SEEN,
+    payload: {
+        id: createId(),
+        ...payload,
+    },
+});

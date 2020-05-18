@@ -80,26 +80,26 @@ export function QuestItemRewards({rewards}: QuestItemRewardsProps) {
     const provideImage = (type: Reward<any>['rewardType'], reward?: Reward<any>['reward']) => {
         const r = reward;
         if (type === 'item') {
-            return <span><ItemIcon imgProps={{height: '24px'}} {...(r as Item)} />{(r as Item)?.name}</span>
+            return <span><ItemIcon imgProps={{height: '24px'}} {...(r as Item)} />{(r as Item)?.name}</span>;
         } else if (type === 'pokemon') {
-            return <span><PokemonIcon imgProps={{height: '40px'}} pokemon={r as PartyPokemon} />{(r as PartyPokemon)?.species}</span>
+            return <span><PokemonIcon imgProps={{height: '40px'}} pokemon={r as PartyPokemon} />{(r as PartyPokemon)?.species}</span>;
         } else if (type === 'money') {
             return `$${r?.amount}`;
         } else if (type === 'styleItem') {
-            return `${(r as StyleItem).name}`
+            return `${(r as StyleItem).name}`;
         } {
             return null;
         }
-    }
+    };
     return <div className={styles.QuestItemRewardsWrapper}>
         {rewards?.map(reward => {
             const r = reward.reward as Item;
             return <div className={styles.QuestItemReward} >
                 {provideImage(reward.rewardType, reward.reward)}
                 <div className={styles.QuestItemRewardQuantity}>×{reward.rewardQuantity}</div>
-            </div>
+            </div>;
         })}
-    </div>
+    </div>;
 }
 
 export interface QuestItemProps {
@@ -114,7 +114,7 @@ export function QuestItem({quest}: QuestItemProps) {
         {quest.rank && <div className={styles.QuestItemRank}>{quest.rank}</div>}
         <div className={styles.QuestItemDescription}>{quest.description}</div>
         <QuestItemRewards rewards={quest.rewards} />
-    </div>
+    </div>;
 }
 
 // id: number;

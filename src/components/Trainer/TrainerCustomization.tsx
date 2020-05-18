@@ -87,14 +87,14 @@ const styles = stylesheet({
     ItemNameEmpty: {
         background: colors.red.tint1,
     }
-})
+});
 
-export function TrainerStyleItem({clothing, onClick, category}: {clothing?: StyleItem, onClick?: () => void, category?: StyleCategory}) {
+export function TrainerStyleItem({clothing, onClick, category}: {clothing?: StyleItem; onClick?: () => void; category?: StyleCategory}) {
     return <div onClick={onClick} className={styles.TrainerStyleWrapper}>
         <div className={styles.StyleItemCategory}>{category}</div>
         {clothing && <img alt='' className={styles.TrainerStyleItem} src={`./images/trainer/${clothing.img}.png`} />}
         <span>{clothing?.name || 'None'}</span>
-</div>
+    </div>;
 }
 
 export function TrainerCustomization() {
@@ -110,9 +110,9 @@ export function TrainerCustomization() {
             ...trainer.clothing,
             [selectedCategory]: getStyleItem(name),
         }
-    }))
+    }));
 
-    const CategoryStyleItem = ({trainer, category}:{trainer: Trainer, category: StyleCategory}) => <TrainerStyleItem category={category} onClick={() => setSelectedCategory(category)} clothing={trainer.clothing?.[category]} />
+    const CategoryStyleItem = ({trainer, category}: {trainer: Trainer; category: StyleCategory}) => <TrainerStyleItem category={category} onClick={() => setSelectedCategory(category)} clothing={trainer.clothing?.[category]} />;
 
     return <Dialog kind={DialogKind.Storage} title='Trainer Customization' className={styles.Dialog}>
         <div className={styles.TrainerCustomWrapper}>
@@ -135,7 +135,7 @@ export function TrainerCustomization() {
                     <div onClick={selectItem('')} className={classes(styles.ItemName, trainer.clothing![selectedCategory] == null ? styles.ItemNameSelected : '')}>{'None'}</div>
                     {categoryItems.length !== 0 ? categoryItems.filter(item => item.quantity).map((item, idx) => {
                         const isSelected = trainer.clothing![selectedCategory]?.name === item.name;
-                        return <div onClick={selectItem(item.name)} key={item.name} className={classes(styles.ItemName, isSelected && styles.ItemNameSelected)}>{item.name} ({item.quantity})</div>
+                        return <div onClick={selectItem(item.name)} key={item.name} className={classes(styles.ItemName, isSelected && styles.ItemNameSelected)}>{item.name} ({item.quantity})</div>;
                     }) : <div className={classes(styles.ItemName, styles.ItemNameEmpty)}>You Have No Matching Style Options!</div>}
 
                 </div>

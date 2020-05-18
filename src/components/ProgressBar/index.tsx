@@ -15,36 +15,36 @@ const styles = (props: any) => stylesheet({
         transition: '200ms all',
         width: '10rem',
     }
-})
+});
 
 export interface ProgressBarProps {
   width?: number;
-  baseColor?: string,
+  baseColor?: string;
   
   amount: number;
   total: number;
 }
 
 export function ProgressBar({
-  width,
-  baseColor,
-  amount,
-  total
+    width,
+    baseColor,
+    amount,
+    total
 }: ProgressBarProps) {
-  const percent = (amount / total) * 100;
-  const props = arguments;
+    const percent = (amount / total) * 100;
+    const props = arguments;
 
-  return (
-    <div
-      className={classes('fs-x-small', styles(props).ProgressBar)}
-      title={`${amount}/${total}`}
-    >
-      <div
-        className={styles(props).ProgressBarInner}
-        style={{
-          background: `linear-gradient(to right, ${baseColor}, ${baseColor} ${percent}%, black ${percent}%, black)`,
-        }}
-      ></div>
-    </div>
-  );
+    return (
+        <div
+            className={classes('fs-x-small', styles(props).ProgressBar)}
+            title={`${amount}/${total}`}
+        >
+            <div
+                className={styles(props).ProgressBarInner}
+                style={{
+                    background: `linear-gradient(to right, ${baseColor}, ${baseColor} ${percent}%, black ${percent}%, black)`,
+                }}
+            ></div>
+        </div>
+    );
 }

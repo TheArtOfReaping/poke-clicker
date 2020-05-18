@@ -58,7 +58,7 @@ export function Dialogue({character, text}: DialogueProps) {
 
     const onClick: OnClick = (e) => {
         setCurrent(clamp(0, max, current + 1));
-    }
+    };
 
     return <Card className={styles.Dialogue} onClick={onClick} options={{padding: false}}>
         <div className={styles.DialogueHeader}>
@@ -76,5 +76,5 @@ export function Dialogue({character, text}: DialogueProps) {
             </div>
             <Sprite className={styles.DialogueCharacter} src={`./images/characters/${character.toLowerCase()}.png`} />
         </div>
-    </Card>
+    </Card>;
 }

@@ -37,5 +37,5 @@ export function Main({
             />
             <DialogManager />
         </Panel>
-    </>
+    </>;
 }

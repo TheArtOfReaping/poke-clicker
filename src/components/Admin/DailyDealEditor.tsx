@@ -119,35 +119,35 @@ export interface DailyDealItem {
 export const cheapDiffVal = (s: string) => {
     const [a,b,c] = s.split('/').map(s => Number.parseInt(s));
     return a + (b * 31) + (c * 365);
-}
+};
 
 
 export const Provider = {
-    DailyDealsList: function DailyDealsList ({children, dependency}: {children: (dailyDeals: DailyDealItem[]) => React.ReactNode, dependency: string}) {
+    DailyDealsList: function DailyDealsList ({children, dependency}: {children: (dailyDeals: DailyDealItem[]) => React.ReactNode; dependency: string}) {
         const [dailyDeals, setDailyDeals] = useState<DailyDealItem[]>([]);
 
         useEffect(() => {
-            fetchy()
+            fetchy();
         }, [dependency]);
 
         async function fetchy() {
             const allDailyDeals = await API.graphql(graphqlOperation(queries.listDailyDeals));
-            const {items}:{items: DailyDealItem[]} = (allDailyDeals as any)?.data?.listDailyDeals;
+            const {items}: {items: DailyDealItem[]} = (allDailyDeals as any)?.data?.listDailyDeals;
             setDailyDeals(items.sort((a, b) => cheapDiffVal(b.date) - cheapDiffVal(a.date)));
         }
 
         return <div>
             {children(dailyDeals)}
-        </div>
+        </div>;
     }
-}
+};
 
-const handleChange = (setter: Function) => (v:ItemName) => {console.log(v); setter(v);}
+const handleChange = (setter: Function) => (v: ItemName) => {console.log(v); setter(v);};
 const onDateChoose = (setter: Function) => (date: any, dateString: string) => {
     date && setter(date.format('M/D/YYYY'));
-}
+};
 
-const formDailyDeal = ({content, priceOff, date, item}: {content: {value: string}, priceOff: {value: number}, date?: string, item: ItemName}) => {
+const formDailyDeal = ({content, priceOff, date, item}: {content: {value: string}; priceOff: {value: number}; date?: string; item: ItemName}) => {
     const title = item;
     const basePrice = getItem(item)?.price;
     if (!basePrice) {
@@ -166,8 +166,8 @@ const formDailyDeal = ({content, priceOff, date, item}: {content: {value: string
         price,
         date,
         title,
-    }
-}
+    };
+};
 
 export function DailyDealItem({item, price, discount, content, date, onEdit}: any) {
     return <div className={styles.DailyDealItem}>
@@ -179,7 +179,7 @@ export function DailyDealItem({item, price, discount, content, date, onEdit}: an
         <div className={classes(styles.DailyDealItemValue, styles.DailyDealItemContent)}>{content}</div>
         <div className={classes(styles.DailyDealItemValue, styles.DailyDealItemDate)}>{date}</div>
         <div onClick={onEdit} className={classes(styles.DailyDealItemValue)}><EditOutlined /></div>
-    </div>
+    </div>;
 }
 
 const discountRaw = (a?: number, b?: number) => a && b && (100 - ((a / b) * 100));
@@ -187,8 +187,8 @@ const discount = (a?: number, b?: number) => `${discountRaw(a, b)?.toFixed(0)}%`
 
 
 export function DailyDealEditor() {
-    const content: {value: string, onChange: OnChange} = useInput('');
-    const priceOff: {value: number, onChange: OnChange} = useInput(40);
+    const content: {value: string; onChange: OnChange} = useInput('');
+    const priceOff: {value: number; onChange: OnChange} = useInput(40);
     const [date, setDate] = useState<string>();
     const [item, setItem] = useState<ItemName>('Poké Ball');
     const [id, setId] = useState('');
@@ -205,7 +205,7 @@ export function DailyDealEditor() {
             setId('');
         }
         setEditMode(false);
-    }
+    };
 
     const onEdit = (dailyDeal: DailyDealItem) => (e: any) => {
         content.onChange({...e, target: {value: dailyDeal.content}});
@@ -215,7 +215,7 @@ export function DailyDealEditor() {
         setId(dailyDeal.id);
         setDate(dailyDeal.date);
         setEditMode(true);
-    }
+    };
 
     return <div className={styles.DailyDealEditor}>
         <Provider.DailyDealsList dependency={id}>
@@ -251,5 +251,5 @@ export function DailyDealEditor() {
                 </div>
             </>)}
         </Provider.DailyDealsList>
-    </div>
+    </div>;
 }

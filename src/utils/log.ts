@@ -1,6 +1,6 @@
 declare namespace NodeJS {
     export interface Global {
-      logs: any
+      logs: any;
     }
 }
 

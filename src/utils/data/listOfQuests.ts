@@ -7,8 +7,8 @@ export const listOfQuests: Quest[] = [
     {
         id: 1,
         
-        title: `Take to the Skies`,
-        description: `Catch 3 Pidgey`,
+        title: 'Take to the Skies',
+        description: 'Catch 3 Pidgey',
         rank: 'F',
         accepted: true,
         rewards: [
@@ -23,13 +23,13 @@ export const listOfQuests: Quest[] = [
                 rewardType: 'pokemon',
             }
         ],
-        requester: `Birdkeeper Toby`
+        requester: 'Birdkeeper Toby'
     },
     {
         id: 3,
         
-        title: `Slowpoke Showdown`,
-        description: `Have a staring contest with Slowpoke in Pewter City`,
+        title: 'Slowpoke Showdown',
+        description: 'Have a staring contest with Slowpoke in Pewter City',
         rank: 'D',
         accepted: false,
         rewards: [
@@ -59,13 +59,13 @@ export const listOfQuests: Quest[] = [
                 rewardType: 'styleItem',
             }
         ],
-        requester: `Birdkeeper Toby`
+        requester: 'Birdkeeper Toby'
     },
     {
         id: 2,
         
-        title: `Mewtwo Strikes Back!`,
-        description: `Raid Mewtwo's lair & defeat Mewtwo`,
+        title: 'Mewtwo Strikes Back!',
+        description: 'Raid Mewtwo\'s lair & defeat Mewtwo',
         rank: 'S+',
         accepted: false,
         rewards: [
@@ -80,6 +80,6 @@ export const listOfQuests: Quest[] = [
                 rewardType: 'pokemon',
             }
         ],
-        requester: `Birdkeeper Toby`
+        requester: 'Birdkeeper Toby'
     }
-]
+];

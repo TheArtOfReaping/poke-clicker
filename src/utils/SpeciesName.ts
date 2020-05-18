@@ -81,7 +81,7 @@ export type SpeciesName =
     'Slowbro' |
     'Magnemite' |
     'Magneton' |
-    "Farfetch'd" |
+    'Farfetch\'d' |
     'Doduo' |
     'Dodrio' |
     'Seel' |
@@ -863,7 +863,7 @@ export type SpeciesName =
     'Obstagoon' |
     'Perrserker' |
     'Cursola' |
-    "Sirfetch'd" |
+    'Sirfetch\'d' |
     'Mr. Rime' |
     'Runerigus' |
     'Milcery' |

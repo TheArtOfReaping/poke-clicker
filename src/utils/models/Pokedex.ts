@@ -1,5 +1,5 @@
-import { SpeciesName } from "utils/SpeciesName";
+import { SpeciesName } from 'utils/SpeciesName';
 
 export type Pokedex = {
-    [S in SpeciesName]?: {seen: boolean, caught: boolean};
+    [S in SpeciesName]?: {seen: boolean; caught: boolean};
   }

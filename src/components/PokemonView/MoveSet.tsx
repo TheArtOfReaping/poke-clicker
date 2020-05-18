@@ -14,16 +14,16 @@ export function MoveSet({pokemon}: MoveSetProps) {
             const rank = move.rank;
             return (
                 data && (
-                <div
-                    className={styles.Move}
-                    style={typeToStyle(data.type)}
-                    key={idx}
-                >
-                    <div className={styles.MoveName}>{data?.name}</div>
-                    <div className={styles.MoveRank} style={{background: colors.black.tint1, color: colors.white.get()}}>{rank}</div>
-                </div>
+                    <div
+                        className={styles.Move}
+                        style={typeToStyle(data.type)}
+                        key={idx}
+                    >
+                        <div className={styles.MoveName}>{data?.name}</div>
+                        <div className={styles.MoveRank} style={{background: colors.black.tint1, color: colors.white.get()}}>{rank}</div>
+                    </div>
                 )
             );
         })}
-    </div>
+    </div>;
 }

@@ -3,5 +3,5 @@ import { render } from '@testing-library/react';
 import App from './App';
 
 test('just testin da build', () => {
-  expect(true).toBe(true);
+    expect(true).toBe(true);
 });

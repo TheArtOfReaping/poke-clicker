@@ -1,6 +1,6 @@
-import { Item } from "utils/listOfItems";
-import { PartyPokemon } from "./PartyPokemon";
-import { StyleItem } from "./Trainer";
+import { Item } from 'utils/listOfItems';
+import { PartyPokemon } from './PartyPokemon';
+import { StyleItem } from './Trainer';
 
 export interface Money {
     amount: number;

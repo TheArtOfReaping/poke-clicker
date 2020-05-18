@@ -1,12 +1,12 @@
-import { PartyPokemon } from "utils";
-import { clamp } from "ramda";
+import { PartyPokemon } from 'utils';
+import { clamp } from 'ramda';
 
 const SHINY_RATE = 4096;
 
 function getRandom<A>(weights: number[], values: A[]) {
-    let num = Math.random();
+    const num = Math.random();
     let s = 0;
-    let lastIndex = weights.length - 1;
+    const lastIndex = weights.length - 1;
 
     for (let i = 0; i < lastIndex; ++i) {
         s += weights[i];
@@ -16,7 +16,7 @@ function getRandom<A>(weights: number[], values: A[]) {
     }
 
     return values[lastIndex];
-};
+}
 
 
 export const determineShiny = function determineShiny(): Pick<PartyPokemon, 'shiny' | 'superShiny' | 'superShinySeed'> {
@@ -30,5 +30,5 @@ export const determineShiny = function determineShiny(): Pick<PartyPokemon, 'shi
         shiny,
         superShiny,
         superShinySeed,
-    }
-}
+    };
+};

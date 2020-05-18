@@ -28,7 +28,7 @@ const styles = stylesheet({
     DialogChildWrapper: {
         display: 'flex',
     }
-})
+});
 
 export enum DialogKind {
     Pokemart = 1,
@@ -51,12 +51,12 @@ export function Dialog({
 }: DialogProps) {
     const dispatch = useDispatch();
     return <div className={styles.DialogOuter}>
-            <div className={classes(styles.Dialog)}>
+        <div className={classes(styles.Dialog)}>
             <div onClick={e => dispatch(openDialog({selectedDialog: -1}))} className={styles.DialogClose}>x</div>
             <h1>{title}</h1>
             <div className={classes(styles.DialogChildWrapper, className)}>
                 {children}
             </div>
         </div>
-    </div>
-};
+    </div>;
+}

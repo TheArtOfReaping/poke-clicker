@@ -1,7 +1,7 @@
 import { createMachine, interpret, Machine, actions, Interpreter } from 'xstate';
 import { SpeciesName } from 'utils/SpeciesName';
 
-const {assign, send} = actions
+const {assign, send} = actions;
 
 export enum GameMode {
     DamagingEnemy = 'enemyBeingDamaged',
@@ -53,29 +53,29 @@ export const battleMachine = createMachine({
 
 export interface CoreStateSchema {
     states: {
-        [GameMode.SelectingStarter]: {},
+        [GameMode.SelectingStarter]: {};
         [GameMode.SelectedStarter]: {
             states: {
                 [GameMode.EncounteringWildPokemon]: {
                     states: {
-                        [GameMode.DamagingEnemy]: {}
-                    }
-                }
-            }
-        },
-        [GameMode.EncounteringWildPokemon]: {},
-        [GameMode.DamagingEnemy]: {},
-        [GameMode.DamagedEnemy]: {},
-        [GameMode.DamagingUser]: {},
-        [GameMode.DamagedUser]: {},
-        [GameMode.RewardUser]: {},
-        [GameMode.ReplaceUser]: {},
-    }
+                        [GameMode.DamagingEnemy]: {};
+                    };
+                };
+            };
+        };
+        [GameMode.EncounteringWildPokemon]: {};
+        [GameMode.DamagingEnemy]: {};
+        [GameMode.DamagedEnemy]: {};
+        [GameMode.DamagingUser]: {};
+        [GameMode.DamagedUser]: {};
+        [GameMode.RewardUser]: {};
+        [GameMode.ReplaceUser]: {};
+    };
 }
 
 export type CoreStateEvent =
-    | { type: 'STARTER_SELECTION', selection: SpeciesName  }
-    | { type: 'START_ENCOUNTER', selection: SpeciesName }
+    | { type: 'STARTER_SELECTION'; selection: SpeciesName  }
+    | { type: 'START_ENCOUNTER'; selection: SpeciesName }
     | { type: 'BATTLE' }
     | { type: 'KNOCKED_OUT' }
 ;
@@ -98,7 +98,7 @@ export const coreMachine = Machine<CoreStateContext, CoreStateSchema, CoreStateE
                     actions: assign({
                         starter: (_, event) => {
                             console.log('Selecting Starter...');
-                            return event.selection
+                            return event.selection;
                         }
                     })
                 },
@@ -112,7 +112,7 @@ export const coreMachine = Machine<CoreStateContext, CoreStateSchema, CoreStateE
                         assign({
                             starter: (_, event) => {
                                 console.log('Selecting Starter...');
-                                return event.selection
+                                return event.selection;
                             }
                         }),
                         //send(GameMode.EncounteringWildPokemon)

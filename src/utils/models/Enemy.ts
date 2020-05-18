@@ -1,5 +1,5 @@
-import { SpeciesName } from "utils/SpeciesName";
-import { Nature } from "utils/Nature";
+import { SpeciesName } from 'utils/SpeciesName';
+import { Nature } from 'utils/Nature';
 
 export interface Enemy {
     level: number;

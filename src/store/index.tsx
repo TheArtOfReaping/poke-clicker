@@ -1,9 +1,9 @@
 import {
-  applyMiddleware,
-  createStore,
-  Middleware,
-  combineReducers,
-  compose,
+    applyMiddleware,
+    createStore,
+    Middleware,
+    combineReducers,
+    compose,
 } from 'redux';
 
 import { reducers } from '../reducers';
@@ -15,15 +15,15 @@ export const middlewares: Middleware[] = [];
 const composeEnhancers =
   typeof window === 'object' &&
   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   
-    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+      (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
       // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
-    }) : compose;
+      }) : compose;
 
 const enhancer = composeEnhancers(
-  applyMiddleware(...middlewares),
+    applyMiddleware(...middlewares),
 );
 
 export const store = createStore(
-  storeReducers,
-  enhancer,
+    storeReducers,
+    enhancer,
 );

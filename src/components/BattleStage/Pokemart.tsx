@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { stylesheet, classes } from "typestyle";
+import { stylesheet, classes } from 'typestyle';
 import { getItem } from 'utils/listOfRoutes';
 import { colors } from 'utils/colors';
 import { ItemIcon } from 'components/Inventory';
@@ -68,7 +68,7 @@ const styles = stylesheet({
         textAlign: 'left',
     },
     DailyDealItem: {
-        backgroundImage: `linear-gradient(120deg, #f6d365 0%, #fda085 100%)`,
+        backgroundImage: 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)',
         color: colors.black.get(),
         transform: 'scale(1.05)',
         paddingBottom: '8px',
@@ -107,7 +107,7 @@ const styles = stylesheet({
         //left: 'calc(2.25rem - 4px)',
         top: '-10px',
         background: colors.red.get(),
-        clipPath: `polygon(90% 0, 100% 50%, 90% 100%, 0% 100%, 0% 50%, 0% 0%)`,
+        clipPath: 'polygon(90% 0, 100% 50%, 90% 100%, 0% 100%, 0% 50%, 0% 0%)',
         padding: '0 8px',
         textAlign: 'center',
     },
@@ -140,7 +140,7 @@ const styles = stylesheet({
         imageRendering: 'pixelated',
     }
 
-})
+});
 
 export const slashPrice = (price?: number) => {
     if (!price) {
@@ -148,7 +148,7 @@ export const slashPrice = (price?: number) => {
     } else {
         return price / 2;
     }
-}
+};
 
 export interface PokemartProps {
 
@@ -162,15 +162,15 @@ export type BuyOrSellFunction<T = Item> = ({
     sellAmount,
     buyAmount,
 }: {
-    type?: 'Buy' | 'Sell',
-    item?: T,
-    sellPrice: Nullable<number>,
-    buyPrice: number,
-    sellAmount: number,
-    buyAmount: number,
+    type?: 'Buy' | 'Sell';
+    item?: T;
+    sellPrice: Nullable<number>;
+    buyPrice: number;
+    sellAmount: number;
+    buyAmount: number;
 }) => void;
 
-export function MartItem({item, type, dailyDeal, onClick}: {item?: Item & {content?: string}, type?: 'Sell' | 'Buy', dailyDeal?: boolean, onClick: BuyOrSellFunction}) {
+export function MartItem({item, type, dailyDeal, onClick}: {item?: Item & {content?: string}; type?: 'Sell' | 'Buy'; dailyDeal?: boolean; onClick: BuyOrSellFunction}) {
     // TODO: Be warned, sellAmount & buyAmount are implicity any types
     const sellAmount = useInput(1);
     const buyAmount = useInput(1);
@@ -198,7 +198,7 @@ export function MartItem({item, type, dailyDeal, onClick}: {item?: Item & {conte
     </div>;
 }
 
-export function BoutiqueItem({item, type, onClick}: {item?: StyleItem, type?: 'Sell' | 'Buy', onClick: BuyOrSellFunction<StyleItem>}) {
+export function BoutiqueItem({item, type, onClick}: {item?: StyleItem; type?: 'Sell' | 'Buy'; onClick: BuyOrSellFunction<StyleItem>}) {
     // TODO: Be warned, sellAmount & buyAmount are implicity any types
     const sellAmount = useInput(1);
     const buyAmount = useInput(1);
@@ -227,7 +227,7 @@ export const sellingFilter = (item: {quantity: number}) => (item?.quantity || 0)
 
 export function Pokemart({}: PokemartProps) {
     const dispatch = useDispatch();
-    const [dailyDeal, setDailyDeal] = useState<{item?: Item, price?: number, content?:string}>({item: undefined, price: undefined, content: undefined});
+    const [dailyDeal, setDailyDeal] = useState<{item?: Item; price?: number; content?: string}>({item: undefined, price: undefined, content: undefined});
     const inventory = useSelector<State, State['inventory']>(state => state.inventory);
     const styleItems = useSelector<State, State['styleItems']>(state => state.styleItems);
     const trainer = useSelector<State, State['trainer']>(state => state.trainer);
@@ -249,7 +249,7 @@ export function Pokemart({}: PokemartProps) {
     const extraItems: Record<number, (Item | undefined)[]> = {
         9: [getItem('Dive Ball'), getItem('Max Potion')],
         10: [getItem('Rare Candy'), getItem('Moon Stone')]
-    }
+    };
 
     const martItems = [
         getItem('Potion'),
@@ -261,12 +261,12 @@ export function Pokemart({}: PokemartProps) {
 
     const extraBoutiqueItems: Record<number, (StyleItem | undefined)[]> = {
         10: [getStyleItem('Pink Hat'), getStyleItem('Dimmahat')]
-    }
+    };
 
     const boutiqueItems = [
         getStyleItem('Red Hat'),
         ...(extraBoutiqueItems[rng] == null ? [] : extraBoutiqueItems[rng]),
-    ]
+    ];
 
     const buyOrSellItem: BuyOrSellFunction = ({type,
         item,
@@ -274,20 +274,20 @@ export function Pokemart({}: PokemartProps) {
         buyPrice,
         sellAmount,
         buyAmount}) => {
-            const foundItem = inventory.find(inv => inv.id === item?.id);
-            console.log(item?.id, item?.name);
-            if (foundItem) {
-                if (type === 'Sell') {
-                    dispatch(editTrainer({...trainer, money: (trainer?.money || 0) + (sellPrice || 0)}));
-                    dispatch(editItem({...foundItem, quantity: (foundItem?.quantity || 0) - Number.parseInt(sellAmount as any)}))
-                } else if (type === 'Buy') {
-                    dispatch(editTrainer({...trainer, money: (trainer?.money || 0) - (buyPrice || 0)}));
-                    dispatch(editItem({...foundItem, quantity: (foundItem?.quantity || 0) + Number.parseInt(buyAmount as any)}))
-                }
-            } else {
-                return;
+        const foundItem = inventory.find(inv => inv.id === item?.id);
+        console.log(item?.id, item?.name);
+        if (foundItem) {
+            if (type === 'Sell') {
+                dispatch(editTrainer({...trainer, money: (trainer?.money || 0) + (sellPrice || 0)}));
+                dispatch(editItem({...foundItem, quantity: (foundItem?.quantity || 0) - Number.parseInt(sellAmount as any)}));
+            } else if (type === 'Buy') {
+                dispatch(editTrainer({...trainer, money: (trainer?.money || 0) - (buyPrice || 0)}));
+                dispatch(editItem({...foundItem, quantity: (foundItem?.quantity || 0) + Number.parseInt(buyAmount as any)}));
             }
-    }
+        } else {
+            return;
+        }
+    };
 
     const buyOrSellStyleItem: BuyOrSellFunction<StyleItem> = ({type,
         item,
@@ -295,36 +295,36 @@ export function Pokemart({}: PokemartProps) {
         buyPrice,
         sellAmount,
         buyAmount}) => {
-            const foundItem = styleItems.find(inv => inv.id === item?.id);
-            if (foundItem) {
-                if (type === 'Sell') {
-                    const quantity = (foundItem?.quantity || 0) - Number.parseInt(sellAmount as any);
-                    dispatch(editTrainer({...trainer, money: (trainer?.money || 0) + (sellPrice || 0)}));
-                    dispatch(editStyleItem({...foundItem, quantity}));
-                    if (quantity <= 0) {
-                        const category: StyleCategory = foundItem.category;
-                        if (trainer.clothing![category]!.id === item?.id) {
-                            dispatch(editTrainer({
-                                clothing: {
-                                    ...trainer.clothing,
-                                    [category]: undefined,
-                                }
-                            }))
-                        }
+        const foundItem = styleItems.find(inv => inv.id === item?.id);
+        if (foundItem) {
+            if (type === 'Sell') {
+                const quantity = (foundItem?.quantity || 0) - Number.parseInt(sellAmount as any);
+                dispatch(editTrainer({...trainer, money: (trainer?.money || 0) + (sellPrice || 0)}));
+                dispatch(editStyleItem({...foundItem, quantity}));
+                if (quantity <= 0) {
+                    const category: StyleCategory = foundItem.category;
+                    if (trainer.clothing![category]!.id === item?.id) {
+                        dispatch(editTrainer({
+                            clothing: {
+                                ...trainer.clothing,
+                                [category]: undefined,
+                            }
+                        }));
                     }
-                } else if (type === 'Buy') {
-                    dispatch(editTrainer({...trainer, money: (trainer?.money || 0) - (buyPrice || 0)}));
-                    dispatch(editStyleItem({...foundItem, quantity: (foundItem?.quantity || 0) + Number.parseInt(buyAmount as any)}))
                 }
-            } else {
-                return;
+            } else if (type === 'Buy') {
+                dispatch(editTrainer({...trainer, money: (trainer?.money || 0) - (buyPrice || 0)}));
+                dispatch(editStyleItem({...foundItem, quantity: (foundItem?.quantity || 0) + Number.parseInt(buyAmount as any)}));
             }
-    }
+        } else {
+            return;
+        }
+    };
 
     const effectDependency = dailyDeal.item?.name;
     useEffect(() => {
-        fetchy()
-    }, [effectDependency])
+        fetchy();
+    }, [effectDependency]);
 
     console.log(dailyDeal);
     
@@ -343,7 +343,7 @@ export function Pokemart({}: PokemartProps) {
                 </div>
             </div>
             <div className={styles.MartPanel}>
-            <div className={styles.PanelHeading}>Sell</div>
+                <div className={styles.PanelHeading}>Sell</div>
                 {inventory.filter(sellingFilter).map((item, idx) => <MartItem key={idx} onClick={buyOrSellItem} item={item} type='Sell' />)}
                 {styleItems.filter(sellingFilter).map((item, idx) => <BoutiqueItem key={idx} onClick={buyOrSellStyleItem} item={item} type='Sell' />)}
             </div>

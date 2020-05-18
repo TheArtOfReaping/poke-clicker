@@ -7,16 +7,16 @@ export interface CaptureFormulaArgs {
   statusBonus?: number;
 }
 export const captureFormula = ({
-  maxHP,
-  currentHP,
-  rate,
-  ballBonus = 1,
-  statusBonus = 1,
+    maxHP,
+    currentHP,
+    rate,
+    ballBonus = 1,
+    statusBonus = 1,
 }: CaptureFormulaArgs) => {
-  return (
-    (((3 * maxHP - 2 * currentHP) * rate * ballBonus) / (3 * maxHP)) *
+    return (
+        (((3 * maxHP - 2 * currentHP) * rate * ballBonus) / (3 * maxHP)) *
     statusBonus
-  );
+    );
 };
 
 export const shouldBeCaught = (args: CaptureFormulaArgs) => 255 < captureFormula(args);

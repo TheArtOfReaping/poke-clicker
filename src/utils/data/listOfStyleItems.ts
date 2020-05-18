@@ -139,7 +139,7 @@ export const listOfStyleItems: StyleItem[] = [
         id: 16,
     }
 
-]
+];
 
 export const getStyleItem = (name: StyleItem['name']) => listOfStyleItems.find(n => n.name === name);
 export const getCategoryStyleItems = (cat: StyleCategory, list: typeof listOfStyleItems) => list.filter(item => item.category === cat);

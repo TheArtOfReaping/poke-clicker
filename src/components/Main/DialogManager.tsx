@@ -16,5 +16,5 @@ export function DialogManager({}: DialogManagerProps) {
         {id === DialogKind.Storage && <PokemonStorage />}
         {id === DialogKind.Pokemart && <Pokemart />}
         {id === DialogKind.TrainerCustomization && <TrainerCustomization />}
-    </>
+    </>;
 }

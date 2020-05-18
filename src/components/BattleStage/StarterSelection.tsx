@@ -7,12 +7,12 @@ import { Background } from 'components/Shared';
 
 const bounce = keyframes({
     '0%': {
-      marginTop: '-32px',
+        marginTop: '-32px',
     },
     '100%': {
-      marginTop: '-34px',
+        marginTop: '-34px',
     }
-  })
+});
 
 const styles = stylesheet({
     StarterSelect: {
@@ -61,7 +61,7 @@ const styles = stylesheet({
         animationIterationCount: 'infinite',
     }
 
-})
+});
 
 const determineBackground = (species: SpeciesName) => {
     if (species === 'Bulbasaur') {
@@ -74,11 +74,11 @@ const determineBackground = (species: SpeciesName) => {
         return 'deep-sea';
     }
     return '';
-}
+};
 
-export function StarterSelection({species, onClick, shiny = false, selected = false}:{species: SpeciesName, selected?: boolean, shiny?: boolean, onClick: (e?: any)=>void}) {
+export function StarterSelection({species, onClick, shiny = false, selected = false}: {species: SpeciesName; selected?: boolean; shiny?: boolean; onClick: (e?: any) => void}) {
     return <div className={classes(styles.StarterSelect, selected && styles.StarterSelectSelected)} onClick={onClick}>
         <PokemonIcon className={classes(styles.StarterSprite, selected && styles.StarterSpriteAnim)} pokemon={{species, shiny}} />
         <Background background={determineBackground(species)} imgProps={{className: styles.Background}} />
-    </div>
+    </div>;
 }

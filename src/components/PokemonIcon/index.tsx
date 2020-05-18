@@ -7,5 +7,5 @@ export interface PokemonIconProps {
     className?: string;
 }
 export function PokemonIcon({pokemon, imgProps, className}: PokemonIconProps) {
-    return <img style={{imageRendering: 'pixelated'}} className={className} src={getPokemonIcon(pokemon.species || 'Ditto', pokemon.shiny)} {...imgProps} />
+    return <img style={{imageRendering: 'pixelated'}} className={className} src={getPokemonIcon(pokemon.species || 'Ditto', pokemon.shiny)} {...imgProps} />;
 }

@@ -46,7 +46,7 @@ export interface PokemonSpecies {
     name: string;
     url: string;
   };
-  egg_groups: {name: string, url: string}[];
+  egg_groups: {name: string; url: string}[];
   evolution_chain: {url: string};
   evolves_from_species: any;
   flavor_text_entries: {flavor_text: string}[];
@@ -55,8 +55,8 @@ export interface PokemonSpecies {
   gender_rate: number;
   genera: any;
   generation: any;
-  growth_rate: {name: string, url: string};
-  habitat: {name: string, url: string};
+  growth_rate: {name: string; url: string};
+  habitat: {name: string; url: string};
   has_gender_differences: boolean;
   hatch_counter: number;
   id: number;
@@ -75,17 +75,17 @@ export type Pokemon = PokemonData & PokemonSpecies;
 export const dexEntries: Pokemon[] = [];
 
 export const getSpecies = async (pokeId?: number): Promise<Pokemon | undefined> => {
-  if (!pokeId) return undefined;
-  try {
-    const dex = new Pokedex.Pokedex();
-    if (dexEntries[pokeId] != null) {
-      return dexEntries[pokeId];
+    if (!pokeId) return undefined;
+    try {
+        const dex = new Pokedex.Pokedex();
+        if (dexEntries[pokeId] != null) {
+            return dexEntries[pokeId];
+        }
+        const species: PokemonData[] = await dex.resource(['api/v2/pokemon/' + pokeId]);
+        const moreData: PokemonSpecies[] = await dex.resource([species[0].species.url]);
+        dexEntries[pokeId] = { ...species[0], ...moreData[0]};
+        return { ...species[0], ...moreData[0]};
+    } catch (e) {
+        console.error(e);
     }
-    const species: PokemonData[] = await dex.resource(['api/v2/pokemon/' + pokeId]);
-    const moreData: PokemonSpecies[] = await dex.resource([species[0].species.url]);
-    dexEntries[pokeId] = { ...species[0], ...moreData[0]};
-    return { ...species[0], ...moreData[0]};
-  } catch (e) {
-    console.error(e);
-  }
 };

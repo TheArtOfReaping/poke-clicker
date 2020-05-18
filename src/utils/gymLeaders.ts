@@ -1,4 +1,4 @@
-import { SpeciesName } from "./SpeciesName";
+import { SpeciesName } from './SpeciesName';
 
 
 export interface GymLeader {
@@ -31,4 +31,4 @@ export const gymLeaders: GymLeader[] = [
             }
         ]
     }
-]
+];

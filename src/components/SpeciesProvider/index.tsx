@@ -15,7 +15,7 @@ export const determineId = function determineId(id: SpeciesProviderProps['specie
     } else {
         return speciesToNumber(id);
     }
-}
+};
 
 export function SpeciesProvider({speciesNameOrId, render}: SpeciesProviderProps) {
     const id = determineId(speciesNameOrId);    

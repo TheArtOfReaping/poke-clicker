@@ -13,16 +13,16 @@ export enum StyleCategory {
     Background = 'background',
   }
   
-  export type StyleItem<T = any> = {
-    name: string,
-    price?: number,
-    category?: T,
-    img: string,
+export type StyleItem<T = any> = {
+    name: string;
+    price?: number;
+    category?: T;
+    img: string;
     quantity: number;
     id: number;
   }
   
-  export type ClothingComposite = {
+export type ClothingComposite = {
     headgear?: StyleItem<StyleCategory.Headgear>;
     hair?: StyleItem<StyleCategory.Hair>;
     eyewear?: StyleItem<StyleCategory.Eyewear>;
@@ -36,14 +36,14 @@ export enum StyleCategory {
     background?: StyleItem<StyleCategory.Background>;
   };
 
-  export enum SkinColor {
+export enum SkinColor {
       Peach = '#edbcab',
       Brown = '#453125',
       Black = '#1f1712',
       Olive = '#f0e7c2',
   }
   
-  export interface Trainer {
+export interface Trainer {
     name?: Trainer;
     clothing?: ClothingComposite;
     startDate?: number;

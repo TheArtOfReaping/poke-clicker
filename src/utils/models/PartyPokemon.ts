@@ -1,11 +1,11 @@
-import { ItemName } from "utils/listOfItems";
-import { StatName } from "utils/getSpecies";
-import { Nature } from "utils/Nature";
-import { SpeciesName } from "utils/SpeciesName";
+import { ItemName } from 'utils/listOfItems';
+import { StatName } from 'utils/getSpecies';
+import { Nature } from 'utils/Nature';
+import { SpeciesName } from 'utils/SpeciesName';
 
 
 export type MarkType = 'Circle' | 'Triangle' | 'Square' | 'Heart' | 'Star' | 'Diamond';
-export type Mark = {mark: MarkType, level: 0 | 1 | 2};
+export type Mark = {mark: MarkType; level: 0 | 1 | 2};
 export type Ribbon = {ribbon?: string; dateRecieved?: number};
 
 export interface PartyPokemon {

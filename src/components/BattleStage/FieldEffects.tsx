@@ -13,7 +13,7 @@ export const FieldEffectsStyle = style({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-})
+});
 
 export function FieldEffects() {
     return <div
@@ -25,5 +25,5 @@ export function FieldEffects() {
             src="https://image.flaticon.com/icons/svg/890/890347.svg"
         />
         Sunny
-    </div>
+    </div>;
 }
