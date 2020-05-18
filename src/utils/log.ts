@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 declare namespace NodeJS {
     export interface Global {
       logs: any;

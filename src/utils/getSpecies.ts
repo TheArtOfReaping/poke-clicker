@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 //@ts-ignore
 import * as Pokedex from 'pokeapi-js-wrapper';
 import { Move } from './generateWildPokemonMoves';

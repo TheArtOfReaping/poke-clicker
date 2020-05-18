@@ -125,16 +125,15 @@ export const cheapDiffVal = (s: string) => {
 export const Provider = {
     DailyDealsList: function DailyDealsList ({children, dependency}: {children: (dailyDeals: DailyDealItem[]) => React.ReactNode; dependency: string}) {
         const [dailyDeals, setDailyDeals] = useState<DailyDealItem[]>([]);
-
-        useEffect(() => {
-            fetchy();
-        }, [dependency]);
-
         async function fetchy() {
             const allDailyDeals = await API.graphql(graphqlOperation(queries.listDailyDeals));
             const {items}: {items: DailyDealItem[]} = (allDailyDeals as any)?.data?.listDailyDeals;
             setDailyDeals(items.sort((a, b) => cheapDiffVal(b.date) - cheapDiffVal(a.date)));
         }
+
+        useEffect(() => {
+            fetchy();
+        }, [dependency]);
 
         return <div>
             {children(dailyDeals)}

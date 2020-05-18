@@ -290,12 +290,14 @@ export function pokedex(state: Pokedex = {
 }, action: any) {
     switch (action.type) {
     case ADD_SEEN:
+        // eslint-disable-next-line no-case-declarations
         const speciesData = state[action.payload.species as SpeciesName] ? state[action.payload.species as SpeciesName] : {seen: false, caught: false};
         return {
             ...state,
             [action.payload.species]: {...speciesData, seen: action.payload.seen},
         };
     case ADD_CAUGHT:
+        // eslint-disable-next-line no-case-declarations
         const speciesDataCaught = state[action.payload.species as SpeciesName] ? state[action.payload.species as SpeciesName] : {seen: false, caught: false};
         return {
             ...state,

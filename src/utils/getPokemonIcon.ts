@@ -20,6 +20,7 @@ export const formatSpeciesName = (species: string | null) => {
 
 export const getPokemonIcon = (poke: string, shiny?: boolean) => {
     try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const img = require(`../../node_modules/pokesprite-images/pokemon-gen8/${shiny ? 'shiny' : 'regular'}/${formatSpeciesName(
             poke
         )}.png`);

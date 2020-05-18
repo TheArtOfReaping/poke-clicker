@@ -4,7 +4,7 @@ import { DialogKind, Dialog } from 'components/Dialog';
 import { State } from 'state';
 import { useSelector } from 'react-redux';
 import { StyledSprite } from 'components/Party/StyledSprite';
-import { colors, Stat } from 'utils';
+import { colors } from 'utils';
 import { Button } from 'components/Button';
 import { PartyPokemon } from 'utils';
 import { PokemonView } from 'components/PokemonView';
@@ -147,7 +147,7 @@ export function PokemonStorage() {
         </div>
         {
             filteredStorage.filter(poke => boxSelections.includes(poke.id))
-                .map(poke => <div className={styles.PokemonViewContainer}>
+                .map(poke => <div key={poke.id} className={styles.PokemonViewContainer}>
                     <PokemonView pokemon={poke} id={1} idx={1} hp={100} />
                 </div>)
         }

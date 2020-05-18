@@ -92,9 +92,8 @@ export function QuestItemRewards({rewards}: QuestItemRewardsProps) {
         }
     };
     return <div className={styles.QuestItemRewardsWrapper}>
-        {rewards?.map(reward => {
-            const r = reward.reward as Item;
-            return <div className={styles.QuestItemReward} >
+        {rewards?.map((reward, idx) => {
+            return <div key={idx} className={styles.QuestItemReward} >
                 {provideImage(reward.rewardType, reward.reward)}
                 <div className={styles.QuestItemRewardQuantity}>×{reward.rewardQuantity}</div>
             </div>;

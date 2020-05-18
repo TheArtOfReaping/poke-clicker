@@ -237,6 +237,7 @@ export function Inventory({ panelProps }: InventoryProps) {
                     {['ball', 'medicine', 'battle-items', 'berries', 'other-items', 'tms', 'treasures', 'ingredients', 'key-items'].map((category, idx) => {
                         return (
                             <div
+                                key={idx}
                                 onClick={inventoryFilter(category)}
                                 className="fs-x-small"
                                 style={{

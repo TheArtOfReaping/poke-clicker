@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { calculateBaseDPS, expRequiredForumla, generateRewards, moves, getSpecies, choose, moneyFormula, colors, getContrastColor, speciesToNumber, calculateHP, determineShiny, expFormula, Pokemon, determineDamage, calculateBaseDFS, PartyPokemon, Enemy, shouldBeCaught, Item } from 'utils';
@@ -11,7 +12,6 @@ import {
     TrainerPanel,
     BattleStage,
 } from 'components';
-//@ts-ignore
 import { Party, getStat } from './components/Party';
 import clamp from 'ramda/src/clamp';
 import head from 'ramda/src/head';
@@ -21,7 +21,6 @@ import { Game } from 'utils';
 import { style, media } from 'typestyle';
 import { State } from 'state';
 import { SpeciesName } from 'utils/SpeciesName';
-// @ts-ignore
 import Amplify from 'aws-amplify';
 import awsconfig from './aws-exports';
 import {withAuthenticator} from 'aws-amplify-react';
@@ -209,7 +208,7 @@ export function App(props: AppProps) {
 
     useEffect(() => {
         const timer = setInterval(() => {
-
+            console.log('tick');
         }, simulationSpeed);
         return clearInterval(timer);
     }, [simulationSpeed]);
@@ -494,7 +493,8 @@ export function App(props: AppProps) {
                         <div style={{display: 'flex'}}>
                             <OptionsPanel />
                             <Panel name='Console'>
-                                {(global as any)?.logs?.map((log: string, idx: number) => <div key={idx} style={{
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {(global as unknown as any)?.logs?.map((log: string, idx: number) => <div key={idx} style={{
                                     textAlign: 'left',
                                     border: border({color: colors.secondary.tint1, style: 'solid', width: '1px'})
                                 }}>{log}</div>)}
@@ -506,9 +506,9 @@ export function App(props: AppProps) {
                         <Map panelProps={{height: '40%', visible: p.map}} />
                         <QuestLog />
                         <Panel name='Dev' height={'30%'}>
-                            <Button onClick={e => setSimulationSpeed(simulationSpeed - 200)} value='Speed Up' />
-                            <Button onClick={e => setSimulationSpeed(1000)} value='Reset' />
-                            <Button onClick={e => setSimulationSpeed(simulationSpeed + 200)} value='Slow Down' />
+                            <Button onClick={() => setSimulationSpeed(simulationSpeed - 200)} value='Speed Up' />
+                            <Button onClick={() => setSimulationSpeed(1000)} value='Reset' />
+                            <Button onClick={() => setSimulationSpeed(simulationSpeed + 200)} value='Slow Down' />
                 Current Speed: {simulationSpeed}{'\n'}
                 pokeBallsToThrow: {pokeBallsToThrow}
                         </Panel>

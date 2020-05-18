@@ -253,7 +253,7 @@ export function Party({ party, panelProps }: PartyProps) {
     const isActiveInBattle = (idx: number) => idx === selectedPokemonId;
     const dispatch = useDispatch();
 
-    const onClick = (id: number) => (e: any) => {
+    const onClick = (id: number) => () => {
         if (activeId === id) {
             setActiveId(-1);
         } else {
@@ -267,7 +267,7 @@ export function Party({ party, panelProps }: PartyProps) {
 
     if (!party.length) {
         return <Panel name="Party" {...panelProps}>
-      You have no Pokémon! Get one from the Professor's lab!
+      You have no Pokémon! Get one from the Professor{'\''}s lab!
         </Panel>;
     }  
 
@@ -276,7 +276,6 @@ export function Party({ party, panelProps }: PartyProps) {
             <HealBar currentHealth={healing} totalHealth={totalHealth} baseColor={colors.pink.get()} />
             {take(6, party.sort(positionalSort)).map((member, idx) => {
                 const isFainted = member?.currentHp === 0 && !member?.isEgg;
-                const canEvolve = idx === 4;
 
                 const id = speciesToNumber(member?.species) || 1;
                 // const species = getSpecies(speciesToNumber(member?.species)).then((res) => res);

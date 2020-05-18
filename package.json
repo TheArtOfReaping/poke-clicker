@@ -99,11 +99,11 @@
     "xstate": "^4.9.1"
   },
   "scripts": {
-    "prebuild": "amplify init --appId d2qsbgwevha9oh --envName production",
+    "prebuild": "echo 'amplify init --appId d2qsbgwevha9oh --envName production'",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "lint": "eslint --fix . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint --quiet --fix src --ext .js,.jsx,.ts,.tsx"
   },
   "eslintConfig": {
     "extends": "react-app"

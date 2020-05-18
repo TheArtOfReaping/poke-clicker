@@ -28,7 +28,7 @@ export const starterMode = (gm: GameMode) => gm === GameMode.SelectingStarter ||
 
 export function ProfessorOakBlurb() {
     return <Dialogue text={[
-        `Welcome to the world of Pok${accentedE}mon! I\'m Professor Oak. (Click on this card to continue reading.)`,
+        `Welcome to the world of Pok${accentedE}mon! I'm Professor Oak. (Click on this card to continue reading.)`,
         `This is an idle Pok${accentedE}mon game with an emphasis on resource management.`,
         'I hope you can enjoy this game as much as I did creating it!',
         `I've left one of three starter Pok${accentedE}mon here for you to choose.`,
@@ -93,7 +93,7 @@ export function StarterSelector() {
                     'Bulbasaur',
                     'Charmander',
                     'Squirtle',
-                ].map(species => <StarterSelection selected={starter === species} onClick={e=>send('STARTER_SELECTION', {selection: species})} species={species as SpeciesName} />)}
+                ].map((species, idx) => <StarterSelection key={idx} selected={starter === species} onClick={e=>send('STARTER_SELECTION', {selection: species})} species={species as SpeciesName} />)}
             </div>
             {starter && <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', }}>
                 <span style={{fontSize: '120%', marginBottom: '0.5rem', marginTop: '1rem'}}>Would you like to nickname your {starter}? You can always change it later.</span>

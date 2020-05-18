@@ -1,7 +1,7 @@
 import React from 'react';
 import { classes, stylesheet } from 'typestyle';
 
-const styles = (props: any) => stylesheet({
+const styles = (props: ProgressBarProps) => stylesheet({
     ProgressBar: {
         display: 'flex',
         alignItems: 'center',
@@ -32,7 +32,7 @@ export function ProgressBar({
     total
 }: ProgressBarProps) {
     const percent = (amount / total) * 100;
-    const props = arguments;
+    const props = {width, baseColor, amount, total};
 
     return (
         <div

@@ -56,6 +56,7 @@ export interface PokedexProps {
 
 
 //`https://github.com/msikma/pokesprite/blob/master/pokemon-gen8/regular/${poke.toLowerCase()}.png?raw=true`
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function Pokedex({ seen, caught, total, panelProps }: PokedexProps) {
     const dex = useSelector<State, State['pokedex']>(state => state.pokedex);
     return (
@@ -63,13 +64,13 @@ export function Pokedex({ seen, caught, total, panelProps }: PokedexProps) {
             <div className={classes(styles.InnerPanel, styles.Scrollbar)}>
                 <div>330 Seen, 220 Caught</div>
                 {listOfPokemon.map((poke) => (
-                    <div className={styles.PokedexIcon}>
+                    <div key={poke} className={styles.PokedexIcon}>
                         <img
                             data-caught={dex[poke]?.caught}
                             className={classes(
                                 styles.PokedexIconImage,
-                dex[poke]?.seen && styles.Seen,
-                dex[poke]?.caught && styles.Owned
+                                dex[poke]?.seen && styles.Seen,
+                                dex[poke]?.caught && styles.Owned
                             )}
                             alt={poke}
                             src={getPokemonIcon(poke)}

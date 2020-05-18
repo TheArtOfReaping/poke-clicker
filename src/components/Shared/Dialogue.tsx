@@ -1,4 +1,4 @@
-import React, { useState, Component, useEffect } from 'react';
+import React, { useState} from 'react';
 import { stylesheet } from 'typestyle';
 import { Card } from 'components/Card';
 import { Sprite } from './Sprite';

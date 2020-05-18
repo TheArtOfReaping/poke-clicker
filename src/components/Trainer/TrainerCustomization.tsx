@@ -4,7 +4,7 @@ import { DialogKind, Dialog } from 'components/Dialog';
 import { editTrainer } from 'actions';
 import { State } from 'state';
 import { useSelector, useDispatch } from 'react-redux';
-import { colors, Stat, StyleItem, getCategoryStyleItems, StyleCategory, getStyleItem, Trainer } from 'utils';
+import { colors, StyleItem, getCategoryStyleItems, StyleCategory, getStyleItem, Trainer } from 'utils';
 import { TrainerImage } from '.';
 
 const styles = stylesheet({
@@ -97,6 +97,7 @@ export function TrainerStyleItem({clothing, onClick, category}: {clothing?: Styl
     </div>;
 }
 
+
 export function TrainerCustomization() {
     const dispatch = useDispatch();
     const trainer = useSelector<State, State['trainer']>(state => state.trainer);
@@ -113,27 +114,29 @@ export function TrainerCustomization() {
     }));
 
     const CategoryStyleItem = ({trainer, category}: {trainer: Trainer; category: StyleCategory}) => <TrainerStyleItem category={category} onClick={() => setSelectedCategory(category)} clothing={trainer.clothing?.[category]} />;
+    const mapToStyleItem = (trainer: Trainer) => (cat: StyleCategory, idx: number) => <CategoryStyleItem key={idx} trainer={trainer} category={cat} />;
+
 
     return <Dialog kind={DialogKind.Storage} title='Trainer Customization' className={styles.Dialog}>
         <div className={styles.TrainerCustomWrapper}>
 
             <div className={styles.TrainerCustomSelections}>
                 <div className={styles.Column}>
-                    {[StyleCategory.Headgear, StyleCategory.Hair, StyleCategory.Eyewear, StyleCategory.Bag].map(cat => <CategoryStyleItem trainer={trainer} category={cat} />)}
+                    {[StyleCategory.Headgear, StyleCategory.Hair, StyleCategory.Eyewear, StyleCategory.Bag].map(mapToStyleItem(trainer))}
                 </div>
 
                 <div className={styles.Column}>
                     <TrainerImage trainer={trainer} className={styles.BaseTrainerImage} imgClassName={styles.AdditionalTrainerImage} />
                     <div className={styles.Row}>
-                        {[StyleCategory.Bottoms, StyleCategory.Footwear].map(cat => <CategoryStyleItem trainer={trainer} category={cat} />)}
+                        {[StyleCategory.Bottoms, StyleCategory.Footwear].map(mapToStyleItem(trainer))}
                     </div>
                 </div>
                 <div className={styles.Column}>
-                    {[StyleCategory.Neckwear, StyleCategory.Shirt, StyleCategory.Jacket, StyleCategory.Background].map(cat => <CategoryStyleItem trainer={trainer} category={cat} />)}
+                    {[StyleCategory.Neckwear, StyleCategory.Shirt, StyleCategory.Jacket, StyleCategory.Background].map(mapToStyleItem(trainer))}
                 </div>
                 <div className={styles.Column}>
                     <div onClick={selectItem('')} className={classes(styles.ItemName, trainer.clothing![selectedCategory] == null ? styles.ItemNameSelected : '')}>{'None'}</div>
-                    {categoryItems.length !== 0 ? categoryItems.filter(item => item.quantity).map((item, idx) => {
+                    {categoryItems.length !== 0 ? categoryItems.filter(item => item.quantity).map((item) => {
                         const isSelected = trainer.clothing![selectedCategory]?.name === item.name;
                         return <div onClick={selectItem(item.name)} key={item.name} className={classes(styles.ItemName, isSelected && styles.ItemNameSelected)}>{item.name} ({item.quantity})</div>;
                     }) : <div className={classes(styles.ItemName, styles.ItemNameEmpty)}>You Have No Matching Style Options!</div>}

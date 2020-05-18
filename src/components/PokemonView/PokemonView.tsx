@@ -63,14 +63,14 @@ export function PokemonView({
                 </div>
                 {
                     (['attack', 'defense', 'special-attack', 'special-defense', 'speed'] as StatName[]).map((stat: StatName) => {
-                        return <div className={styles.PokemonStat}>
+                        return <div key={stat} className={styles.PokemonStat}>
                             <span>{getStatShorthand(stat).toUpperCase()}</span>
                             <span title={getStat(id, stat)?.toString()}>{calculateOtherStat(pokemon.level, getStat(id, stat))}</span>
                         </div>;
                     })
                 }
             </div> : <div className={styles.EggStatus}>
-        This egg looks like it's quite a while away from hatching...  
+            This egg looks like it{'\''}s quite a while away from hatching...  
             </div>}
             {!pokemon?.isEgg && <div>
                 <div className={styles.DPSBadge}>DPS: {calculateBaseDPS(pokemon.level, getStat(id, 'special-attack'), getStat(id, 'attack'), getStat(id, 'speed'))}</div>

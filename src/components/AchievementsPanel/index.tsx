@@ -109,6 +109,7 @@ export function AchivementsPanel({panelProps}: AchievementsPanelProps) {
                 ].map((achievement) => {
                     return (
                         <div
+                            key={achievement.name}
                             className={classes(
                                 styles.Achievement,
                                 achievement.obtained && styles.AchievementObtained

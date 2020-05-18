@@ -29,7 +29,8 @@ export function OptionsPanel() {
     const [catchMode, setCatchMode] = useState(CatchMode.AllPokemon);
     const pokeballAmount = useInput(10);
     const onChange = (e?: CheckboxChangeEvent) => {
-
+        const checked = e?.target.checked;
+        return checked;
     };
     const onChangeSelect = (setter: typeof setCatchMode | typeof setPokeballMode) => (v?: any) => {
         setter(v);
