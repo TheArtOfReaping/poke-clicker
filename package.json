@@ -99,7 +99,6 @@
     "xstate": "^4.9.1"
   },
   "scripts": {
-    "prebuild": "amplify pull",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
